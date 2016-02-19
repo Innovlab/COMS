@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html ng-app="gls">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/grid.css" />
+<script src="lib/angular.min.js"></script>
+<title>SRS</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="css/sb-admin.css" rel="stylesheet">
+
+<!-- Morris Charts CSS -->
+<link href="css/plugins/morris.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet"
+	type="text/css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body ng-controller="family">
+
+	<div id="wrapper">
+
+		<!-- Navigation -->
+		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" ng-click="backToHome()">Cognizant Shipping
+					Solutions</a>
+			</div>
+			<!-- Top Menu Items -->
+			<ul class="nav navbar-right top-nav">
+				<li class="dropdown"><a  class="dropdown-toggle"
+					data-toggle="dropdown"><i class="fa fa-envelope"></i> <b
+						class="caret"></b></a>
+					<ul class="dropdown-menu message-dropdown">
+						<li class="message-preview"><a >
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a>
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-preview"><a>
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-footer"><a>Read All New
+								Messages</a></li>
+					</ul></li>
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown"><i class="fa fa-bell"></i> <b
+						class="caret"></b></a>
+					<ul class="dropdown-menu alert-dropdown">
+						<li><a >Alert Name <span
+								class="label label-default">Alert Badge</span></a></li>
+						<li><a>Alert Name <span
+								class="label label-primary">Alert Badge</span></a></li>
+						<li><a>Alert Name <span
+								class="label label-success">Alert Badge</span></a></li>
+						<li><a>Alert Name <span class="label label-info">Alert
+									Badge</span></a></li>
+						<li><a>Alert Name <span
+								class="label label-warning">Alert Badge</span></a></li>
+						<li><a>Alert Name <span
+								class="label label-danger">Alert Badge</span></a></li>
+						<li class="divider"></li>
+						<li><a>View All</a></li>
+					</ul></li>
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown"><i class="fa fa-user"></i> Ragav <b
+						class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a><i class="fa fa-fw fa-user"></i> Profile</a>
+						</li>
+						<li><a><i class="fa fa-fw fa-envelope"></i>
+								Inbox</a></li>
+						<li><a><i class="fa fa-fw fa-gear"></i> Settings</a>
+						</li>
+						<li class="divider"></li>
+						<li><a><i class="fa fa-fw fa-power-off"></i> Log
+								Out</a></li>
+					</ul></li>
+			</ul>
+			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<ul class="nav navbar-nav side-nav">
+					<li><a  ng-click="backToHome()" style="cursor: pointer;"><i class="fa fa-fw fa-shopping-cart"></i>
+							Create Shipment</a></li>
+					<li><a href="javascript:;" data-toggle="collapse" ng-show="showDta"
+						data-target="#demo"><i class="fa fa-fw fa-bar-chart-o"></i>
+							Generated Docs <i class="fa fa-fw fa-caret-down"></i></a>
+						<ul id="demo" class="collapse" ng-show="showDta">
+							<li><a data-toggle="pill" ng-click="showLabel('SHIP')" style="cursor: pointer;"> <i class="fa fa-fw fa-file-text"></i>Shipping
+									Label </a></li>
+							<li><a data-toggle="pill" ng-if="checkboxModel.value==true"
+								ng-click="showLabel('RETURN')" style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>Return Label </a></li>
+							<li><a data-toggle="pill" ng-click="showLabel('INVOICE')" style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>International
+									Doc </a></li>
+						</ul></li>
+					<li><a ng-click="showTracking()" style="cursor: pointer;"><i class="fa fa-fw fa-search"></i> Tracking</a></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</nav>
+
+		<div id="page-wrapper">
+
+			<div class="container-fluid">
+				<div ng-show="load"
+					style="top: 40%; left: 45%; right: 45%; position: absolute; z-index: 1070;">
+					<img src="./images/loading.gif" />
+				</div>
+				<div class="row" ng-hide="!showDta" style="padding-top: 60px;">
+					<!-- 		<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12"> -->
+					<!-- 		<nav class="navbar navbar-inverse"> -->
+					<!-- 		<div class="container-fluid"> -->
+					<!-- 			<ul class="nav navbar-nav"> -->
+					<!-- 				<li><a data-toggle="pill" ng-click="showLabel('SHIP')">Shipping -->
+					<!-- 						Label -->
+					<!-- 				</a></li> -->
+					<!-- 				<li><a data-toggle="pill" ng-if="checkboxModel.value==true" -->
+					<!-- 					ng-click="showLabel('RETURN')">Return Label</a></li> -->
+					<!-- 				<li><a data-toggle="pill" ng-click="showLabel('INVOICE')">Invoice -->
+					<!-- 						Doc</a></li> -->
+					<!-- 				<li><a data-toggle="pill" ng-click="backToHome()">Home</a></li> -->
+					<!-- 			</ul> -->
+					<!-- 			</div> -->
+					<!-- 			</nav> -->
+					<!-- 		</div> -->
+					<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+							ng-show="shipLbl">
+							<img ng-src="{{imgSrc}}" style="height: 500px" ng-show="isUPS"/>
+							<embed src="{{labelSrc}}" width="900" height="600"
+								type='application/pdf' ng-hide="isUPS">
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+							ng-show="returnLbl">
+							<img ng-src="{{retimgSrc}}" style="height: 500px" />
+						</div>
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+							ng-show="showInv">
+							<embed src="{{invoiceSrc}}" width="900" height="600"
+								type='application/pdf'>
+						</div>
+					</div>
+				</div>
+				<div class="alert alert-danger" ng-show="showError">
+					<a href="{{strUrl}}" class="close" data-dismiss="alert"
+						aria-label="close">&times;</a> <strong>Error!</strong>
+					{{errorDesc}}
+				</div>
+				<div ng-hide="showDta">
+					<div class="row" ng-hide="tracking">
+						<div class="col-lg-3"
+							style="height: 500px; vertical-align: middle;">
+							<img src="./images/xml_5.png"
+								style="height: 300px; padding-top: 35%; padding-left: 15%;">
+						</div>
+						<div class="col-lg-6">
+							<div class="row">
+								<div class="col-lg-5" style="padding-top: 25px;" ng-show="{$scope.data.selectedOption.name == 'UPS'}">
+									<label for="mySelect">Carrier:</label> <select name="mySelect"
+										id="mySelect"
+										ng-options="option.name for option in data.availableOptions track by option.id"
+										ng-model="data.selectedOption"></select>
+								</div>
+								<div class="col-lg-7" style="padding-top: 15px;">
+									<h4>Input XML to be pasted below</h3>
+								</div>
+							</div>
+							<textarea rows="4" cols="50"
+								class="form-control ng-pristine ng-untouched ng-valid"
+								ng-model="xmlData" style="width: 680px; height: 350px;"></textarea>
+							<br>
+							<div class="row" style=" width: 720px;">
+								<div class="col-lg-3">
+								<label> <input type="checkbox" ng-model="checkboxModel.value" class="ng-pristine ng-untouched ng-valid"> Return Label  </label>
+								</div>
+								<div class="col-lg-3"></div>
+								<div class="col-lg-3"></div>
+								<div class="col-lg-3" style="padding-left: 85px;">
+									<button ng-click="processXML()" class="btn btn-info btn-sm"
+										style="right: 45%">Proceed</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="vertical-align: middle; padding-top:50px" ng-show="tracking">
+						<div class="col-lg-3" style="padding-top: 5%;">
+							<img src="./images/tracking.png" style="height: 220px" />
+						</div>
+						<div class="row" style="padding-top: 5%;">
+							<div class="row">
+								<div class="col-lg-3" style="padding-top: 50px;">
+									<label for="inputTN">Enter Tracking number :</label> <input
+										class="form-control input-sm" ng-model="trackingNum"
+										id="inputTN" type="text">
+								</div>
+								<div class="col-lg-2" style="padding-top: 75px;">
+									<button type="button" ng-click="trackShipment()"
+										class="btn btn-info btn-sm">Track</button>
+								</div>
+								<div class="col-lg-8" style="padding-top: 25PX;">
+									<table class="table table-bordered" ng-show="showProg">
+										<thead>
+											<tr>
+												<th>City</th>
+												<th>State</th>
+												<th>Status</th>
+												<th>Date</th>
+											</tr>
+										</thead>
+										<tr ng-repeat="x in activities">
+											<td>{{ x.ActivityLocation.Address.city }}</td>
+											<td>{{ x.ActivityLocation.Address.stateProvinceCode }}</td>
+											<td>{{ x.Status.StatusType.Description }}</td>
+											<td>{{ x.Date }}</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-lg-3" style="padding-top: 5%;">
+							<img src="./images/tracking.png" style="height: 180px;visibility: hidden;">
+						</div>
+					</div>
+					<div>
+						<div class="col-lg-3" style="padding-top: 5%;">
+							<img src="./images/tracking.png" style="height: 180px;visibility: hidden;">
+						</div>
+						<div class="col-lg-3" style="padding-top: 5%;">
+							<img src="./images/tracking.png" style="height: 180px;visibility: hidden;">
+						</div>
+				</div>
+				<!-- /.container-fluid -->
+
+			</div>
+			<!-- /#page-wrapper -->
+
+		</div>
+		<!-- /#wrapper -->
+
+		<!-- jQuery -->
+		<script src="js/jquery.js"></script>
+
+		<!-- Bootstrap Core JavaScript -->
+		<script src="js/bootstrap.min.js"></script>
+
+		<!-- Morris Charts JavaScript -->
+		<script src="js/plugins/morris/raphael.min.js"></script>
+		<script src="js/plugins/morris/morris.min.js"></script>
+		<script src="js/plugins/morris/morris-data.js"></script>
+</body>
+
+<script type="text/javascript">
+	var gls = angular
+			.module('gls', [])
+			.controller(
+					'family',
+					function($scope, $window, $http) {
+						$scope.tracking = false;
+						$scope.styleWid = "width:100%";
+						$scope.deliverySts = "";
+						$scope.shipLbl = true;
+						$scope.returnLbl = false;
+						$scope.showInv = false;
+						$scope.showProg = false;
+						$scope.activities = null;
+						$scope.isUPS =true;
+						$scope.checkboxModel = {
+							value : false,
+						};
+						$scope.data = {
+							availableOptions : [ {
+								id : 'UPS',
+								name : 'UPS'
+							}, {
+								id : 'YRC',
+								name : 'YRC'
+							}, ],
+							selectedOption : {
+								id : 'UPS',
+								name : 'UPS'
+							}
+						//This sets the default value of the select in the ui
+						};
+
+						$scope.showTracking = function() {
+							$scope.tracking = true;
+							$scope.showDta = false;
+							$scope.showProg = false;
+							$scope.showDta = false;
+							$scope.load = false;
+							$scope.xmlData = "";
+							$scope.trackingNum = "";
+						}
+						$scope.backToHome = function() {
+							$scope.tracking = false;
+							$scope.showDta = false;
+							$scope.showProg = false;
+							$scope.showDta = false;
+							$scope.load = false;
+							$scope.xmlData = "";
+							$scope.trackingNum = "";
+							$scope.data = {
+								availableOptions : [ {
+									id : 'UPS',
+									name : 'UPS'
+								}, {
+									id : 'YRC',
+									name : 'YRC'
+								}, ],
+								selectedOption : {
+									id : 'UPS',
+									name : 'UPS'
+								}
+							//This sets the default value of the select in the ui
+							};
+						}
+
+						$scope.trackShipment = function() {
+							$scope.load = true;
+							$http
+									.get(
+											'./rest/Tracking/trackingdetails',
+											{
+												transformRequest : angular.identity,
+												headers : {
+													'Content-Type' : undefined
+												},
+												params : {
+													'trackingNumber' : $scope.trackingNum,
+													'carrierName' : "UPS"
+												}
+											})
+									.success(
+											function(resp, status) {
+												if (resp.responseStatusCode == "1") {
+													$scope.response = resp
+													$scope.activities = $scope.response.shipment[0]._package[0].Activity;
+													$scope.load = false;
+													$scope.showError = false;
+													$scope.showProg = true;
+												} else if (resp.responseStatusCode == "0") {
+													$scope.load = false;
+													$scope.showProg = false;
+													$scope.errorDesc = resp.error[0].errorDescription;
+													$scope.showError = true;
+												}
+											}).error(function(error, status) {
+										$scope.load = false;
+									});
+						}
+						$scope.processXML = function() {
+							var bfr = $scope.xmlData.replace(/(<[a-z A-Z]:)/g,
+									'<');
+							var frmData = new FormData();
+							$scope.strUrl = window.location.href;
+							$scope.strUrl = $scope.strUrl.replace("/#", "");
+							var aftr = bfr.replace(/(<\/[a-z A-Z]:)/g, '</');
+							$scope.load = true;
+							frmData.append('FILEUPLOAD', aftr);
+							frmData.append('CARRIER',
+									$scope.data.selectedOption.name);
+							frmData
+									.append('GENLBL',
+											$scope.checkboxModel.value);
+							$http
+									.post(
+											'./rest/ManageShipping/importXMLFile',
+											frmData,
+											{
+												transformRequest : angular.identity,
+												headers : {
+													'Content-Type' : undefined
+												}
+											})
+									.success(
+											function(resp, status) {
+												$scope.response = resp
+												if (resp.status == null
+														|| resp.status == "Failure"
+														|| resp.status == "FAILURE") {
+													$scope.showDta = false;
+													$scope.load = false;
+													$scope.errorDesc = resp.errorDescription;
+													$scope.showError = true;
+												} else {
+													var str = window.location.href;
+													str = str.replace("/#", "");
+													if ($scope.data.selectedOption.name=="UPS") {
+														$scope.isUPS = true;
+													$scope.imgSrc = str
+															+ "/ShipLabels/"
+															+ $scope.response.trackingNumber
+															+ ".png";
+													$scope.retimgSrc = str
+															+ "/ShipLabels/Return_"
+															+ $scope.response.trackingNumber
+															+ ".png";
+													$scope.invoiceSrc = str
+															+ "/ShipLabels/"
+															+ $scope.response.trackingNumber
+															+ "-IntlForms.PDF";
+													} else{
+														$scope.isUPS = false;
+														for (var shipmentdoc in $scope.response.shipmentDocuments) {
+															if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "INVOICE") {
+																$scope.invoiceSrc =str+ "/ShipLabels/"+ $scope.response.shipmentDocuments[shipmentdoc].documentPath;
+															}
+															if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "SHIPPINGLABEL") {
+																$scope.labelSrc = str+ "/ShipLabels/"+$scope.response.shipmentDocuments[shipmentdoc].documentPath;
+															}
+														}														
+													}
+													
+													$scope.showDta = true;
+													$scope.load = false;
+													$scope.showError = false;
+												}
+											}).error(function(error, status) {
+										$scope.showDta = false;
+										$scope.load = false;
+										$scope.showError = true;
+									});
+						}
+						$scope.showLabel = function(lblName) {
+							if (lblName == 'SHIP') {
+								$scope.shipLbl = true;
+								$scope.returnLbl = false;
+								$scope.showInv = false;
+							} else if (lblName == 'RETURN') {
+								$scope.shipLbl = false;
+								$scope.returnLbl = true;
+								$scope.showInv = false;
+							} else {
+								$scope.shipLbl = false;
+								$scope.returnLbl = false;
+								$scope.showInv = true;
+							}
+
+						}
+
+					});
+
+	gls.directive('file', function() {
+		return {
+			scope : {
+				file : '='
+			},
+			link : function(scope, el, attrs) {
+
+				var r = new RegExp(/\.(docx|pdf)$/i);
+				el.bind('change', function(event) {
+					var files = event.target.files;
+					var file = files[0];
+
+					if (r.test(file.name)) {
+						scope.$parent.addScreen.fileconverter.$valid = true;
+						scope.file = file;
+						scope.$apply();
+
+					} else {
+						scope.$parent.addScreen.fileconverter.$valid = false;
+						scope.$apply();
+					}
+				});
+			}
+		};
+	});
+</script>
+</html>
+
