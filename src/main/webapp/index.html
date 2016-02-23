@@ -156,7 +156,7 @@
 									Label </a></li>
 							<li><a data-toggle="pill" ng-if="checkboxModel.value==true"
 								ng-click="showLabel('RETURN')" style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>Return Label </a></li>
-							<li><a data-toggle="pill" ng-click="showLabel('INVOICE')" style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>International
+							<li><a data-toggle="pill" ng-click="showLabel('INVOICE')" style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>Invoice
 									Doc </a></li>
 						</ul></li>
 					<li><a ng-click="showTracking()" style="cursor: pointer;"><i class="fa fa-fw fa-search"></i> Tracking</a></li>
@@ -221,9 +221,9 @@
 						</div>
 						<div class="col-lg-6">
 							<div class="row">
-								<div class="col-lg-5" style="padding-top: 25px;" ng-show="{$scope.data.selectedOption.name == 'UPS'}">
+								<div class="col-lg-5" style="padding-top: 25px;">
 									<label for="mySelect">Carrier:</label> <select name="mySelect"
-										id="mySelect"
+										id="mySelect" ng-change="showRetLabel()"
 										ng-options="option.name for option in data.availableOptions track by option.id"
 										ng-model="data.selectedOption"></select>
 								</div>
@@ -236,8 +236,8 @@
 								ng-model="xmlData" style="width: 680px; height: 350px;"></textarea>
 							<br>
 							<div class="row" style=" width: 720px;">
-								<div class="col-lg-3">
-								<label> <input type="checkbox" ng-model="checkboxModel.value" class="ng-pristine ng-untouched ng-valid"> Return Label  </label>
+								<div class="col-lg-3" >
+								<label ng-show="showRet"> <input type="checkbox" ng-model="checkboxModel.value" class="ng-pristine ng-untouched ng-valid"> Return Label  </label>
 								</div>
 								<div class="col-lg-3"></div>
 								<div class="col-lg-3"></div>
@@ -331,6 +331,7 @@
 						$scope.showProg = false;
 						$scope.activities = null;
 						$scope.isUPS =true;
+						$scope.showRet = true;
 						$scope.checkboxModel = {
 							value : false,
 						};
@@ -348,7 +349,16 @@
 							}
 						//This sets the default value of the select in the ui
 						};
-
+						
+						$scope.showRetLabel = function() {
+							$scope.checkboxModel.value = false;
+							if($scope.data.selectedOption.name == "UPS"){
+									$scope.showRet = true;
+							}
+							else{
+									$scope.showRet = false;
+							}
+						}
 						$scope.showTracking = function() {
 							$scope.tracking = true;
 							$scope.showDta = false;
@@ -364,8 +374,10 @@
 							$scope.showProg = false;
 							$scope.showDta = false;
 							$scope.load = false;
+							$scope.showRet = true;
 							$scope.xmlData = "";
 							$scope.trackingNum = "";
+							checkboxModel.value = false;
 							$scope.data = {
 								availableOptions : [ {
 									id : 'UPS',
