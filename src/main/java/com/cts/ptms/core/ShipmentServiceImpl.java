@@ -9,18 +9,16 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
-import com.cts.ptms.carrier.ups.UPSHTTPClient;
+import com.cts.ptms.carrier.fedex.FedExShipmentService;
 import com.cts.ptms.carrier.ups.UPSShipmentService;
 import com.cts.ptms.carrier.yrc.YRCShipmentService;
 import com.cts.ptms.dao.ShipmentServiceDAO;
-import com.cts.ptms.model.common.ShipmentRequest;
 import com.cts.ptms.model.common.BatchOrderSummary;
 import com.cts.ptms.model.common.BatchOrderSummaryFilter;
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
-import com.cts.ptms.model.common.ShipmentOrderDetail;
-import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
+import com.cts.ptms.model.common.ShipmentRequest;
 import com.cts.ptms.model.common.TrackingDetails;
 import com.cts.ptms.utils.ShipmentUtils;
 import com.cts.ptms.utils.constants.ShippingConstants;
@@ -38,8 +36,11 @@ public class ShipmentServiceImpl implements ShipmentService {
 		if (carrier.equalsIgnoreCase(ShippingConstants.UPS)) {
 			clientShipmentService = new UPSShipmentService();
 		}
-		if (carrier.equalsIgnoreCase(ShippingConstants.YRC)) {
+		else if (carrier.equalsIgnoreCase(ShippingConstants.YRC)) {
 			clientShipmentService = new YRCShipmentService();
+		} 
+		else if (carrier.equalsIgnoreCase(ShippingConstants.FEDEX)){
+			clientShipmentService = new FedExShipmentService();
 		}
 
 	}
@@ -107,8 +108,9 @@ public class ShipmentServiceImpl implements ShipmentService {
 		
 		List<ShipmentDocument> shipmentDocumentList = shipmentOrder.getShipmentDocuments();
 		StringBuilder fileNameBuilder = new StringBuilder();
-		String path = new UPSHTTPClient().getClass().getClassLoader().getResource("").getPath();
+		String path = getClass().getClassLoader().getResource("").getPath();
 		path = path.replace(ShippingConstants.FILE_PATH, ShippingConstants.File_Path_Replace);
+		//String path = "E:/TestShippingLabelsAndDocuments";
 		for (ShipmentDocument shipmentDocument:shipmentDocumentList ) {
 			fileNameBuilder.append(path);
 			fileNameBuilder.append("/");
@@ -121,7 +123,13 @@ public class ShipmentServiceImpl implements ShipmentService {
 			
 			try {
 				File outputFile =  new File(fileNameBuilder.toString());
-				byte[] decoded = Base64.getDecoder().decode(shipmentDocument.getDocumentText());
+				byte[] decoded = null;
+				String documentContentType = shipmentDocument.getDocumentContentType();
+				if (documentContentType != null && documentContentType.equals(ShippingConstants.DECODED_BYTE_ARRAY)){
+					decoded = shipmentDocument.getDocumentText().getBytes("UTF8");
+				} else {
+					decoded = Base64.getDecoder().decode(shipmentDocument.getDocumentText());
+				}
 				FileUtils.writeByteArrayToFile(outputFile,decoded);
 				shipmentDocument.setDocumentText("");
 				fileNameBuilder.setLength(0);

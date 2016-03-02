@@ -16,7 +16,7 @@ public class ShippingConstants {
     public static final String SHIP_REQUEST_OPTION = "shipRequestOption";
     public static final String XML_STANDALONE_STRING ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
     public static final String PDF_FILE_NAME="pdfFileName";
-    public static final String INPUTFILE="D:\\inputData.xml";
+    public static final String INPUTFILE="E:\\inputData.xml";
     public static final String UPS = "UPS";
     public static final String buildPropertiesPath=".\\Config\\ups\\Integraiton\\UPS.properties";
     public static final String YRC_INPUT_MAPPER=".\\Config\\yrc\\Integraiton\\yrc_mapper.xsl";
@@ -36,5 +36,9 @@ public class ShippingConstants {
     
     
     public static  final String YRC = "YRC";
+    public static  final String FEDEX = "FEDEX";
+    public static final String DECODED_BYTE_ARRAY = "DECODED_BYTE_ARRAY";
+    public static final String DECODED_FORMAT = "UTF-8";
+    public static final String SHIPPING_LABEL_DOC = "";
 }
 

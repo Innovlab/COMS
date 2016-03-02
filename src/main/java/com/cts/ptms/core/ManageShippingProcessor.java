@@ -1,13 +1,12 @@
 package com.cts.ptms.core;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -23,20 +22,19 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 
-import com.cts.ptms.model.common.BatchOrderSummary;
 import com.cts.ptms.model.common.BatchOrderSummaryFilter;
-import com.cts.ptms.model.common.ShipmentOrderDetail;
-
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentBatchResponse;
-import com.cts.ptms.model.common.ShipmentRequest;
 import com.cts.ptms.model.common.ShipmentOrder;
+import com.cts.ptms.model.common.ShipmentOrderDetail;
+import com.cts.ptms.model.common.ShipmentRequest;
 import com.cts.ptms.utils.constants.ShippingConstants;
 
 
 @Path("/ManageShipping")
 public class ManageShippingProcessor {
-
+	
+	private Logger logger = Logger.getAnonymousLogger() ;
 	private Properties properties = new Properties();
 
 	@POST
@@ -127,4 +125,24 @@ public class ManageShippingProcessor {
 	public ShipmentBatchResponse getOrderSummary(BatchOrderSummaryFilter orderSummaryFilter) {
 		return null;
 	}
+	
+	@POST
+	@Path("/shipment" )
+	@Consumes( MediaType.APPLICATION_XML )
+	@Produces( MediaType.APPLICATION_JSON)
+	public ShipmentOrder getShipmentResponse(ShipmentRequest shipmentRequest) {
+		
+		ShipmentOrder shipmentResponse = null;
+		logger.info("getShipmentResponse==>"+shipmentRequest);
+		try{
+			ShipmentService impl = new ShipmentServiceImpl();
+			shipmentResponse = impl.createSingleShipmentOrder(shipmentRequest);
+		
+		}catch(Exception e){
+			logger.severe("getShipmentResponse==>"+shipmentResponse);
+		}
+		logger.info("getShipmentResponse<==");
+		return shipmentResponse;
+	}
+	
 }

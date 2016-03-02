@@ -33,6 +33,9 @@ public class ShipmentDocument implements Serializable {
 	private String documentType;
 	@Column(name="DOCUMENT_PATH",length = 100, nullable = false, unique = true)
 	private String documentPath;
+	
+	private String documentContentType;
+	
 	@Transient
 	private String documentText;
 	
@@ -81,6 +84,18 @@ public class ShipmentDocument implements Serializable {
 	}
 	public void setDocumentText(String documentText) {
 		this.documentText = documentText;
+	}
+	/**
+	 * @return the documentContentType
+	 */
+	public String getDocumentContentType() {
+		return documentContentType;
+	}
+	/**
+	 * @param documentContentType the documentContentType to set
+	 */
+	public void setDocumentContentType(String documentContentType) {
+		this.documentContentType = documentContentType;
 	}
 	
 	
