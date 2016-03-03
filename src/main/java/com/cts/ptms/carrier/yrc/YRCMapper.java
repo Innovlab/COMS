@@ -1,11 +1,15 @@
 package com.cts.ptms.carrier.yrc;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,13 +47,11 @@ public class YRCMapper {
 		String xmlString = "";
 		try {
 			;
-			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(ShippingConstants.YRC_INPUT_MAPPER);
-			File sourceXml = new File(sourceXmlFile); // source file
-			String rawXml = FileUtils.readFileToString(sourceXml);	
-			rawXml = rawXml.replace("xmlns=\"http://ScanData.com/WTM/XMLSchemas/WTM_XMLSchema_11.00.0000.xsd\"", "");
-			
-			FileUtils.writeStringToFile(sourceXml, rawXml);
-			sourceXml =  new File(sourceXmlFile);
+			//InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(ShippingConstants.YRC_INPUT_MAPPER);
+			File initialFile = new File("/home/bdcuser/Config/yrc/Integraiton/yrc_mapper.xsl");
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);		
+			File sourceXml =  new File(sourceXmlFile);
+			File formattedSourceXml = updateDateFormat(sourceXml,sourceXmlFile);
 			TransformerFactory f = TransformerFactory.newInstance();
 			Transformer transformer = f.newTransformer(new StreamSource(inputStream));
 			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -58,19 +60,22 @@ public class YRCMapper {
 		    //transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
 
 			StringWriter writer = new StringWriter();
-			Source source = new StreamSource(sourceXml);
+			Source source = new StreamSource(formattedSourceXml);
 			Result result = new StreamResult(writer);
 			transformer.transform(source, result);
 			xmlString = writer.toString();	
+			System.out.println(xmlString);
 			
 		} catch (TransformerConfigurationException e) {
-			System.out.println(e.toString());
+			
+			e.printStackTrace();	
 		} catch (TransformerException e) {
-			System.out.println(e.toString());
+			
+			e.printStackTrace();			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		return xmlString;
 
 	}
@@ -106,6 +111,7 @@ public class YRCMapper {
 					switch(docName) {
 						case "trackingNumber" : {							
 							shipmentOrder.setTrackingNumber(xpath.evaluate(exprList.get("trackingNumber"), document));
+							shipmentOrder.setOrderNumber(xpath.evaluate(exprList.get("trackingNumber"), document));
 							break;
 						}
 						case "INVOICE":
@@ -116,8 +122,7 @@ public class YRCMapper {
 							shipmentDoc.setDocumentText(content);
 							shipmentDoc.setDocumentType(ShippingConstants.PDF_fILE);
 							shipmentDoc.setDocumentName(docName);
-							shipmentDoclist.add(shipmentDoc);
-							System.out.println("Inside Loop " + docName );
+							shipmentDoclist.add(shipmentDoc);							
 							break;
 						}
 					}
@@ -126,25 +131,26 @@ public class YRCMapper {
 			} else {
 				shipmentOrder.setStatus("ERROR");
 				shipmentOrder.setErrorCode("YRC-01");
-				content = xpath.evaluate(exprList.get("error"), document);
-				System.out.println("Content : - " + content);
+				content = xpath.evaluate(exprList.get("error"), document);				
 				shipmentOrder.setErrorDescription(content);
 				
 			}
 		} catch (XPathExpressionException e) {
-			
+			updateErrorInfo(shipmentOrder,"YRC-03",e.getMessage());
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
 			updateErrorInfo(shipmentOrder,"YRC-03",e.getMessage());
 			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO Auto-generated catch block
+		} catch (SAXException e) {			
+			updateErrorInfo(shipmentOrder,"YRC-03",e.getMessage());
 			e.printStackTrace();
+			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			updateErrorInfo(shipmentOrder,"YRC-03",e.getMessage());			
 			e.printStackTrace();
 		} 
 		shipmentOrder.setCarrier("YRC");
+		shipmentOrder.setOrderDate(new Date());
 		return shipmentOrder;
 	}
 
@@ -172,13 +178,68 @@ public class YRCMapper {
 		exprList.put("trackingNumber","//ns2:submitBOLResponse/proNumber/text()");
 		exprList.put("INVOICE", "//xsd:base64Binary[@id='ID3']/text()");			
 		exprList.put("SHIPPINGLABEL", "//xsd:base64Binary[@id='ID4']/text()");
-		exprList.put("BARCODE", "//xsd:base64Binary[@id='ID5']/text()");	 
+		exprList.put("BARCODE", "//xsd:base64Binary[@id='ID5']/text()");	
+		exprList.put("orderNumber", "//ns2:submitBOLResponse/proNumber/text()");		
 		return exprList;
 		
 	}
 	
+	public  File updateDateFormat(File sourceXmlFile, String sourceXmlFileName) {
+		BufferedReader bf;
+		String line;
+		String matchLine = "";
+		try {
+			bf = new BufferedReader(new FileReader(sourceXmlFile));
+			
+
+			while ((line = bf.readLine()) != null) {
+				if (line.contains("DatePlannedShipment")) {
+					matchLine = line;
+					matchLine = matchLine.trim();
+					System.out.println("Match Line:" + matchLine + "--");
+					break;
+				}
+			}
+			bf.close();
+		} catch (FileNotFoundException e) {			
+			e.printStackTrace();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		StringBuilder output = new StringBuilder();
+		output.append(matchLine.substring(26, 28));
+		output.append("/");
+		output.append(matchLine.substring(29, 31));
+		output.append("/");
+		output.append(matchLine.substring(21, 25));
+		String formattedDate = "<DatePlannedShipment>" + output.toString() + "</DatePlannedShipment>";
+		// source file
+		String rawXml;
+		File formattedXmlFile=null;
+		try {
+			rawXml = FileUtils.readFileToString(sourceXmlFile);
+			rawXml = rawXml.replace("xmlns=\"http://ScanData.com/WTM/XMLSchemas/WTM_XMLSchema_11.00.0000.xsd\"", "");			                                
+			rawXml = rawXml.replace("xmlns=\"http://ScanData.com/WTM/XMLSchemas/Walmart_1.00.0000.xsd\"", "");
+			rawXml =  rawXml.replace(matchLine, formattedDate);
+			formattedXmlFile =  new File(sourceXmlFileName);
+			FileUtils.writeStringToFile(formattedXmlFile, rawXml);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}	
+		
+		try {
+			FileUtils.readFileToString(formattedXmlFile);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		return formattedXmlFile;
+
+	}
+
+	
 	public static void main  (String[] args) {
-		String inputXmlFileName = "D:/samplePdf/source.xml";
+		//String inputXmlFileName = "D:/samplePdf/source.xml";
+		String inputXmlFileName = "C:/Users/234174/workspace/YRCClient/src/xml_data/source.xml";
 		YRCMapper yrcMapper = new YRCMapper();
 		yrcMapper.populateYRCSubmitRequest(inputXmlFileName);
 	}

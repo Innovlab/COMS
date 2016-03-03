@@ -24,7 +24,9 @@
 						xmlns:yrc="http://my.yrc.com/national/WebServices/2009/01/31/YRCBolMessages.xsd">
 						<bolDetail xsi:type="yrc1:BoLDetail"
 							xmlns:yrc1="http://my.yrc.com/national/WebServices/2009/01/31/YRCBoLTypes.xsd">
-							<pickupDate xsi:type="xsd:string">02/20/2016</pickupDate>
+							<pickupDate xsi:type="xsd:string">
+								<xsl:value-of select="//SHIP_UNIT/DatePlannedShipment/text()" />
+							</pickupDate>
 							<role xsi:type="yrc1:Roles">SH</role>
 							<autoSchedulePickup>false</autoSchedulePickup>
 							<autoEmailBOL>false</autoEmailBOL>
@@ -50,8 +52,10 @@
 							<zip xsi:type="xsd:string">
 								<xsl:value-of select="exsl:node-set($shipper)/ZIPCode/text()" />
 							</zip>
-							<country xsi:type="yrc1:countryCodeList">USA</country>
-							<phoneNumber xsi:type="xsd:string">3303849000</phoneNumber>
+							<country xsi:type="yrc1:countryCodeList">
+							<xsl:value-of select="exsl:node-set($shipper)/Country/text()" />
+							</country>
+							<phoneNumber xsi:type="xsd:string"></phoneNumber>
 							<businessID xsi:type="xsd:string" />
 						</shipper>
 						<consignee xsi:type="yrc1:Customer"
@@ -70,11 +74,18 @@
 							</state>
 							<zip xsi:type="xsd:string">
 								<xsl:value-of select="exsl:node-set($shipTo)/ZIPCode/text()" />
-							</zip>							
-							<country xsi:type="yrc1:countryCodeList">USA</country>
+							</zip>
+							<country xsi:type="yrc1:countryCodeList">
+							<xsl:value-of select="exsl:node-set($shipTo)/Country/text()" />
+							</country>							
+							
 							<storeNumber xsi:type="xsd:string">21</storeNumber>
-							<!-- <contactName xsi:type="xsd:string">Bob</contactName> -->
-							<phoneNumber xsi:type="xsd:string">330-456-1234</phoneNumber>
+							<contactName xsi:type="xsd:string">
+								<xsl:value-of select="exsl:node-set($shipTo)/IndividualName/text()" />
+							</contactName>
+							<phoneNumber xsi:type="xsd:string">
+							<xsl:value-of select="exsl:node-set($shipTo)/PhoneNumber/text()" />
+							</phoneNumber>
 						</consignee>
 						<shipFrom xsi:type="yrc1:Customer"
 							xmlns:yrc1="http://my.yrc.com/national/WebServices/2009/01/31/YRCBoLTypes.xsd">
@@ -93,8 +104,13 @@
 							<zip xsi:type="xsd:string">
 								<xsl:value-of select="exsl:node-set($orderBy)/ZIPCode/text()" />
 							</zip>
-							<country xsi:type="yrc1:countryCodeList">USA</country>
-							<phoneNumber xsi:type="xsd:string">3303849000</phoneNumber>
+							<country xsi:type="yrc1:countryCodeList">
+							<xsl:value-of select="exsl:node-set(orderBy)/Country/text()" />
+							</country>	
+							<phoneNumber xsi:type="xsd:string">
+							<xsl:value-of select="exsl:node-set($orderBy)/PhoneNumber/text()" />
+							</phoneNumber>
+							
 							<businessID xsi:type="xsd:string" />
 						</shipFrom>
 						<commodityInformation xsi:type="yrc1:CommodityInformation"
@@ -104,7 +120,7 @@
 						<commodityItem xsi:type="yrc1:CommodityArray"
 							soapenc:arrayType="yrc1:CommodityItem[]"
 							xmlns:yrc1="http://my.yrc.com/national/WebServices/2009/01/31/YRCBoLTypes.xsd">
-							<xsl:for-each select="$shipmentItem">
+							<xsl:for-each select="//ITEM">
 							
 							<!--1 to 20 repetitions: -->
 							<item xsi:type="yrc1:CommodityItem">
@@ -113,19 +129,19 @@
 								</totalWeight>
 								<!--Optional: -->
 								<handlingUnitQuantity xsi:type="xsd:string">
-									<xsl:value-of select="exsl:node-set($shipmentItem)//Quantity/text()" />
+									<xsl:value-of select="Quantity" />
 								</handlingUnitQuantity>
 								<!--Optional: -->
 								<handlingUnitType xsi:type="yrc1:HandlingUnitTypes">SKD</handlingUnitType>
 								<!--Optional: -->
 								<packageQuantity xsi:type="xsd:string">
-								<xsl:value-of select="exsl:node-set($shipmentItem)//Quantity/text()" />
+								<xsl:value-of select="Quantity" />
 								</packageQuantity>
 								<!--Optional: -->
 								<packageUnitType xsi:type="yrc1:HandlingUnitTypes">BOX</packageUnitType>
 								<!--Optional: -->
 								<productDesc xsi:type="xsd:string">
-								<xsl:value-of select="exsl:node-set($shipmentItem)//Description/text()" />
+								<xsl:value-of select="Description" />
 								</productDesc>								
 								<!--Optional: -->
 								<freightClass xsi:type="yrc1:FreightClassTypes">60</freightClass>
@@ -139,7 +155,9 @@
 							xmlns:yrc1="http://my.yrc.com/national/WebServices/2009/01/31/YRCBoLTypes.xsd">
 							<!--0 to 20 repetitions: -->
 							<item xsi:type="yrc1:ReferenceNumber">
-								<refNumber xsi:type="xsd:string">345344555</refNumber>
+								<refNumber xsi:type="xsd:string">
+								<xsl:value-of select="//CarrierReferenceNote"/>
+								</refNumber>
 								<refNumberType xsi:type="yrc1:ReferenceNumberTypes">BM</refNumberType>
 								<!--Optional: -->
 								<storeNumber xsi:type="xsd:string">32</storeNumber>

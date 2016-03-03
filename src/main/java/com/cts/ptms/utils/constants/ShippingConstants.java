@@ -7,6 +7,17 @@ package com.cts.ptms.utils.constants;
  */
 public class ShippingConstants {
 	
+	 // Path setting for tomcat server in azure
+	 public static final String buildPropertiesPath=".\\Config\\ups\\Integraiton\\UPS.properties";
+	 public static final String YRC_INPUT_MAPPER=".\\Config\\yrc\\Integraiton\\yrc_mapper.xsl";
+	 public static final String INPUTFILE="/home/bdcuser/input";
+
+	 // Path setting for local tomcat
+	 /*public static final String buildPropertiesPath=".\\Config\\ups\\Integraiton\\UPS.properties";
+	 public static final String YRC_INPUT_MAPPER=".\\Config\\yrc\\Integraiton\\yrc_mapper.xsl";
+	 public static final String INPUTFILE="E:\\inputData.xml";*/
+	    
+	
 	public static final String SHIPPING_CONFIRM_URL	= "shipConfirmURL";
 	public static final String SHIPPING_ACCEPT_URL 	= "shipAcceptURL";
 	public static final String ACCESS_KEY = "accesskey";
@@ -16,11 +27,9 @@ public class ShippingConstants {
     public static final String SHIP_REQUEST_OPTION = "shipRequestOption";
     public static final String XML_STANDALONE_STRING ="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
     public static final String PDF_FILE_NAME="pdfFileName";
-    public static final String INPUTFILE="E:\\inputData.xml";
+   
     public static final String UPS = "UPS";
-    public static final String buildPropertiesPath=".\\Config\\ups\\Integraiton\\UPS.properties";
-    public static final String YRC_INPUT_MAPPER=".\\Config\\yrc\\Integraiton\\yrc_mapper.xsl";
-    
+   
     // Hard coded strings used in business logic
     public static final String XML_NAMESPACE = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>";
     public static final String SHIP_Response_TAG = "<ShipmentConfirmResponse>";

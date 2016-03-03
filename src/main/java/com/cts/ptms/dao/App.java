@@ -32,12 +32,12 @@ public class App {
 			ShipmentOrder shipmentOrder = populateShipmentOrder();
 			dao.saveShipmentOrder(shipmentOrder);
 		}
-		/*ShipmentOrder shipmentOrder = dao.getByTrackingNumber("Y12345");
-		System.out.println(shipmentOrder);*/
-		List<ShipmentOrder> shipmentOrderList = dao.getSummaryByDateRange("2016-02-17","2016-02-17");
+		ShipmentOrder shipmentOrder = dao.getByTrackingNumber("Y12345");
+		System.out.println(shipmentOrder);
+		/*List<ShipmentOrder> shipmentOrderList = dao.getSummaryByDateRange("2016-02-17","2016-02-17");
 		for(ShipmentOrder shipmentOrder: shipmentOrderList) {
 			System.out.println(shipmentOrder);
-		}
+		}*/
 		context.close();
 	
 	}

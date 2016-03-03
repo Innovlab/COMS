@@ -26,6 +26,7 @@ public class ShipmentServiceDAO {
 	
 	 
 	public void saveShipmentOrder(ShipmentOrder shipmentOrder) {
+		System.out.println("Shipment Order Data" + shipmentOrder);
 		em.persist(shipmentOrder);
 	}
 	

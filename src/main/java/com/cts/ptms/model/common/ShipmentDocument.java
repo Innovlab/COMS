@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -27,21 +26,20 @@ public class ShipmentDocument implements Serializable {
 	@Column
 	private long id;	
 	
-	@Column(name="DOCUMENT_TITLE",length = 35, nullable = false, unique = true)
+	@Column(name="DOCUMENT_TITLE",length = 35, nullable = false)
 	private String documentName;
-	@Column(name="DOCUMENT_TYPE",length = 15, nullable = false, unique = true)
+	@Column(name="DOCUMENT_TYPE",length = 15, nullable = false)
 	private String documentType;
-	@Column(name="DOCUMENT_PATH",length = 100, nullable = false, unique = true)
+	@Column(name="DOCUMENT_PATH",length = 300, nullable = false)
 	private String documentPath;
-	
+	@Transient
 	private String documentContentType;
-	
 	@Transient
 	private String documentText;
 	
 	
 	@ManyToOne
-	@JoinColumn(name = "SHIPMENT_ORDER_ID") 
+	//@JoinColumn(name = "SHIPMENT_ORDER_ID",updatable = false, insertable = true) 
 	private ShipmentOrder shipmentOrder;
 	
 	@Override

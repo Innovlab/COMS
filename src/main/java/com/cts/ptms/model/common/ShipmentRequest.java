@@ -82,6 +82,4 @@ public class ShipmentRequest {
 		this.createShipUnits = createShipUnits;
 	}
 	
-	
-	
 }

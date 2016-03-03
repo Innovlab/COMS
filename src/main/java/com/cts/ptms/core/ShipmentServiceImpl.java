@@ -8,8 +8,10 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.FastDateFormat;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.cts.ptms.carrier.fedex.FedExShipmentService;
+import com.cts.ptms.carrier.ups.UPSHTTPClient;
 import com.cts.ptms.carrier.ups.UPSShipmentService;
 import com.cts.ptms.carrier.yrc.YRCShipmentService;
 import com.cts.ptms.dao.ShipmentServiceDAO;
@@ -18,7 +20,8 @@ import com.cts.ptms.model.common.BatchOrderSummaryFilter;
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
-import com.cts.ptms.model.common.ShipmentRequest;
+import com.cts.ptms.model.common.ShipmentOrderDetail;
+import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
 import com.cts.ptms.model.common.TrackingDetails;
 import com.cts.ptms.utils.ShipmentUtils;
 import com.cts.ptms.utils.constants.ShippingConstants;
@@ -46,12 +49,15 @@ public class ShipmentServiceImpl implements ShipmentService {
 	}
 
 	public ShipmentOrder createSingleShipmentOrder(ShipmentRequest shipmentRequest) {
-		ShipmentServiceDAO shipmentServiceDAO  =  new ShipmentServiceDAO();
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		shipmentServiceDAO  = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");	 
 		initializeService(shipmentRequest.getCarrier());		
 		ShipmentOrder shipmentOrder = clientShipmentService.createShipment(shipmentRequest);
 		shipmentOrder = saveShipmentDocuments(shipmentOrder);
-		//shipmentServiceDAO.saveShipmentOrder(shipmentOrder);
+		shipmentOrder.setCarrier("YRC");		
+		shipmentServiceDAO.saveShipmentOrder(shipmentOrder);
 		System.out.println(shipmentOrder);
+		context.close();
 		return shipmentOrder;
 
 	}
@@ -118,8 +124,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 			fileNameBuilder.append("_");
 			fileNameBuilder.append(shipmentDocument.getDocumentName());
 			fileNameBuilder.append("_");
-			fileNameBuilder.append(shipmentOrder.getTrackingNumber());
-			fileNameBuilder.append(".pdf");
+			fileNameBuilder.append(shipmentOrder.getTrackingNumber());			
+			fileNameBuilder.append(shipmentDocument.getDocumentType().toLowerCase());
 			
 			try {
 				File outputFile =  new File(fileNameBuilder.toString());
@@ -131,15 +137,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 					decoded = Base64.getDecoder().decode(shipmentDocument.getDocumentText());
 				}
 				FileUtils.writeByteArrayToFile(outputFile,decoded);
-				shipmentDocument.setDocumentText("");
-				fileNameBuilder.setLength(0);
-				fileNameBuilder.append(shipmentOrder.getCarrier());
-				fileNameBuilder.append("_");
-				fileNameBuilder.append(shipmentDocument.getDocumentName());
-				fileNameBuilder.append("_");
-				fileNameBuilder.append(shipmentOrder.getTrackingNumber());
-				fileNameBuilder.append(".pdf");
-				
+				fileNameBuilder.replace(0,path.length()-1, "");
+				shipmentDocument.setDocumentText("");				
 				shipmentDocument.setDocumentPath(fileNameBuilder.toString());
 			} catch (IOException e) {				
 				e.printStackTrace();

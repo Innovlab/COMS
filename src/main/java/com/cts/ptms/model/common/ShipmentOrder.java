@@ -18,9 +18,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "SHIPMENT_ORDER")
+@XmlRootElement
 public class ShipmentOrder  implements Serializable {
 	/**
 	 * 
@@ -46,7 +48,7 @@ public class ShipmentOrder  implements Serializable {
 	private String shipmentType;
 	
 	
-	@OneToMany(fetch=FetchType.EAGER,cascade = CascadeType.ALL)	
+	@OneToMany(fetch=FetchType.EAGER,cascade = CascadeType.ALL)		
 	private List<ShipmentDocument> shipmentDocuments = new ArrayList<ShipmentDocument>();
 	
 	@Override

@@ -8,7 +8,7 @@
 	<!-- Enable Spring Annotation Configuration -->
 	<context:annotation-config />
 	<!-- Scan for all of Spring components such as Spring Service -->
-	<context:component-scan base-package="main.java.com.cts.ptms.model.common"></context:component-scan>
+	<context:component-scan base-package="main.java.com.cts.ptms"></context:component-scan>
 
 	<!-- Necessary to get the entity manager injected into the factory bean -->
 	<bean
@@ -16,11 +16,7 @@
 
 	<!-- Define EclipseLink JPA Vendor Adapter -->
 	<bean id="jpaVendorAdapter"
-		class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter">
-		<property name="databasePlatform"
-			value="org.eclipse.persistence.platform.database.MySQLPlatform" />
-		<property name="generateDdl" value="false" />
-		<property name="showSql" value="true" />
+		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">		
 	</bean>
 
 	<!-- Entity Manager Factory -->
@@ -34,7 +30,7 @@
 	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
 	</bean>
-	<bean id="shipmentServiceDao" class="main.java.com.cts.ptms.dao.ShipmentServiceDAO"/>
+	<bean id="shipmentServiceDao" class="com.cts.ptms.dao.ShipmentServiceDAO"/>
 
 	<!-- Detect @Transactional -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
