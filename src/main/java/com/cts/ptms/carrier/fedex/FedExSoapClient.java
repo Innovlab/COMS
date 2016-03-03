@@ -46,17 +46,13 @@ public class FedExSoapClient implements ClientGateway {
 		{
 			FedExMapper fedExMapper = new FedExMapper();
 			shipmentOrder = new ShipmentOrder();
-			if(request.getCarrierAccessRequest() == null) {
-				JAXBContext jaxbContext = JAXBContext.newInstance(CreateShipUnits.class);
-				File file = new File(request.getFileName());
-				Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-				CreateShipUnits createShipUnits = (CreateShipUnits) jaxbUnmarshaller.unmarshal(file);
-				request.setCreateShipUnits(createShipUnits);
-				processShipmentRequest = fedExMapper.mapRequestToCarrierInput(request);
-			} else {
-				shipmentOrder.setCarrier("FEDEX");
-				processShipmentRequest = fedExMapper.mapRequestToCarrierInput(request);
-			}
+			shipmentOrder.setCarrier(request.getCarrier());
+			JAXBContext jaxbContext = JAXBContext.newInstance(CreateShipUnits.class);
+			File file = new File(request.getFileName());
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			CreateShipUnits createShipUnits = (CreateShipUnits) jaxbUnmarshaller.unmarshal(file);
+			processShipmentRequest = fedExMapper.mapRequestToCarrierInput(createShipUnits);
+			
 			// Initialize the service
 			ShipServiceLocator service;
 			ShipPortType port;

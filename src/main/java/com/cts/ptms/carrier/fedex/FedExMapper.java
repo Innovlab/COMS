@@ -16,10 +16,8 @@ import org.apache.axis.types.PositiveInteger;
 
 import com.cts.ptms.commonutils.ShipmentCommonUtilities;
 import com.cts.ptms.exception.shipping.ShippingException;
-import com.cts.ptms.model.common.CarrierAccessRequest;
 import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
-import com.cts.ptms.model.common.ShipmentRequest;
 import com.cts.ptms.model.fedex.ws.ship.v17.Address;
 import com.cts.ptms.model.fedex.ws.ship.v17.AssociatedShipmentDetail;
 import com.cts.ptms.model.fedex.ws.ship.v17.ClientDetail;
@@ -85,26 +83,17 @@ public class FedExMapper {
 	 * @return
 	 * @throws ShippingException
 	 */
-	public ProcessShipmentRequest mapRequestToCarrierInput(ShipmentRequest request) throws ShippingException{
+	public ProcessShipmentRequest mapRequestToCarrierInput(CreateShipUnits createShipUnits) throws ShippingException{
 		
 		ProcessShipmentRequest processShipmentRequest  = null;
 		try {
 			
 			processShipmentRequest = new ProcessShipmentRequest();
-			CarrierAccessRequest carrierAccessRequest = null;
-			//Setting access details
-			if (request.getCarrierAccessRequest() != null) {
-				
-				carrierAccessRequest = request.getCarrierAccessRequest();
-				processShipmentRequest.setClientDetail(createClientDetail(carrierAccessRequest));
-				processShipmentRequest.setWebAuthenticationDetail(createWebAuthenticationDetail(carrierAccessRequest));
-				
-			} else {
-				processShipmentRequest.setClientDetail(createClientDetail(carrierAccessRequest));
-				processShipmentRequest.setWebAuthenticationDetail(createWebAuthenticationDetail(carrierAccessRequest));
-			}
 			
-			CreateShipUnits createShipUnits = request.getCreateShipUnits();
+			processShipmentRequest.setClientDetail(createClientDetail());
+			processShipmentRequest.setWebAuthenticationDetail(createWebAuthenticationDetail());
+			
+			
 			if (createShipUnits == null) {
 				logger.severe("Ship units are empty");
 				throw new ShippingException("Ship units are empty");
@@ -141,11 +130,7 @@ public class FedExMapper {
 					 requestedShipment.setShipper(addShipper(address));
 				}
 			}
-			if (carrierAccessRequest != null) {
-				requestedShipment.setShippingChargesPayment(addShippingChargesPayment(carrierAccessRequest.getAccountNumber()));
-			} else {
-				requestedShipment.setShippingChargesPayment(addShippingChargesPayment("510087224"));
-			}
+			requestedShipment.setShippingChargesPayment(addShippingChargesPayment("510087224"));
 		    requestedShipment.setLabelSpecification(addLabelSpecification());
 	        //At present considering only one item.
 		    requestedShipment.setPackageCount(new NonNegativeInteger("1"));
@@ -225,7 +210,7 @@ public class FedExMapper {
 				shipmentOrder.setErrorDescription(n.getMessage());
 				
 			} else {
-				shipmentOrder.setStatus(status);
+				shipmentOrder.setStatus("SUCCESS");
 			}
 		}
 		return shipmentOrder;
@@ -365,7 +350,7 @@ public class FedExMapper {
 				ShippingDocument sd = cpd[i].getLabel();
 				saveLabelToFile(sd, trackingNumber, shipmentOrder);
 				//printPackageOperationalDetails(cpd[i].getOperationalDetail());
-				System.out.println();
+				//System.out.println();
 			}
 		}
 	}
@@ -537,7 +522,7 @@ public class FedExMapper {
 	
 	public  LabelSpecification addLabelSpecification(){
 	    LabelSpecification labelSpecification = new LabelSpecification(); // Label specification	    
-		labelSpecification.setImageType(ShippingDocumentImageType.PDF);// Image types PDF, PNG, DPL, ...	
+		labelSpecification.setImageType(ShippingDocumentImageType.PNG);// Image types PDF, PNG, DPL, ...	
 	    labelSpecification.setLabelFormatType(LabelFormatType.COMMON2D); //LABEL_DATA_ONLY, COMMON2D
 	    //labelSpecification.setLabelStockType(LabelStockType.value2); // STOCK_4X6.75_LEADING_DOC_TAB	    
 	    //labelSpecification.setLabelPrintingOrientation(LabelPrintingOrientationType.TOP_EDGE_OF_TEXT_FIRST);
@@ -605,14 +590,17 @@ public class FedExMapper {
 			
 			ShippingDocumentPart sdpart = sdparts[a];
 			byte[] imageArray = sdpart.getImage();
-			/*StringBuilder stringBuilder = new StringBuilder();
-			String labelFileName = stringBuilder.append(getClass().getClassLoader().getResource("").getPath()).
+			String decodedString1 = new String(imageArray, "UTF-8");
+			
+			byte[] decoded = decodedString1.getBytes("UTF8");
+			StringBuilder stringBuilder = new StringBuilder();
+			String labelFileName = stringBuilder.append("E://TestShippingLabelsAndDocuments/").
 					append(trackingNumber).append(".").append(imageType).toString();
 			File labelFile = new File(labelFileName);
 			FileOutputStream fos = new FileOutputStream( labelFile );
 			fos.write(imageArray);
 			fos.close();
-			System.out.println("\nlabel file name " + labelFile.getAbsolutePath());*/
+			System.out.println("\nlabel file name " + labelFile.getAbsolutePath());
 			//Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + labelFile.getAbsolutePath());
 			
 			String decodedString = new String(imageArray, "UTF-8");
@@ -632,7 +620,7 @@ public class FedExMapper {
 	 * @param shipmentOrder
 	 * @throws Exception
 	 */
-	public  void saveShipmentDocumentsToFile(CompletedPackageDetail[] packageDetails, String trackingNumber,
+	/*public  void saveShipmentDocumentsToFile(CompletedPackageDetail[] packageDetails, String trackingNumber,
 			ShipmentOrder shipmentOrder) throws Exception {
 		if(packageDetails!= null){
 			
@@ -649,6 +637,7 @@ public class FedExMapper {
 						ShipmentDocument shipmentDocument = new ShipmentDocument();
 						ShippingDocumentPart sdpart = sdparts[a];
 						String imageType = shipDocLabel.getImageType().toString();
+						
 						StringBuilder stringBuilder = new StringBuilder();
 						stringBuilder.append(new ShipmentCommonUtilities().getClass().getClassLoader()
 								.getResource("").getPath()).append("/").append(trackingNumber).append(".").append(imageType);
@@ -672,7 +661,7 @@ public class FedExMapper {
 			}
 			shipmentOrder.setShipmentDocuments(shipmentDocuments);
 		}
-	}
+	}*/
 	
 	public  void getAssociatedShipmentLabels(AssociatedShipmentDetail[] associatedShipmentDetail) throws Exception{
 		if(associatedShipmentDetail!=null){
@@ -715,60 +704,29 @@ public class FedExMapper {
 	 * @param carrierAccessRequest
 	 * @return
 	 */
-	public  ClientDetail createClientDetail(CarrierAccessRequest carrierAccessRequest) {
+	public  ClientDetail createClientDetail() {
         ClientDetail clientDetail = new ClientDetail();
-        if (carrierAccessRequest != null) {
-	        String accNum = carrierAccessRequest.getAccountNumber();
-	        if (accNum == null) {
-	        	clientDetail.setAccountNumber("510087224");
-	        } else {
-	        	clientDetail.setAccountNumber(accNum);
-	        }
-	        String meterNum = carrierAccessRequest.getMeterNumber();
-	        if (meterNum == null) {
-	        	clientDetail.setMeterNumber("118706842");
-	        } else {
-	        	clientDetail.setMeterNumber(meterNum);
-	        }
-        } else {
-        	clientDetail.setAccountNumber("510087224");
-        	clientDetail.setMeterNumber("118706842");
-        }
+    	clientDetail.setAccountNumber("510087224");
+    	clientDetail.setMeterNumber("118706842");
         return clientDetail;
 	}
 	/**
 	 * 
-	 * @param carrierAccessRequest
 	 * @return
 	 */
-	public WebAuthenticationDetail createWebAuthenticationDetail(CarrierAccessRequest carrierAccessRequest) {
+	public WebAuthenticationDetail createWebAuthenticationDetail() {
         
 		WebAuthenticationCredential userCredential = new WebAuthenticationCredential();
 		WebAuthenticationCredential parentCredential = null;
-		if (carrierAccessRequest != null) {
-			String key = carrierAccessRequest.getUserId();
-			if(key == null){
-				userCredential.setKey("1GVNZ5PFguLgFkmP");
-			} else {
-				userCredential.setKey(key);
-			}
-			String password = carrierAccessRequest.getPassword();
-			if(password == null) {
-				userCredential.setPassword("Q02iNoC2AUFsGpJzyTIsm9obV");
-			} else {
-				userCredential.setPassword(password);
-			}
-	        Boolean useParentCredential = false; //Set this value to true is using a parent credential
-	        if (useParentCredential) {
-	        
-	        	parentCredential = new WebAuthenticationCredential();
-	        	parentCredential.setKey(null);
-	        	parentCredential.setPassword(null);
-	        }
-		} else {
-			userCredential.setKey("1GVNZ5PFguLgFkmP");
-			userCredential.setPassword("Q02iNoC2AUFsGpJzyTIsm9obV");
-		}
+		userCredential.setKey("1GVNZ5PFguLgFkmP");
+		userCredential.setPassword("Q02iNoC2AUFsGpJzyTIsm9obV");
+		Boolean useParentCredential = false; //Set this value to true is using a parent credential
+        if (useParentCredential) {
+        
+        	parentCredential = new WebAuthenticationCredential();
+        	parentCredential.setKey(null);
+        	parentCredential.setPassword(null);
+        }
 		return new WebAuthenticationDetail(parentCredential, userCredential);
 	}
 	

@@ -3,7 +3,10 @@
  */
 package com.cts.ptms.commonutils;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -115,5 +118,34 @@ public class ShipmentCommonUtilities {
 			System.out.println("Exception occured while loading the properties.."+e.getMessage());
 		}
 		return properties;
+	}
+	
+	/**
+	 * Utility for saving the base64 file into a folder.
+	 * @param decoded
+	 * @param trackingNumber
+	 * @param pathToSave
+	 * @param docType
+	 * @throws IOException
+	 */
+  	public static void saveBase64DataToLocalFile(byte[] decoded, String trackingNumber, String pathToSave, String docType) 
+  			throws IOException 
+  	{
+  		OutputStream out1 = null;
+  		try {
+  			StringBuilder stringBuilder = new StringBuilder();
+  			stringBuilder.append(pathToSave).append("/").append(trackingNumber).append(".").append(docType);
+  			//String filename = pathToSave +"/"+ trackingNumber+ShippingConstants.PDF_fILE;
+			out1 = new BufferedOutputStream(new FileOutputStream(stringBuilder.toString()));
+			out1.write(decoded);
+  		} catch (FileNotFoundException e) {
+  			System.out.println("Exception occured"+e.getMessage());
+  		} catch (Exception e) {
+  			System.out.println("Exception occured"+e.getMessage());
+  		} finally {
+			if (out1 != null) {
+				out1.close();
+			}
+		}
 	}
 }
