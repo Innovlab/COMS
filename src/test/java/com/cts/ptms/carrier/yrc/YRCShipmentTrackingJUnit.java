@@ -8,6 +8,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
@@ -54,9 +56,10 @@ public class YRCShipmentTrackingJUnit {
 		shipmentResponse = new ShipmentOrder();
 		
 		try {
-    		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./documents_location.properties");
 			properties = new Properties();
-			properties.load(inputStream);
+			File initialFile = new File(ShippingConstants.buildPropertiesPath);
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);			
+			properties.load(inputStream);			
 			System.out.println("Saving the file .."+ properties.getProperty("SAVE_FILE_PATH"));
 
 		} catch (IOException e) {
@@ -99,11 +102,11 @@ public class YRCShipmentTrackingJUnit {
 			List<ShipmentDocument> shipmentDocs = shipmentResponse.getShipmentDocuments();
 			
 			for( ShipmentDocument shipmentDoc : shipmentDocs) {
-				assertFalse(null == shipmentDoc.getDocumentText());
-				if (shipmentDoc.getDocumentName().equals(SHIPPINGLABEL)) {
+				assertFalse(null == shipmentDoc.getDocumentContent());
+				if (shipmentDoc.getDocumentTitle().equals(SHIPPINGLABEL)) {
 					
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_StandardSuccess_"+shipmentDoc.getDocumentName());
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_StandardSuccess_"+shipmentDoc.getDocumentTitle());
 					PdfReader reader = new PdfReader(decoded);
 					System.out.println("This PDF has "+reader.getNumberOfPages()+" pages.");
 			        String page = PdfTextExtractor.getTextFromPage(reader, 1);
@@ -112,16 +115,16 @@ public class YRCShipmentTrackingJUnit {
 			        assertTrue(page.contains("60"));
 			        assertTrue(page.contains("WALMART.COM-VAR"));
 			        
-				} else if (shipmentDoc.getDocumentName().equals(INVOICE)){
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_StandardSuccess_"+shipmentDoc.getDocumentName());
+				} else if (shipmentDoc.getDocumentTitle().equals(INVOICE)){
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_StandardSuccess_"+shipmentDoc.getDocumentTitle());
 					PdfReader reader = new PdfReader(decoded);
 					System.out.println("This PDF has "+reader.getNumberOfPages()+" pages.");
 			        //String page = PdfTextExtractor.getTextFromPage(reader, 1);
 			        //System.out.println("Page Content:\n\n"+page+"\n\n");
 				} else {
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_StandardSuccess_"+shipmentDoc.getDocumentName());
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_StandardSuccess_"+shipmentDoc.getDocumentTitle());
 				}
 			}
 			
@@ -184,11 +187,11 @@ public class YRCShipmentTrackingJUnit {
 	    	assertEquals("SUCCESS", shipmentResponse.getStatus());
 	    	List<ShipmentDocument> shipmentDocs = shipmentResponse.getShipmentDocuments();
 	    	for( ShipmentDocument shipmentDoc : shipmentDocs) {
-				assertFalse(null == shipmentDoc.getDocumentText());
-				if (shipmentDoc.getDocumentName().equals(SHIPPINGLABEL)) {
+				assertFalse(null == shipmentDoc.getDocumentContent());
+				if (shipmentDoc.getDocumentTitle().equals(SHIPPINGLABEL)) {
 					
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_AddressValidation_"+shipmentDoc.getDocumentName());
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_AddressValidation_"+shipmentDoc.getDocumentTitle());
 					PdfReader reader = new PdfReader(decoded);
 					System.out.println("This PDF has "+reader.getNumberOfPages()+" pages.");
 			        String page = PdfTextExtractor.getTextFromPage(reader, 1);
@@ -197,9 +200,9 @@ public class YRCShipmentTrackingJUnit {
 			        assertTrue(page.contains("20"));
 			        assertTrue(page.contains("WALMART.COM-VAR"));
 			        
-				} else if (shipmentDoc.getDocumentName().equals(INVOICE)){
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_AddressValidation_"+shipmentDoc.getDocumentName());
+				} else if (shipmentDoc.getDocumentTitle().equals(INVOICE)){
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_AddressValidation_"+shipmentDoc.getDocumentTitle());
 					PdfReader reader = new PdfReader(decoded);
 					System.out.println("This PDF has "+reader.getNumberOfPages()+" pages.");
 			        String page = PdfTextExtractor.getTextFromPage(reader, 1);
@@ -209,8 +212,8 @@ public class YRCShipmentTrackingJUnit {
 			        assertTrue(page.contains("WALMART.COM-VAR"));
 			        
 				} else {
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_AddressValidation_"+shipmentDoc.getDocumentName());
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_AddressValidation_"+shipmentDoc.getDocumentTitle());
 				}
 			}
 			
@@ -273,11 +276,11 @@ public class YRCShipmentTrackingJUnit {
 	    	assertEquals("SUCCESS", shipmentResponse.getStatus());
 	    	List<ShipmentDocument> shipmentDocs = shipmentResponse.getShipmentDocuments();
 	    	for( ShipmentDocument shipmentDoc : shipmentDocs) {
-				assertFalse(null == shipmentDoc.getDocumentText());
-				if (shipmentDoc.getDocumentName().equals(SHIPPINGLABEL)) {
+				assertFalse(null == shipmentDoc.getDocumentContent());
+				if (shipmentDoc.getDocumentTitle().equals(SHIPPINGLABEL)) {
 					
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ConsigneeValidation_"+shipmentDoc.getDocumentName());
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ConsigneeValidation_"+shipmentDoc.getDocumentTitle());
 					PdfReader reader = new PdfReader(decoded);
 					System.out.println("This PDF has "+reader.getNumberOfPages()+" pages.");
 			        String page = PdfTextExtractor.getTextFromPage(reader, 1);
@@ -289,9 +292,9 @@ public class YRCShipmentTrackingJUnit {
 			        
 			        
 			        
-				} else if (shipmentDoc.getDocumentName().equals(INVOICE)) {
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ConsigneeValidation_"+shipmentDoc.getDocumentName());
+				} else if (shipmentDoc.getDocumentTitle().equals(INVOICE)) {
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ConsigneeValidation_"+shipmentDoc.getDocumentTitle());
 					PdfReader reader = new PdfReader(decoded);
 					System.out.println("This PDF has "+reader.getNumberOfPages()+" pages.");
 			        String page = PdfTextExtractor.getTextFromPage(reader, 1);
@@ -301,8 +304,8 @@ public class YRCShipmentTrackingJUnit {
 			        assertTrue(page.contains("72716"));
 			        
 				} else {
-					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
-					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ConsigneeValidation_"+shipmentDoc.getDocumentName());
+					byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
+					saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ConsigneeValidation_"+shipmentDoc.getDocumentTitle());
 				}
 			}
 			

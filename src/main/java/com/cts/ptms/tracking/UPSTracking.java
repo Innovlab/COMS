@@ -4,6 +4,8 @@
 package com.cts.ptms.tracking;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -14,6 +16,8 @@ import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
+import org.apache.commons.io.FileUtils;
 
 import com.cts.ptms.commonutils.ShipmentCommonUtilities;
 import com.cts.ptms.exception.tracking.TrackingException;
@@ -39,6 +43,7 @@ import com.cts.ptms.model.tracking.UnitOfMeasurement;
 import com.cts.ptms.model.tracking.Weight;
 
 import com.cts.ptms.model.ups.generated.trackresponse.TrackResponse;
+import com.cts.ptms.utils.constants.ShippingConstants;
 
 
 
@@ -48,14 +53,18 @@ import com.cts.ptms.model.ups.generated.trackresponse.TrackResponse;
  */
 public class UPSTracking implements ITrackingDetails{
 
-	Properties properties = null;
+	Properties properties = new Properties();
 	/**
 	 * Constructor for instantiating required objects.
 	 */
 	public UPSTracking() {
 		
 		try{
-			properties = ShipmentCommonUtilities.getProperties("./Config/ups/Integraiton/UPS.properties");
+			File initialFile = new File(ShippingConstants.buildPropertiesPath);
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);
+			
+			properties.load(inputStream);
+			
 		}catch (Exception e){
 			System.out.println("Exception occured while loading the UPS properties file.");
 		}

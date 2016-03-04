@@ -19,6 +19,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
+import com.cts.ptms.model.confirm.request.ShipmentType;
 
 @Entity
 @Table(name = "SHIPMENT_ORDER")
@@ -46,9 +47,16 @@ public class ShipmentOrder  implements Serializable {
 	//@Column(name="SHIPMENT_TYPE",length = 30,nullable=false)
 	@Transient
 	private String shipmentType;
+	@Transient
+	private ShipmentType shipmentTypeDO;
 	
-	
-	@OneToMany(fetch=FetchType.EAGER,cascade = CascadeType.ALL)		
+	public ShipmentType getShipmentTypeDO() {
+		return shipmentTypeDO;
+	}
+	public void setShipmentTypeDO(ShipmentType shipmentTypeDO) {
+		this.shipmentTypeDO = shipmentTypeDO;
+	}
+	@OneToMany(fetch=FetchType.EAGER,cascade = CascadeType.ALL)	
 	private List<ShipmentDocument> shipmentDocuments = new ArrayList<ShipmentDocument>();
 	
 	@Override

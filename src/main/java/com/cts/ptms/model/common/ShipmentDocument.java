@@ -27,25 +27,32 @@ public class ShipmentDocument implements Serializable {
 	private long id;	
 	
 	@Column(name="DOCUMENT_TITLE",length = 35, nullable = false)
-	private String documentName;
+	private String documentTitle;
 	@Column(name="DOCUMENT_TYPE",length = 15, nullable = false)
 	private String documentType;
 	@Column(name="DOCUMENT_PATH",length = 300, nullable = false)
-	private String documentPath;
+	private String documentName;
 	@Transient
 	private String documentContentType;
 	@Transient
-	private String documentText;
+	private String documentContent;
+	@Transient
+	private byte[] byteArray;
 	
-	
+	public byte[] getByteArray() {
+		return byteArray;
+	}
+	public void setByteArray(byte[] byteArray) {
+		this.byteArray = byteArray;
+	}
 	@ManyToOne
 	//@JoinColumn(name = "SHIPMENT_ORDER_ID",updatable = false, insertable = true) 
 	private ShipmentOrder shipmentOrder;
 	
 	@Override
 	public String toString() {
-		return "ShipmentDocument [id=" + id + ", documentName=" + documentName + ", documentType=" + documentType
-				+ ", documentPath=" + documentPath + ", shipmentOrder=" + shipmentOrder + "]";
+		return "ShipmentDocument [id=" + id + ", documentName=" + documentTitle + ", documentType=" + documentType
+				+ ", documentPath=" + documentName + ", shipmentOrder=" + shipmentOrder + "]";
 	}
 	public ShipmentOrder getShipmentOrder() {
 		return shipmentOrder;
@@ -59,11 +66,11 @@ public class ShipmentDocument implements Serializable {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getDocumentName() {
-		return documentName;
+	public String getDocumentTitle() {
+		return documentTitle;
 	}
-	public void setDocumentName(String documentName) {
-		this.documentName = documentName;
+	public void setDocumentTitle(String documentTitle) {
+		this.documentTitle = documentTitle;
 	}
 	public String getDocumentType() {
 		return documentType;
@@ -71,17 +78,17 @@ public class ShipmentDocument implements Serializable {
 	public void setDocumentType(String documentType) {
 		this.documentType = documentType;
 	}
-	public String getDocumentPath() {
-		return documentPath;
+	public String getDocumentName() {
+		return documentName;
 	}
-	public void setDocumentPath(String documentPath) {
-		this.documentPath = documentPath;
+	public void setDocumentName(String documentFileName) {
+		this.documentName = documentFileName;
 	}
-	public String getDocumentText() {
-		return documentText;
+	public String getDocumentContent() {
+		return documentContent;
 	}
-	public void setDocumentText(String documentText) {
-		this.documentText = documentText;
+	public void setDocumentContent(String documentText) {
+		this.documentContent = documentText;
 	}
 	/**
 	 * @return the documentContentType

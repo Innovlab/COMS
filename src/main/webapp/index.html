@@ -49,31 +49,15 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" ng-click="backToHome()">Cognizant Shipping
-					Solutions</a>
+				<a class="navbar-brand" ng-click="backToHome()">Cognizant
+					Shipping Solutions</a>
 			</div>
 			<!-- Top Menu Items -->
 			<ul class="nav navbar-right top-nav">
-				<li class="dropdown"><a  class="dropdown-toggle"
+				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-envelope"></i> <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu message-dropdown">
-						<li class="message-preview"><a >
-								<div class="media">
-									<span class="pull-left"> <img class="media-object"
-										src="http://placehold.it/50x50" alt="">
-									</span>
-									<div class="media-body">
-										<h5 class="media-heading">
-											<strong>John Smith</strong>
-										</h5>
-										<p class="small text-muted">
-											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
-										</p>
-										<p>Lorem ipsum dolor sit amet, consectetur...</p>
-									</div>
-								</div>
-						</a></li>
 						<li class="message-preview"><a>
 								<div class="media">
 									<span class="pull-left"> <img class="media-object"
@@ -106,25 +90,40 @@
 									</div>
 								</div>
 						</a></li>
-						<li class="message-footer"><a>Read All New
-								Messages</a></li>
+						<li class="message-preview"><a>
+								<div class="media">
+									<span class="pull-left"> <img class="media-object"
+										src="http://placehold.it/50x50" alt="">
+									</span>
+									<div class="media-body">
+										<h5 class="media-heading">
+											<strong>John Smith</strong>
+										</h5>
+										<p class="small text-muted">
+											<i class="fa fa-clock-o"></i> Yesterday at 4:32 PM
+										</p>
+										<p>Lorem ipsum dolor sit amet, consectetur...</p>
+									</div>
+								</div>
+						</a></li>
+						<li class="message-footer"><a>Read All New Messages</a></li>
 					</ul></li>
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown"><i class="fa fa-bell"></i> <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu alert-dropdown">
-						<li><a >Alert Name <span
-								class="label label-default">Alert Badge</span></a></li>
-						<li><a>Alert Name <span
-								class="label label-primary">Alert Badge</span></a></li>
-						<li><a>Alert Name <span
-								class="label label-success">Alert Badge</span></a></li>
+						<li><a>Alert Name <span class="label label-default">Alert
+									Badge</span></a></li>
+						<li><a>Alert Name <span class="label label-primary">Alert
+									Badge</span></a></li>
+						<li><a>Alert Name <span class="label label-success">Alert
+									Badge</span></a></li>
 						<li><a>Alert Name <span class="label label-info">Alert
 									Badge</span></a></li>
-						<li><a>Alert Name <span
-								class="label label-warning">Alert Badge</span></a></li>
-						<li><a>Alert Name <span
-								class="label label-danger">Alert Badge</span></a></li>
+						<li><a>Alert Name <span class="label label-warning">Alert
+									Badge</span></a></li>
+						<li><a>Alert Name <span class="label label-danger">Alert
+									Badge</span></a></li>
 						<li class="divider"></li>
 						<li><a>View All</a></li>
 					</ul></li>
@@ -132,34 +131,36 @@
 					data-toggle="dropdown"><i class="fa fa-user"></i> Ragav <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a><i class="fa fa-fw fa-user"></i> Profile</a>
-						</li>
-						<li><a><i class="fa fa-fw fa-envelope"></i>
-								Inbox</a></li>
-						<li><a><i class="fa fa-fw fa-gear"></i> Settings</a>
-						</li>
+						<li><a><i class="fa fa-fw fa-user"></i> Profile</a></li>
+						<li><a><i class="fa fa-fw fa-envelope"></i> Inbox</a></li>
+						<li><a><i class="fa fa-fw fa-gear"></i> Settings</a></li>
 						<li class="divider"></li>
-						<li><a><i class="fa fa-fw fa-power-off"></i> Log
-								Out</a></li>
+						<li><a><i class="fa fa-fw fa-power-off"></i> Log Out</a></li>
 					</ul></li>
 			</ul>
 			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
 				<ul class="nav navbar-nav side-nav">
-					<li><a  ng-click="backToHome()" style="cursor: pointer;"><i class="fa fa-fw fa-shopping-cart"></i>
-							Create Shipment</a></li>
-					<li><a href="javascript:;" data-toggle="collapse" ng-show="showDta"
-						data-target="#demo"><i class="fa fa-fw fa-bar-chart-o"></i>
-							Generated Docs <i class="fa fa-fw fa-caret-down"></i></a>
+					<li><a ng-click="backToHome()" style="cursor: pointer;"><i
+							class="fa fa-fw fa-shopping-cart"></i> Create Shipment</a></li>
+					<li><a href="javascript:;" data-toggle="collapse"
+						ng-show="showDta" data-target="#demo"><i
+							class="fa fa-fw fa-bar-chart-o"></i> Generated Docs <i
+							class="fa fa-fw fa-caret-down"></i></a>
 						<ul id="demo" class="collapse" ng-show="showDta">
-							<li><a data-toggle="pill" ng-click="showLabel('SHIP')" style="cursor: pointer;"> <i class="fa fa-fw fa-file-text"></i>Shipping
-									Label </a></li>
+							<li><a data-toggle="pill" ng-click="showLabel('SHIP')"
+								style="cursor: pointer;"> <i class="fa fa-fw fa-file-text"></i>Shipping
+									Label
+							</a></li>
 							<li><a data-toggle="pill" ng-if="checkboxModel.value==true"
-								ng-click="showLabel('RETURN')" style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>Return Label </a></li>
-							<li><a data-toggle="pill" ng-click="showLabel('INVOICE')" style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>Invoice
-									Doc </a></li>
+								ng-click="showLabel('RETURN')" style="cursor: pointer;"><i
+									class="fa fa-fw fa-file-text"></i>Return Label </a></li>
+							<li><a data-toggle="pill" ng-click="showLabel('COE')"
+								style="cursor: pointer;"><i class="fa fa-fw fa-file-text"></i>Certificate
+									of Origin </a></li>
 						</ul></li>
-					<li><a ng-click="showTracking()" style="cursor: pointer;"><i class="fa fa-fw fa-search"></i> Tracking</a></li>
+					<li><a ng-click="showTracking()" style="cursor: pointer;"><i
+							class="fa fa-fw fa-search"></i> Tracking</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -192,9 +193,8 @@
 					<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 							ng-show="shipLbl">
-							<img ng-src="{{imgSrc}}" style="height: 500px" ng-show="isUPS"/>
-							<embed src="{{labelSrc}}" width="900" height="600"
-								type='application/pdf' ng-hide="isUPS">
+							<embed ng-src="{{labelSrc}}" width="900" height="600"
+								type='application/pdf'>
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 							ng-show="returnLbl">
@@ -202,7 +202,7 @@
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 							ng-show="showInv">
-							<embed src="{{invoiceSrc}}" width="900" height="600"
+							<embed ng-src="{{COESrc}}" width="900" height="600"
 								type='application/pdf'>
 						</div>
 					</div>
@@ -228,16 +228,22 @@
 										ng-model="data.selectedOption"></select>
 								</div>
 								<div class="col-lg-7" style="padding-top: 15px;">
-									<h4>Input XML to be pasted below</h3>
+									<h4>
+										Input XML to be pasted below
+										</h3>
 								</div>
 							</div>
 							<textarea rows="4" cols="50"
 								class="form-control ng-pristine ng-untouched ng-valid"
 								ng-model="xmlData" style="width: 680px; height: 350px;"></textarea>
 							<br>
-							<div class="row" style=" width: 720px;">
-								<div class="col-lg-3" >
-								<label ng-show="showRet"> <input type="checkbox" ng-model="checkboxModel.value" class="ng-pristine ng-untouched ng-valid"> Return Label  </label>
+							<div class="row" style="width: 720px;">
+								<div class="col-lg-3">
+									<label ng-show="showRet"> <input type="checkbox"
+										ng-model="checkboxModel.value"
+										class="ng-pristine ng-untouched ng-valid"> Return
+										Label
+									</label>
 								</div>
 								<div class="col-lg-3"></div>
 								<div class="col-lg-3"></div>
@@ -248,7 +254,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="row" style="vertical-align: middle; padding-top:50px" ng-show="tracking">
+					<div class="row" style="vertical-align: middle; padding-top: 50px"
+						ng-show="tracking">
 						<div class="col-lg-3" style="padding-top: 5%;">
 							<img src="./images/tracking.png" style="height: 220px" />
 						</div>
@@ -283,37 +290,40 @@
 								</div>
 							</div>
 						</div>
-						
+
 						<div class="col-lg-3" style="padding-top: 5%;">
-							<img src="./images/tracking.png" style="height: 180px;visibility: hidden;">
+							<img src="./images/tracking.png"
+								style="height: 180px; visibility: hidden;">
 						</div>
 					</div>
 					<div>
 						<div class="col-lg-3" style="padding-top: 5%;">
-							<img src="./images/tracking.png" style="height: 180px;visibility: hidden;">
+							<img src="./images/tracking.png"
+								style="height: 180px; visibility: hidden;">
 						</div>
 						<div class="col-lg-3" style="padding-top: 5%;">
-							<img src="./images/tracking.png" style="height: 180px;visibility: hidden;">
+							<img src="./images/tracking.png"
+								style="height: 180px; visibility: hidden;">
 						</div>
+					</div>
+					<!-- /.container-fluid -->
+
 				</div>
-				<!-- /.container-fluid -->
+				<!-- /#page-wrapper -->
 
 			</div>
-			<!-- /#page-wrapper -->
+			<!-- /#wrapper -->
 
-		</div>
-		<!-- /#wrapper -->
+			<!-- jQuery -->
+			<script src="js/jquery.js"></script>
 
-		<!-- jQuery -->
-		<script src="js/jquery.js"></script>
+			<!-- Bootstrap Core JavaScript -->
+			<script src="js/bootstrap.min.js"></script>
 
-		<!-- Bootstrap Core JavaScript -->
-		<script src="js/bootstrap.min.js"></script>
-
-		<!-- Morris Charts JavaScript -->
-		<script src="js/plugins/morris/raphael.min.js"></script>
-		<script src="js/plugins/morris/morris.min.js"></script>
-		<script src="js/plugins/morris/morris-data.js"></script>
+			<!-- Morris Charts JavaScript -->
+			<script src="js/plugins/morris/raphael.min.js"></script>
+			<script src="js/plugins/morris/morris.min.js"></script>
+			<script src="js/plugins/morris/morris-data.js"></script>
 </body>
 
 <script type="text/javascript">
@@ -330,7 +340,7 @@
 						$scope.showInv = false;
 						$scope.showProg = false;
 						$scope.activities = null;
-						$scope.isUPS =true;
+						$scope.isUPS = true;
 						$scope.showRet = true;
 						$scope.checkboxModel = {
 							value : false,
@@ -342,24 +352,20 @@
 							}, {
 								id : 'YRC',
 								name : 'YRC'
-							}, {
-								id : 'FEDEX',
-								name : 'FEDEX'
-							},],
+							}, ],
 							selectedOption : {
 								id : 'UPS',
 								name : 'UPS'
 							}
 						//This sets the default value of the select in the ui
 						};
-						
+
 						$scope.showRetLabel = function() {
 							$scope.checkboxModel.value = false;
-							if($scope.data.selectedOption.name == "UPS"){
-									$scope.showRet = true;
-							}
-							else{
-									$scope.showRet = false;
+							if ($scope.data.selectedOption.name == "UPS") {
+								$scope.showRet = true;
+							} else {
+								$scope.showRet = false;
 							}
 						}
 						$scope.showTracking = function() {
@@ -388,9 +394,6 @@
 								}, {
 									id : 'YRC',
 									name : 'YRC'
-								}, {
-									id : 'FEDEX',
-									name : 'FEDEX'
 								}, ],
 								selectedOption : {
 									id : 'UPS',
@@ -470,32 +473,21 @@
 												} else {
 													var str = window.location.href;
 													str = str.replace("/#", "");
-													if ($scope.data.selectedOption.name=="UPS") {
-														$scope.isUPS = true;
-													$scope.imgSrc = str
-															+ "/ShipLabels/"
-															+ $scope.response.trackingNumber
-															+ ".png";
-													$scope.retimgSrc = str
-															+ "/ShipLabels/Return_"
-															+ $scope.response.trackingNumber
-															+ ".png";
-													$scope.invoiceSrc = str
-															+ "/ShipLabels/"
-															+ $scope.response.trackingNumber
-															+ "-IntlForms.PDF";
-													} else{
-														$scope.isUPS = false;
-														for (var shipmentdoc in $scope.response.shipmentDocuments) {
-															if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "INVOICE") {
-																$scope.invoiceSrc =str+ "/ShipLabels/"+ $scope.response.shipmentDocuments[shipmentdoc].documentPath;
-															}
-															if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "SHIPPINGLABEL") {
-																$scope.labelSrc = str+ "/ShipLabels/"+$scope.response.shipmentDocuments[shipmentdoc].documentPath;
-															}
-														}														
+													if ($scope.data.selectedOption.name == "UPS") {
+														$scope.retimgSrc = str
+																+ "/ShipLabels/Return_"
+																+ $scope.response.trackingNumber
+																+ ".png";
 													}
-													
+													for ( var shipmentdoc in $scope.response.shipmentDocuments) {
+														if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "CO") {
+															$scope.COESrc = $scope.response.shipmentDocuments[shipmentdoc].documentContent;
+														}
+														if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "SHIPPINGLABEL") {
+															$scope.labelSrc =  $scope.response.shipmentDocuments[shipmentdoc].documentContent;
+														}
+													}
+
 													$scope.showDta = true;
 													$scope.load = false;
 													$scope.showError = false;

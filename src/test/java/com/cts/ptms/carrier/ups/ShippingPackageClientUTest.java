@@ -15,6 +15,7 @@ import java.util.Base64;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
@@ -53,9 +54,11 @@ public class ShippingPackageClientUTest {
     	upsHTTPClient = new UPSHTTPClient();
     	
     	try {
-    		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./documents_location.properties");
+    		//InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./documents_location.properties");
 			properties = new Properties();
-			properties.load(inputStream);
+			File initialFile = new File(ShippingConstants.TEST_DOCUMENT_LOCATION);
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);			
+			properties.load(inputStream);			
 			System.out.println("File will be saved on  .."+ properties.getProperty("SAVE_FILE_PATH"));
 
 		} catch (IOException e) {
@@ -122,9 +125,9 @@ public class ShippingPackageClientUTest {
 			assertFalse(shipmentResponse == null);
 			assertFalse(shipmentResponse.getShipmentDocuments().size() == 0);
 			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(0);
-			assertFalse(shipmentDoc.getDocumentName() != "SHIPPINGLABEL");
-			assertFalse(null == shipmentDoc.getDocumentText());
-			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
+			assertFalse(shipmentDoc.getDocumentTitle() != "SHIPPINGLABEL");
+			assertFalse(null == shipmentDoc.getDocumentContent());
+			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
 			saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ValidSrvcCd", false);
 			
 			assertEquals("Success", shipmentResponse.getStatus());
@@ -186,9 +189,9 @@ public class ShippingPackageClientUTest {
 			assertFalse(shipmentResponse == null);
 			assertFalse(shipmentResponse.getShipmentDocuments().size() == 0);
 			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(0);
-			assertFalse(shipmentDoc.getDocumentName() != "SHIPPINGLABEL");
-			assertFalse(null == shipmentDoc.getDocumentText());
-			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
+			assertFalse(shipmentDoc.getDocumentTitle() != "SHIPPINGLABEL");
+			assertFalse(null == shipmentDoc.getDocumentContent());
+			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
 			saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_ValidWieght", false);
 			assertEquals("Success", shipmentResponse.getStatus());
 			
@@ -221,9 +224,9 @@ public class ShippingPackageClientUTest {
 			assertFalse(shipmentResponse == null);
 			assertFalse(shipmentResponse.getShipmentDocuments().size() == 0);
 			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(0);
-			assertFalse(shipmentDoc.getDocumentName() != "SHIPPINGLABEL");
-			assertFalse(null == shipmentDoc.getDocumentText());
-			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
+			assertFalse(shipmentDoc.getDocumentTitle() != "SHIPPINGLABEL");
+			assertFalse(null == shipmentDoc.getDocumentContent());
+			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
 			
 			saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"AddressValid_Ground", false);
 			System.out.println("Saved successfully on "+getClass().getClassLoader().getResource("").getPath());
@@ -287,9 +290,9 @@ public class ShippingPackageClientUTest {
 			assertFalse(shipmentResponse == null);
 			assertFalse(shipmentResponse.getShipmentDocuments().size() == 0);
 			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(0);
-			assertFalse(shipmentDoc.getDocumentName() != "SHIPPINGLABEL");
-			assertFalse(null == shipmentDoc.getDocumentText());
-			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
+			assertFalse(shipmentDoc.getDocumentTitle() != "SHIPPINGLABEL");
+			assertFalse(null == shipmentDoc.getDocumentContent());
+			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
 			
 			saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_AddVal_2ndDayAir", false);
 			System.out.println("Saved successfully on "+getClass().getClassLoader().getResource("").getPath());
@@ -349,10 +352,10 @@ public class ShippingPackageClientUTest {
 			
 			
 			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(1);
-			assertFalse(shipmentDoc.getDocumentName() != "INVOICE");
+			assertFalse(shipmentDoc.getDocumentTitle() != "INVOICE");
 			
-			assertFalse(null == shipmentDoc.getDocumentText());
-			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentText());
+			assertFalse(null == shipmentDoc.getDocumentContent());
+			byte[] decoded = Base64.getDecoder().decode(shipmentDoc.getDocumentContent());
 			
 			saveBase64DataToLocalFile(decoded, shipmentResponse.getTrackingNumber()+"_Invoice", true);
 			//System.out.println("Saved successfully on "+getClass().getClassLoader().getResource("").getPath());

@@ -3,7 +3,9 @@ package com.cts.ptms.carrier.ups;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,6 +15,7 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Base64;
@@ -22,11 +25,23 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import org.apache.commons.io.FileUtils;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.BarcodeEAN;
 import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import com.cts.ptms.core.ClientGateway;
@@ -52,10 +67,10 @@ public class UPSHTTPClient implements ClientGateway {
 	}
 	public String trackingNum="";
 	public boolean genReturnLabel=false;
+	public ShippingInfoDO infoDO = new ShippingInfoDO();
 	public ShipmentOrder createShipmentRequest(ShipmentRequest request) {
 		ShipmentConfirmRequest shipConfRequest = new ShipmentConfirmRequest();
 		ShipmentConfirmRequest returnConfRequest = new ShipmentConfirmRequest();
-		ShippingInfoDO infoDO = new ShippingInfoDO();
 		ShippingInfoDO returninfoDO = new ShippingInfoDO();
 		
 		try 
@@ -113,6 +128,8 @@ public class UPSHTTPClient implements ClientGateway {
 		}
 		if(null!= acceptResponse){
 			response.setStatus(acceptResponse.getResponse().getResponseStatusDescription());
+			response.setCarrier(ShippingConstants.UPS);
+			response.setShipmentTypeDO(infoDO.getConfirmRequest().getShipment());
 			if(trackingNum!=""){
 				response.setTrackingNumber(trackingNum);
 			}else{
@@ -122,19 +139,23 @@ public class UPSHTTPClient implements ClientGateway {
 			if(null!=acceptResponse.getShipmentResults() && null!=acceptResponse.getShipmentResults().getPackageResults() &&
 					null!=acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage()){
 				ShipmentDocument document = new ShipmentDocument();
-				document.setDocumentName("SHIPPINGLABEL");
+					document.setDocumentTitle("SHIPPINGLABEL");
 				document.setDocumentType(acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage().getLabelImageFormat().getCode());
-				document.setDocumentText(acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage().getGraphicImage());		
+				document.setDocumentContent(acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage().getGraphicImage());		
 				response.getShipmentDocuments().add(document);
 			}
 			if(null != acceptResponse.getShipmentResults().getForm() && (null != acceptResponse.getShipmentResults().getForm().getImage().getGraphicImage())){
 				ShipmentDocument document = new ShipmentDocument();
-				document.setDocumentName("INVOICE");
+				document.setDocumentTitle("INVOICE");
 				document.setDocumentType(acceptResponse.getShipmentResults().getForm().getImage().getImageFormat().getCode());
-				document.setDocumentText(acceptResponse.getShipmentResults().getForm().getImage().getGraphicImage());		
+				document.setDocumentContent(acceptResponse.getShipmentResults().getForm().getImage().getGraphicImage());		
 				response.getShipmentDocuments().add(document);
 
 			}
+			ShipmentDocument document = new ShipmentDocument();
+			document.setDocumentTitle("CO");
+			document.setDocumentType("PDF");
+			response.getShipmentDocuments().add(document);
 		}
 		
 		return response;
@@ -241,8 +262,10 @@ public class UPSHTTPClient implements ClientGateway {
 		try {
 
 			URL url = new URL(serviceUrl);
-
+		//	System.getProperties().put("https.proxyHost", "proxy.cognizant.com");
+	     //   System.getProperties().put("https.proxyPort", "6050"); 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		//	connection.setRequestProperty("User-Agent", "Mozilla/4.5");
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setUseCaches(false);
@@ -353,9 +376,11 @@ public class UPSHTTPClient implements ClientGateway {
 
 	/**
 	 * This method Generate the shipping label as a PDF file
+	 * @throws InterruptedException 
+	 * @throws URISyntaxException 
 	 */
 	private String generateShippingLabelPDF(byte[] decoded,String trackingNumber,ShippingInfoDO shippingInfoDO,ShipmentRequest request)
-			throws MalformedURLException, IOException, DocumentException {
+			throws MalformedURLException, IOException, DocumentException, InterruptedException, URISyntaxException {
 		Document document = new Document();
 		PdfWriter writer;
 		String URL = "";
@@ -373,7 +398,7 @@ public class UPSHTTPClient implements ClientGateway {
 			else{
 				trackingNum = trackingNumber;
 			}
-			filename = filename.replace(ShippingConstants.FILE_PATH, "");
+			filename = filename.replace(ShippingConstants.FILE_PATH, ShippingConstants.File_Path_Replace);
 			path = path.replace(ShippingConstants.FILE_PATH, ShippingConstants.File_Path_Replace);
 			OutputStream out1 = null;
 
@@ -385,22 +410,8 @@ public class UPSHTTPClient implements ClientGateway {
 					out1.close();
 				}
 			}
-
-			File pdfFile = new File(filename);
-			writer = PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
-			document.open();
-			Image barcode = Image.getInstance(decoded);
-			barcode.setBorder(50);
-			barcode.scalePercent(40, 60);
-			document.add(barcode);
-
-			document.close();
-			writer.close();
-			URL = filename;
+			//URL = createInvoicePDF(path, filename);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DocumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -412,7 +423,8 @@ public class UPSHTTPClient implements ClientGateway {
 	 */
 	private void loadProperties(){
 		try {
-			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(ShippingConstants.buildPropertiesPath);
+			File initialFile = new File(ShippingConstants.buildPropertiesPath);
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);			
 			properties.load(inputStream);
 
 		} catch (IOException e) {
@@ -427,5 +439,59 @@ public class UPSHTTPClient implements ClientGateway {
 	    	return accessRequest;
 	    	
 	    }
+	 
+	 public String createInvoicePDF(String imagePath ,String OUTPUT_FILEPATH)
+				throws FileNotFoundException, IOException, DocumentException, InterruptedException, URISyntaxException {
 
+			float currPosition = 0;
+			String sFilepath = OUTPUT_FILEPATH;
+			 Image image = Image.getInstance(imagePath);
+			   //create a paragraph
+			   Paragraph paragraph = new Paragraph();
+			Document d = new Document(PageSize.A4_LANDSCAPE.rotate());
+			PdfWriter w = PdfWriter.getInstance(d, new FileOutputStream(sFilepath));
+			d.open();
+			PdfContentByte cb = w.getDirectContent();
+			ByteArrayOutputStream stampedBuffer;
+			URL resource = this.getClass().getClassLoader().getResource(ShippingConstants.INVOICE_TEMPLATE);
+			File file = new File(resource.toURI());
+			PdfReader templateReader = new PdfReader(new FileInputStream(file));
+			stampedBuffer = new ByteArrayOutputStream();
+			PdfStamper stamper = new PdfStamper(templateReader, stampedBuffer);
+			 stamper.setFormFlattening(true);
+			 AcroFields form = stamper.getAcroFields();
+			 float[] columnWidths = {1f, 1f, 1f, 3f};
+			   //create PDF table with the given widths
+			   PdfPTable table = new PdfPTable(columnWidths);
+	        // form.setField("field1", String.format("Form Text %d", i+1));
+	         form.setField("OBName", "Ragav");
+	         form.setField("OBCompany", "Ragav");
+	         form.setField("OBAddress", "2002 SW Sarazen Cr");
+	         form.setField("OBCity", "Bentonville");
+	         form.setField("OBPhone", "1234567890");
+	         form.setField("STName", "Ragav");
+	         form.setField("STCompany", "Ragav");
+	         form.setField("STAddress", "2002 SW Sarazen Cr");
+	         form.setField("STCity", "Bentonville");
+	         form.setField("STPhone", "1234567890");
+	         form.setField("itemNo", "12334535");
+	         form.setField("itemDesc", "Laundry Bag");
+	         stamper.close();
+	         templateReader.close();
+	         form = null;
+			stamper.close();
+			templateReader.close();
+			PdfReader stampedReader = new PdfReader(stampedBuffer.toByteArray());
+			PdfImportedPage page = w.getImportedPage(stampedReader, 1);
+			cb.addTemplate(page, 0, currPosition);
+			image.scaleAbsoluteHeight(325);
+			image.scaleAbsoluteWidth(550);
+			image.setRotationDegrees(270);
+			image.setAbsolutePosition(450, 20);
+			d.add(image);
+			d.close();
+			w.close();
+
+			return sFilepath;
+		}
 }

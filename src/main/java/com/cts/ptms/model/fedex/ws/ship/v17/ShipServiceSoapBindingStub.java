@@ -1041,7 +1041,7 @@ public class ShipServiceSoapBindingStub extends org.apache.axis.client.Stub impl
 
             qName = new javax.xml.namespace.QName("http://fedex.com/ws/ship/v17", "FreightSpecialServicePayment");
             cachedSerQNames.add(qName);
-            cls = com.cts.ptms.model.fedex.ws.ship.v17.FreightSpecialServicePayment.class;
+           // cls = com.cts.ptms.model.fedex.ws.ship.v17.FreightSpecialServicePayment.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);

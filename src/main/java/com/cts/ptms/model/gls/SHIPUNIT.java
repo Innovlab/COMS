@@ -90,7 +90,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 public class SHIPUNIT {
 
     @XmlElement(name = "CartonNumber", required = true)
-    protected BigInteger cartonNumber;
+    protected String cartonNumber;
     @XmlElement(name = "DistributionCenter", required = true)
     protected BigInteger distributionCenter;
     @XmlElement(name = "OrderKey", required = true)
@@ -152,7 +152,7 @@ public class SHIPUNIT {
      *     {@link BigInteger }
      *     
      */
-    public BigInteger getCartonNumber() {
+    public String getCartonNumber() {
         return cartonNumber;
     }
 
@@ -164,7 +164,7 @@ public class SHIPUNIT {
      *     {@link BigInteger }
      *     
      */
-    public void setCartonNumber(BigInteger value) {
+    public void setCartonNumber(String value) {
         this.cartonNumber = value;
     }
 

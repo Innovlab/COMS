@@ -44,11 +44,13 @@ public class YRCSoapClient implements ClientGateway {
 	public void initialize() {
 		
 		//InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(ShippingConstants.buildPropertiesPath);
-		File initialFile = new File("/home/bdcuser/Config/ups/Integraiton/UPS.properties");
-	    InputStream targetStream;
+		
 		try {
-			targetStream = FileUtils.openInputStream(initialFile);		
-			properties.load(targetStream);
+			
+			File initialFile = new File(ShippingConstants.buildPropertiesPath);
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);			
+			properties.load(inputStream);
+			
 		} catch (IOException e) {			
 			e.printStackTrace();
 		}
@@ -89,8 +91,8 @@ public class YRCSoapClient implements ClientGateway {
 		        
 	       
 		
-		/*System.getProperties().put("https.proxyHost", "proxy.cognizant.com");
-        System.getProperties().put("https.proxyPort", "6050");*/
+//		System.getProperties().put("https.proxyHost", "proxy.cognizant.com");
+//        System.getProperties().put("https.proxyPort", "6050");
 
        
 

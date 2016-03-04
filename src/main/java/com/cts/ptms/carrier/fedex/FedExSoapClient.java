@@ -41,11 +41,11 @@ public class FedExSoapClient implements ClientGateway {
 	{
 		logger.info("Trying to create the shipment.");
 		ProcessShipmentRequest processShipmentRequest = null;
-		ShipmentOrder shipmentOrder = null;
+		ShipmentOrder shipmentOrder = new ShipmentOrder();;
 		try 
 		{
 			FedExMapper fedExMapper = new FedExMapper();
-			shipmentOrder = new ShipmentOrder();
+			
 			shipmentOrder.setCarrier(request.getCarrier());
 			JAXBContext jaxbContext = JAXBContext.newInstance(CreateShipUnits.class);
 			File file = new File(request.getFileName());
@@ -71,10 +71,13 @@ public class FedExSoapClient implements ClientGateway {
 
 		} catch (ShippingException e) {
 		    e.printStackTrace();
+		    shipmentOrder.setStatus("ERROR");
 		    logger.severe("Exception occured at createShipmentRequest()::"+e.getMessage());
+		    
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("Exception occured::"+e);
+			shipmentOrder.setStatus("ERROR");
+			logger.severe("Exception occured at createShipmentRequest()::"+e.getMessage());
 		}
 		return shipmentOrder;
 	}

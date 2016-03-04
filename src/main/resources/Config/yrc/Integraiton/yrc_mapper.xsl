@@ -52,9 +52,7 @@
 							<zip xsi:type="xsd:string">
 								<xsl:value-of select="exsl:node-set($shipper)/ZIPCode/text()" />
 							</zip>
-							<country xsi:type="yrc1:countryCodeList">
-							<xsl:value-of select="exsl:node-set($shipper)/Country/text()" />
-							</country>
+							<country xsi:type="yrc1:countryCodeList">USA</country>
 							<phoneNumber xsi:type="xsd:string"></phoneNumber>
 							<businessID xsi:type="xsd:string" />
 						</shipper>
@@ -75,9 +73,8 @@
 							<zip xsi:type="xsd:string">
 								<xsl:value-of select="exsl:node-set($shipTo)/ZIPCode/text()" />
 							</zip>
-							<country xsi:type="yrc1:countryCodeList">
-							<xsl:value-of select="exsl:node-set($shipTo)/Country/text()" />
-							</country>							
+							<country xsi:type="yrc1:countryCodeList">USA</country>
+														
 							
 							<storeNumber xsi:type="xsd:string">21</storeNumber>
 							<contactName xsi:type="xsd:string">
@@ -104,9 +101,7 @@
 							<zip xsi:type="xsd:string">
 								<xsl:value-of select="exsl:node-set($orderBy)/ZIPCode/text()" />
 							</zip>
-							<country xsi:type="yrc1:countryCodeList">
-							<xsl:value-of select="exsl:node-set(orderBy)/Country/text()" />
-							</country>	
+							<country xsi:type="yrc1:countryCodeList">USA</country>							
 							<phoneNumber xsi:type="xsd:string">
 							<xsl:value-of select="exsl:node-set($orderBy)/PhoneNumber/text()" />
 							</phoneNumber>

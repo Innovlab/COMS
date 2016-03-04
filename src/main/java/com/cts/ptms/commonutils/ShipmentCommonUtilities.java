@@ -3,8 +3,8 @@
  */
 package com.cts.ptms.commonutils;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -120,6 +120,7 @@ public class ShipmentCommonUtilities {
 		return properties;
 	}
 	
+	
 	/**
 	 * Utility for saving the base64 file into a folder.
 	 * @param decoded
@@ -131,20 +132,24 @@ public class ShipmentCommonUtilities {
   	public static void saveBase64DataToLocalFile(byte[] decoded, String trackingNumber, String pathToSave, String docType) 
   			throws IOException 
   	{
-  		OutputStream out1 = null;
+  		FileOutputStream fos = null;
   		try {
+  			System.out.println("byte array length ::"+ decoded.length);
   			StringBuilder stringBuilder = new StringBuilder();
-  			stringBuilder.append(pathToSave).append("/").append(trackingNumber).append(".").append(docType);
-  			//String filename = pathToSave +"/"+ trackingNumber+ShippingConstants.PDF_fILE;
-			out1 = new BufferedOutputStream(new FileOutputStream(stringBuilder.toString()));
-			out1.write(decoded);
+  			String filename = stringBuilder.append(pathToSave).append("/").append(trackingNumber).append(".").append(docType).toString();
+
+  			File labelFile = new File(filename);
+			fos = new FileOutputStream( labelFile );
+			fos.write(decoded);
+			fos.close();
+			
   		} catch (FileNotFoundException e) {
   			System.out.println("Exception occured"+e.getMessage());
   		} catch (Exception e) {
   			System.out.println("Exception occured"+e.getMessage());
   		} finally {
-			if (out1 != null) {
-				out1.close();
+			if (fos != null) {
+				fos.close();
 			}
 		}
 	}

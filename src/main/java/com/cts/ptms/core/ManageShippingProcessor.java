@@ -18,6 +18,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Unmarshaller;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -31,6 +33,7 @@ import com.cts.ptms.model.common.ShipmentOrderDetail;
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentBatchResponse;
 import com.cts.ptms.model.common.ShipmentRequest;
+import com.cts.ptms.model.gls.CreateShipUnits;
 import com.cts.ptms.model.common.ShipmentOrder;
 import com.cts.ptms.model.common.ShipmentOrderDetail;
 import com.cts.ptms.model.common.ShipmentRequest;
@@ -83,6 +86,11 @@ public class ManageShippingProcessor {
 		shipmentRequest.setFileName(ShippingConstants.INPUTFILE);
 		shipmentRequest.setCarrier(carrierName);
 		shipmentRequest.setGenLabel(genLbl);
+		JAXBContext jaxbContext = JAXBContext.newInstance(CreateShipUnits.class);
+		File file = new File(shipmentRequest.getFileName());
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		CreateShipUnits createShipUnits = (CreateShipUnits) jaxbUnmarshaller.unmarshal(file);
+		shipmentRequest.setCreateShipUnits(createShipUnits);
 		ShipmentOrder shipmentResponse = impl.createSingleShipmentOrder(shipmentRequest);
 		System.out.println(shipmentResponse);
 		return shipmentResponse;
@@ -90,7 +98,9 @@ public class ManageShippingProcessor {
 	
 	private void loadProperties(){
 		try {
-			InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(ShippingConstants.buildPropertiesPath);
+			File initialFile = new File(ShippingConstants.buildPropertiesPath);
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);
+			
 			properties.load(inputStream);
 
 		} catch (IOException e) {

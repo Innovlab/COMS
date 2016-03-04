@@ -54,15 +54,15 @@ public class App {
 		
 		ShipmentDocument shipmentDoc1 = new ShipmentDocument();
 		//shipmentDoc1.setDocumentText("DOC CONTENT");
-		shipmentDoc1.setDocumentPath("D:/ptms");
-		shipmentDoc1.setDocumentName("LABEL");
+		shipmentDoc1.setDocumentName("D:/ptms");
+		shipmentDoc1.setDocumentTitle("LABEL");
 		shipmentDoc1.setDocumentType("PDF");
 		shipmentDocList.add(shipmentDoc1);
 		
 		ShipmentDocument shipmentDoc2 = new ShipmentDocument();
 		//shipmentDoc2.setDocumentText("DOC CONTENT");
-		shipmentDoc2.setDocumentPath("D:/ptms/1");
-		shipmentDoc2.setDocumentName("Invoice");
+		shipmentDoc2.setDocumentName("D:/ptms/1");
+		shipmentDoc2.setDocumentTitle("Invoice");
 		shipmentDoc2.setDocumentType("PDF");
 		shipmentDocList.add(shipmentDoc2);
 		

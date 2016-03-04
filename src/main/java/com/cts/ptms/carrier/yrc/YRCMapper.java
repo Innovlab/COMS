@@ -46,10 +46,9 @@ public class YRCMapper {
 
 		String xmlString = "";
 		try {
-			;
-			//InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(ShippingConstants.YRC_INPUT_MAPPER);
-			File initialFile = new File("/home/bdcuser/Config/yrc/Integraiton/yrc_mapper.xsl");
-		    InputStream inputStream = FileUtils.openInputStream(initialFile);		
+			
+			File initialFile = new File(ShippingConstants.YRC_INPUT_MAPPER);
+		    InputStream inputStream = FileUtils.openInputStream(initialFile);	
 			File sourceXml =  new File(sourceXmlFile);
 			File formattedSourceXml = updateDateFormat(sourceXml,sourceXmlFile);
 			TransformerFactory f = TransformerFactory.newInstance();
@@ -64,7 +63,7 @@ public class YRCMapper {
 			Result result = new StreamResult(writer);
 			transformer.transform(source, result);
 			xmlString = writer.toString();	
-			System.out.println(xmlString);
+			
 			
 		} catch (TransformerConfigurationException e) {
 			
@@ -72,10 +71,13 @@ public class YRCMapper {
 		} catch (TransformerException e) {
 			
 			e.printStackTrace();			
-		} catch (IOException e) {
+		} /*catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		} */ catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return xmlString;
 
 	}
@@ -106,9 +108,8 @@ public class YRCMapper {
 			
 			if (status.equalsIgnoreCase("SUCCESS")) {				
 				shipmentOrder.setStatus("SUCCESS");
-				for (String docName : exprList.keySet()) {
-					System.out.println("Key Name: " + docName);
-					switch(docName) {
+				for (String docTitle : exprList.keySet()) {					
+					switch(docTitle) {
 						case "trackingNumber" : {							
 							shipmentOrder.setTrackingNumber(xpath.evaluate(exprList.get("trackingNumber"), document));
 							shipmentOrder.setOrderNumber(xpath.evaluate(exprList.get("trackingNumber"), document));
@@ -117,11 +118,13 @@ public class YRCMapper {
 						case "INVOICE":
 						case "SHIPPINGLABEL":
 						case "BARCODE" : {
-							content = xpath.evaluate(exprList.get(docName), document);
+							content = xpath.evaluate(exprList.get(docTitle), document);
 							ShipmentDocument shipmentDoc = new ShipmentDocument();
-							shipmentDoc.setDocumentText(content);
-							shipmentDoc.setDocumentType(ShippingConstants.PDF_fILE);
-							shipmentDoc.setDocumentName(docName);
+							shipmentDoc.setDocumentContent(content);
+							shipmentDoc.setDocumentType("PDF");
+							shipmentDoc.setDocumentTitle(docTitle);
+							shipmentDoc.setDocumentContentType("STRING");
+							shipmentDoc.setDocumentName("");
 							shipmentDoclist.add(shipmentDoc);							
 							break;
 						}
@@ -151,6 +154,7 @@ public class YRCMapper {
 		} 
 		shipmentOrder.setCarrier("YRC");
 		shipmentOrder.setOrderDate(new Date());
+		System.out.println(shipmentOrder);
 		return shipmentOrder;
 	}
 

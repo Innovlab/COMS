@@ -14,7 +14,6 @@ import java.util.logging.Logger;
 import org.apache.axis.types.NonNegativeInteger;
 import org.apache.axis.types.PositiveInteger;
 
-import com.cts.ptms.commonutils.ShipmentCommonUtilities;
 import com.cts.ptms.exception.shipping.ShippingException;
 import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
@@ -587,27 +586,12 @@ public class FedExMapper {
 		for (int a=0; a < sdparts.length; a++) {
 			ShipmentDocument shipmentDocument = new ShipmentDocument();
 			String imageType = shippingDocument.getImageType().getValue();
-			
 			ShippingDocumentPart sdpart = sdparts[a];
-			byte[] imageArray = sdpart.getImage();
-			String decodedString1 = new String(imageArray, "UTF-8");
-			
-			byte[] decoded = decodedString1.getBytes("UTF8");
-			StringBuilder stringBuilder = new StringBuilder();
-			String labelFileName = stringBuilder.append("E://TestShippingLabelsAndDocuments/").
-					append(trackingNumber).append(".").append(imageType).toString();
-			File labelFile = new File(labelFileName);
-			FileOutputStream fos = new FileOutputStream( labelFile );
-			fos.write(imageArray);
-			fos.close();
-			System.out.println("\nlabel file name " + labelFile.getAbsolutePath());
-			//Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + labelFile.getAbsolutePath());
-			
-			String decodedString = new String(imageArray, "UTF-8");
 			shipmentDocument.setDocumentName(ShippingConstants.SHIPPING_LABEL_DOC);
 			shipmentDocument.setDocumentType(imageType);
 			shipmentDocument.setDocumentContentType(ShippingConstants.DECODED_BYTE_ARRAY);
-			shipmentDocument.setDocumentText(decodedString);	
+			//shipmentDocument.setDocumentText();
+			shipmentDocument.setByteArray(sdpart.getImage());
 			shipmentDocuments.add(shipmentDocument);
 		}
 		shipmentOrder.setShipmentDocuments(shipmentDocuments);

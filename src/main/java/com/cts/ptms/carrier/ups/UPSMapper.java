@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import com.cts.ptms.core.ShipmentServiceImpl;
 //import com.cts.ptms.model.ShipmentConfirmRequest;
 //import com.cts.ptms.model.ShipmentConfirmRequest.Request.TransactionReference;
 //import com.cts.ptms.model.ShipmentConfirmResponse;
@@ -20,6 +21,7 @@ import com.cts.ptms.model.confirm.request.PackageWeightType;
 import com.cts.ptms.model.confirm.request.PackagingTypeType;
 import com.cts.ptms.model.confirm.request.ProductType;
 import com.cts.ptms.model.confirm.request.ProductWeightType;
+import com.cts.ptms.model.confirm.request.ReferenceNumberType;
 import com.cts.ptms.model.confirm.request.ShipmentConfirmRequest;
 import com.cts.ptms.model.confirm.request.SoldToAddressType;
 import com.cts.ptms.model.confirm.request.SoldToType;
@@ -48,10 +50,11 @@ public class UPSMapper {
 			shipRequest.setLabelSpecification(requestObjectFactory.createLabelSpecificationType());
 			shipRequest.setShipment(requestObjectFactory.createShipmentType());
 			shipRequest.getRequest().setTransactionReference(requestObjectFactory.createTransactionReferenceType());
-			shipRequest.getLabelSpecification().setLabelImageFormat(requestObjectFactory.createLabelImageFormatCodeDescriptionType());
-			shipRequest.getLabelSpecification().setLabelPrintMethod(requestObjectFactory.createLabelPrintMethodCodeDescriptionType());
-			
-		
+			shipRequest.getLabelSpecification()
+					.setLabelImageFormat(requestObjectFactory.createLabelImageFormatCodeDescriptionType());
+			shipRequest.getLabelSpecification()
+					.setLabelPrintMethod(requestObjectFactory.createLabelPrintMethodCodeDescriptionType());
+
 		}
 		shipRequest.getRequest().setRequestAction(UPSConstants.REQUEST_TYPE);
 		shipRequest.getRequest().setRequestOption(UPSConstants.VALIDATION_MODE);
@@ -64,7 +67,12 @@ public class UPSMapper {
 		if(null == shipRequest.getShipment().getShipper()){
 			shipRequest.getShipment().setShipper(requestObjectFactory.createShipperType());
 		}
-		SHIPUNIT  shipUnit = createShipUnits.getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT();
+		SHIPUNIT shipUnit = createShipUnits.getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT();
+		ShipmentServiceImpl.itemNumber = shipUnit.getDataXML().getINVOICE().getITEM().getItemNumber().toString();
+		ShipmentServiceImpl.itemDescription = shipUnit.getDataXML().getINVOICE().getITEM().getDescription();
+		ShipmentServiceImpl.plannedShipDate = shipUnit.getDatePlannedShipment();
+		ShipmentServiceImpl.shipmentWeight = shipUnit.getWeight().toString();
+		ShipmentServiceImpl.pkgCnt = shipUnit.getDataXML().getINVOICE().getITEM().getQuantity().toString();
 		List<ADDRESS> addressList = shipUnit.getADDRESS();
 		ADDRESS toAddress =null;
 		for (ADDRESS address : addressList ) {
@@ -76,9 +84,10 @@ public class UPSMapper {
 				shipRequest.getShipment().getShipTo().setCompanyName(address.getIndividualName());
 				shipRequest.getShipment().getShipTo().setAttentionName(address.getIndividualName());
 				shipRequest.getShipment().getShipTo().setPhoneNumber("1234567890");
-				if(null == shipRequest.getShipment().getShipTo().getAddress()){
-					shipRequest.getShipment().getShipTo().setAddress(requestObjectFactory.createShipToAddressType());
-				}
+					if (null == shipRequest.getShipment().getShipTo().getAddress()) {
+						shipRequest.getShipment().getShipTo()
+								.setAddress(requestObjectFactory.createShipToAddressType());
+					}
 				shipRequest.getShipment().getShipTo().getAddress().setAddressLine1(address.getAddress1());
 				shipRequest.getShipment().getShipTo().getAddress().setCity(address.getCity());
 					shipRequest.getShipment().getShipTo().getAddress().setCountryCode(address.getCountry());
@@ -97,9 +106,10 @@ public class UPSMapper {
 				shipRequest.getShipment().getShipFrom().setAttentionName(address.getIndividualName());
 				shipRequest.getShipment().getShipFrom().setPhoneNumber("1234567890");
 				shipRequest.getShipment().getShipFrom().setTaxIdentificationNumber("1234567877");
-				if(null == shipRequest.getShipment().getShipFrom().getAddress()){
-					shipRequest.getShipment().getShipFrom().setAddress(requestObjectFactory.createShipFromAddressType());
-				}
+					if (null == shipRequest.getShipment().getShipFrom().getAddress()) {
+						shipRequest.getShipment().getShipFrom()
+								.setAddress(requestObjectFactory.createShipFromAddressType());
+					}
 				shipRequest.getShipment().getShipFrom().getAddress().setAddressLine1(address.getAddress1());
 				shipRequest.getShipment().getShipFrom().getAddress().setCity(address.getCity());
 				shipRequest.getShipment().getShipFrom().getAddress().setCountryCode("US");
@@ -112,9 +122,10 @@ public class UPSMapper {
 				shipRequest.getShipment().getShipper().setPhoneNumber("1234567890");
 				shipRequest.getShipment().getShipper().setShipperNumber("1801E0");
 				shipRequest.getShipment().getShipper().setTaxIdentificationNumber("1234567877");
-				if(null == shipRequest.getShipment().getShipper().getAddress()){
-					shipRequest.getShipment().getShipper().setAddress(requestObjectFactory.createShipperAddressType());
-				}
+					if (null == shipRequest.getShipment().getShipper().getAddress()) {
+						shipRequest.getShipment().getShipper()
+								.setAddress(requestObjectFactory.createShipperAddressType());
+					}
 				shipRequest.getShipment().getShipper().getAddress().setAddressLine1(address.getAddress1());
 				shipRequest.getShipment().getShipper().getAddress().setCity(address.getCity());
 				shipRequest.getShipment().getShipper().getAddress().setCountryCode("US");
@@ -183,9 +194,10 @@ public class UPSMapper {
 					shipRequest.getShipment().getShipper().setPhoneNumber("1234567890");
 					shipRequest.getShipment().getShipper().setShipperNumber("1801E0");
 					shipRequest.getShipment().getShipper().setTaxIdentificationNumber("1234567877");
-					
-					if(null == shipRequest.getShipment().getShipper().getAddress()){
-						shipRequest.getShipment().getShipper().setAddress(requestObjectFactory.createShipperAddressType());
+
+					if (null == shipRequest.getShipment().getShipper().getAddress()) {
+						shipRequest.getShipment().getShipper()
+								.setAddress(requestObjectFactory.createShipperAddressType());
 					}
 					shipRequest.getShipment().getShipper().getAddress().setAddressLine1(address.getAddress1());
 					shipRequest.getShipment().getShipper().getAddress().setCity(address.getCity());
@@ -195,12 +207,12 @@ public class UPSMapper {
 					}
 				}
 		}
-		
-		
-		if(null == shipRequest.getShipment().getPaymentInformation()){
+
+		if (null == shipRequest.getShipment().getPaymentInformation()) {
 			shipRequest.getShipment().setPaymentInformation(requestObjectFactory.createPaymentInformationType());
 			shipRequest.getShipment().getPaymentInformation().setPrepaid(requestObjectFactory.createPrepaidType());
-			shipRequest.getShipment().getPaymentInformation().getPrepaid().setBillShipper(requestObjectFactory.createBillShipperType());
+			shipRequest.getShipment().getPaymentInformation().getPrepaid()
+					.setBillShipper(requestObjectFactory.createBillShipperType());
 		}
 		shipRequest.getShipment().getPaymentInformation().getPrepaid().getBillShipper().setAccountNumber("1801E0");
 		if(null == shipRequest.getShipment().getService()){
@@ -227,29 +239,39 @@ public class UPSMapper {
 		}
 		
 		shipRequest.getShipment().setDescription("Shipment Description");
-		
-		for (int pkgCount=0; pkgCount < shipRequest.getShipment().getPackage().size();pkgCount++ ){
+		ReferenceNumberType numberType = new ReferenceNumberType();
+		for (int pkgCount = 0; pkgCount < shipRequest.getShipment().getPackage().size(); pkgCount++) {
 			shipRequest.getShipment().getService().setCode(serviceCode);
 			shipRequest.getShipment().getPackage().get(pkgCount).setDescription("Test");
 			shipRequest.getShipment().getPackage().get(pkgCount).getPackagingType().setCode("02");
-//			shipRequest.getShipment().getPackage().get(pkgCount).getReferenceNumber().get(0).setCode("00");
-//			shipRequest.getShipment().getPackage().get(pkgCount).getReferenceNumber().get(0).setValue("Package");
-			shipRequest.getShipment().getPackage().get(pkgCount).getPackageWeight().setWeight(shipUnit.getWeight().toString());
+			if (null != toAddress && !genForms(toAddress)) {
+				numberType = new ReferenceNumberType();
+				numberType.setBarCodeIndicator("1");
+				numberType.setCode("00");
+				numberType.setValue(shipUnit.getCartonNumber());
+				shipRequest.getShipment().getPackage().get(pkgCount).getReferenceNumber().add(numberType);
+			}
+			shipRequest.getShipment().getPackage().get(pkgCount).getPackageWeight()
+					.setWeight(shipUnit.getWeight().toString());
 		}
-		//International Forms
-		if (null != toAddress && genForms(toAddress) && !isGenlabel){
-			
-			
-			
-			shipRequest.getShipment().setShipmentServiceOptions(requestObjectFactory.createShipmentServiceOptionsType());
-			shipRequest.getShipment().getShipmentServiceOptions().setInternationalForms(requestObjectFactory.createInternationalFormsType());
+		// International Forms
+		if (null != toAddress && genForms(toAddress) && !isGenlabel) {
+
+			shipRequest.getShipment()
+					.setShipmentServiceOptions(requestObjectFactory.createShipmentServiceOptionsType());
+			shipRequest.getShipment().getShipmentServiceOptions()
+					.setInternationalForms(requestObjectFactory.createInternationalFormsType());
 			shipRequest.getShipment().setSoldTo(requestObjectFactory.createSoldToType());
 			shipRequest.getShipment().getSoldTo().setAddress(requestObjectFactory.createSoldToAddressType());
-			
-			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().setDiscount(requestObjectFactory.createDiscountType());
-			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().setFreightCharges(requestObjectFactory.createFreightChargesType());
-			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().setInsuranceCharges(requestObjectFactory.createInsuranceChargesType());
-			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().setOtherCharges(requestObjectFactory.createOtherChargesType());
+
+			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms()
+					.setDiscount(requestObjectFactory.createDiscountType());
+			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms()
+					.setFreightCharges(requestObjectFactory.createFreightChargesType());
+			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms()
+					.setInsuranceCharges(requestObjectFactory.createInsuranceChargesType());
+			shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms()
+					.setOtherCharges(requestObjectFactory.createOtherChargesType());
 			
 			shipRequest.getShipment().setDescription("International Shipment");
 			shipRequest.getShipment().getShipper().setAttentionName("Walmart");
@@ -270,10 +292,10 @@ public class UPSMapper {
 			soldTo.setAddress(soldToAddress);
 			shipRequest.getShipment().setSoldTo(soldTo);
 
-			
-		//International Forms
-		InternationalFormsType internationalForms = shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms();
-		List<String> formTypeList = internationalForms.getFormType();
+			// International Forms
+			InternationalFormsType internationalForms = shipRequest.getShipment().getShipmentServiceOptions()
+					.getInternationalForms();
+			List<String> formTypeList = internationalForms.getFormType();
 
 		//Commercial Invoice
 		formTypeList.add("01");
@@ -313,22 +335,28 @@ public class UPSMapper {
 		internationalForms.setReasonForExport("Sale");
 		internationalForms.setComments("Clothing Items");
 		internationalForms.setDeclarationStatement("Declaration Statement");
-		
-		/** **** Discount, FreightCharges, InsuranceCharges, OtherCharges and CurrencyCode  ***** */
-		DiscountType discount = shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().getDiscount();
-		discount.setMonetaryValue("10");
-		internationalForms.setDiscount(discount);
-		FreightChargesType freight = shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().getFreightCharges();
-		freight.setMonetaryValue("50");
-		internationalForms.setFreightCharges(freight);
-		InsuranceChargesType insurance = shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().getInsuranceCharges();
-		insurance.setMonetaryValue("200");
-		internationalForms.setInsuranceCharges(insurance);
-		OtherChargesType otherCharges = shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms().getOtherCharges();
-		otherCharges.setMonetaryValue("50");
-		otherCharges.setDescription("Misc");
-		internationalForms.setOtherCharges(otherCharges);
-		internationalForms.setCurrencyCode("USD");
+			/**
+			 * **** Discount, FreightCharges, InsuranceCharges, OtherCharges and
+			 * CurrencyCode *****
+			 */
+			DiscountType discount = shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms()
+					.getDiscount();
+			discount.setMonetaryValue("10");
+			internationalForms.setDiscount(discount);
+			FreightChargesType freight = shipRequest.getShipment().getShipmentServiceOptions().getInternationalForms()
+					.getFreightCharges();
+			freight.setMonetaryValue("50");
+			internationalForms.setFreightCharges(freight);
+			InsuranceChargesType insurance = shipRequest.getShipment().getShipmentServiceOptions()
+					.getInternationalForms().getInsuranceCharges();
+			insurance.setMonetaryValue("200");
+			internationalForms.setInsuranceCharges(insurance);
+			OtherChargesType otherCharges = shipRequest.getShipment().getShipmentServiceOptions()
+					.getInternationalForms().getOtherCharges();
+			otherCharges.setMonetaryValue("50");
+			otherCharges.setDescription("Misc");
+			internationalForms.setOtherCharges(otherCharges);
+			internationalForms.setCurrencyCode("USD");
 		
 
         //International Forms CO
@@ -337,9 +365,10 @@ public class UPSMapper {
         ContactsType contacts = requestObjectFactory.createContactsType();
         SimpleDateFormat originFormat = new SimpleDateFormat("yyyy-mm-dd");
         SimpleDateFormat targetFormat = new SimpleDateFormat("yyyyMMdd");
-        try {
-                        internationalForms.setExportDate(targetFormat.format(originFormat.parse(shipUnit.getDatePlannedShipment().substring(0, 10))));
-        } catch (ParseException e) {
+			try {
+				internationalForms.setExportDate(
+						targetFormat.format(originFormat.parse(shipUnit.getDatePlannedShipment().substring(0, 10))));
+			} catch (ParseException e) {
                         internationalForms.setExportDate(targetFormat.format(Calendar.getInstance().getTime()));
         }
         
@@ -369,10 +398,11 @@ public class UPSMapper {
 	public ShipmentAcceptRequest populateShipAcceptRequest(ShipmentConfirmResponse shipconfirmResponse) {
 		ShipmentAcceptRequestObjectFactory acceptRequestObjectFactory = new ShipmentAcceptRequestObjectFactory();
 		ShipmentAcceptRequest shipAccept = new ShipmentAcceptRequest();
-		if(null == shipAccept.getRequest()){
+		if (null == shipAccept.getRequest()) {
 			shipAccept.setRequest(acceptRequestObjectFactory.createShipmentAcceptRequestRequest());
-			shipAccept.getRequest().setTransactionReference(acceptRequestObjectFactory.createShipmentAcceptRequestRequestTransactionReference());
-			
+			shipAccept.getRequest().setTransactionReference(
+					acceptRequestObjectFactory.createShipmentAcceptRequestRequestTransactionReference());
+
 		}
 		shipAccept.getRequest().setRequestAction("ShipAccept");
 		shipAccept.getRequest().setRequestOption("1");
@@ -382,11 +412,12 @@ public class UPSMapper {
 	}
 	
 	
-	private boolean genForms(ADDRESS address){
-		if ((address.getCountry().equalsIgnoreCase("US") && (address.getState().equalsIgnoreCase("PR") ||address.getState().equalsIgnoreCase("VI"))) ||
-				(!address.getCountry().equalsIgnoreCase("US"))){
+	private boolean genForms(ADDRESS address) {
+		if ((address.getCountry().equalsIgnoreCase("US")
+				&& (address.getState().equalsIgnoreCase("PR") || address.getState().equalsIgnoreCase("VI")))
+				|| (!address.getCountry().equalsIgnoreCase("US"))) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 	}
