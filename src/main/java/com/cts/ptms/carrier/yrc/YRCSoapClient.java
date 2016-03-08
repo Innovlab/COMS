@@ -91,18 +91,14 @@ public class YRCSoapClient implements ClientGateway {
 		        
 	       
 		
-//		System.getProperties().put("https.proxyHost", "proxy.cognizant.com");
-//        System.getProperties().put("https.proxyPort", "6050");
-
-       
-
-      
+		/*System.getProperties().put("https.proxyHost", "proxy.cognizant.com");
+        System.getProperties().put("https.proxyPort", "6050");*/
+		
 		String inputXmlFileName = request.getFileName();
 		//String inputXmlFileName = "C:/Users/234174/workspace/YRCClient/src/xml_data/source.xml";
 		YRCMapper yrcMapper = new YRCMapper();
-		String xmlPayLoad = yrcMapper.populateYRCSubmitRequest(inputXmlFileName);	
-		
-		System.out.println("Xml Pay Load Value : " + xmlPayLoad);
+		String xmlPayLoad = yrcMapper.populateYRCSubmitRequest(inputXmlFileName);		
+		//System.out.println("Xml Pay Load Value : " + xmlPayLoad);
 
 		Service svc = Service.create(QNAME_SERVICE);
 		svc.addPort(QNAME_PORT, null, ENDPOINT_URL);
@@ -113,15 +109,13 @@ public class YRCSoapClient implements ClientGateway {
 		//dispatch.getRequestContext().put("com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory",ssl_ctx.getSocketFactory());
 		
 		// Invoke the Dispatch
-		System.out.println("Modified code with out proxy");
 		SOAPMessage response = null;
 		try {
 		 response = dispatch.invoke(reqMsg); 
 		} catch (WebServiceException ex) {
 			ex.printStackTrace();
 		}
-		String responseStr = getSOAPMessageAsString(response);	
-		System.out.println("YRC Response=" +  responseStr);
+		String responseStr = getSOAPMessageAsString(response);		
 		ShipmentOrder shipmentResponse = yrcMapper.createShipmentResposeObj(responseStr);
 		return shipmentResponse;
 	}

@@ -105,6 +105,13 @@ public class YRCMapper {
 			System.out.println("Status --" + status);
 			
 			List<ShipmentDocument> shipmentDoclist = new ArrayList<ShipmentDocument>();
+			ShipmentDocument shipmentCODoc = new ShipmentDocument();
+			shipmentCODoc.setDocumentContent(content);
+			shipmentCODoc.setDocumentType("PDF");
+			shipmentCODoc.setDocumentContentType("STRING");
+			shipmentCODoc.setDocumentTitle("CO");
+			shipmentCODoc.setDocumentName("");
+			shipmentDoclist.add(shipmentCODoc);
 			
 			if (status.equalsIgnoreCase("SUCCESS")) {				
 				shipmentOrder.setStatus("SUCCESS");
@@ -125,7 +132,8 @@ public class YRCMapper {
 							shipmentDoc.setDocumentTitle(docTitle);
 							shipmentDoc.setDocumentContentType("STRING");
 							shipmentDoc.setDocumentName("");
-							shipmentDoclist.add(shipmentDoc);							
+							shipmentDoclist.add(shipmentDoc);		
+							
 							break;
 						}
 					}
@@ -183,7 +191,7 @@ public class YRCMapper {
 		exprList.put("INVOICE", "//xsd:base64Binary[@id='ID3']/text()");			
 		exprList.put("SHIPPINGLABEL", "//xsd:base64Binary[@id='ID4']/text()");
 		exprList.put("BARCODE", "//xsd:base64Binary[@id='ID5']/text()");	
-		exprList.put("orderNumber", "//ns2:submitBOLResponse/proNumber/text()");		
+		exprList.put("orderNumber", "//ns2:submitBOLResponse/proNumber/text()");			
 		return exprList;
 		
 	}

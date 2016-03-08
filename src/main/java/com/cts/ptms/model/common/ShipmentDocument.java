@@ -1,6 +1,7 @@
 package com.cts.ptms.model.common;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,33 +33,39 @@ public class ShipmentDocument implements Serializable {
 	private String documentType;
 	@Column(name="DOCUMENT_PATH",length = 300, nullable = false)
 	private String documentName;
+	
+	@Transient
+	private String documentPath;
 	@Transient
 	private String documentContentType;
 	@Transient
 	private String documentContent;
 	@Transient
-	private byte[] byteArray;
+	private byte[] byteArray;	
 	
-	public byte[] getByteArray() {
-		return byteArray;
-	}
-	public void setByteArray(byte[] byteArray) {
-		this.byteArray = byteArray;
-	}
 	@ManyToOne
 	//@JoinColumn(name = "SHIPMENT_ORDER_ID",updatable = false, insertable = true) 
 	private ShipmentOrder shipmentOrder;
 	
-	@Override
-	public String toString() {
-		return "ShipmentDocument [id=" + id + ", documentName=" + documentTitle + ", documentType=" + documentType
-				+ ", documentPath=" + documentName + ", shipmentOrder=" + shipmentOrder + "]";
+	
+	public String getDocumentPath() {
+		return documentPath;
+	}
+	public void setDocumentPath(String documentPath) {
+		this.documentPath = documentPath;
 	}
 	public ShipmentOrder getShipmentOrder() {
 		return shipmentOrder;
 	}
 	public void setShipmentOrder(ShipmentOrder shipmentOrder) {
 		this.shipmentOrder = shipmentOrder;
+	}
+	@Override
+	public String toString() {
+		return "ShipmentDocument [id=" + id + ", documentTitle=" + documentTitle + ", documentType=" + documentType
+				+ ", documentName=" + documentName + ", documentPath=" + documentPath + ", documentContentType="
+				+ documentContentType + ", documentContent=" + documentContent + ", byteArray="
+				+ Arrays.toString(byteArray) + ", shipmentOrder=" + shipmentOrder + "]";
 	}
 	public long getId() {
 		return id;
@@ -81,8 +88,8 @@ public class ShipmentDocument implements Serializable {
 	public String getDocumentName() {
 		return documentName;
 	}
-	public void setDocumentName(String documentFileName) {
-		this.documentName = documentFileName;
+	public void setDocumentName(String documentName) {
+		this.documentName = documentName;
 	}
 	public String getDocumentContent() {
 		return documentContent;
@@ -102,7 +109,12 @@ public class ShipmentDocument implements Serializable {
 	public void setDocumentContentType(String documentContentType) {
 		this.documentContentType = documentContentType;
 	}
-	
+	public byte[] getByteArray() {
+		return byteArray;
+	}
+	public void setByteArray(byte[] byteArray) {
+		this.byteArray = byteArray;
+	}
 	
 	
 	

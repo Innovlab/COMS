@@ -38,7 +38,6 @@ import com.cts.ptms.model.common.ShipmentOrder;
 import com.cts.ptms.model.common.ShipmentOrderDetail;
 import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
 import com.cts.ptms.model.common.TrackingDetails;
-import com.cts.ptms.utils.CommonUtil;
 import com.cts.ptms.utils.ShipmentUtils;
 import com.cts.ptms.utils.constants.ShippingConstants;
 import com.itextpdf.text.Document;
@@ -84,13 +83,13 @@ public class ShipmentServiceImpl implements ShipmentService {
 		initializeService(shipmentRequest.getCarrier());
 		ShipmentOrder shipmentOrder = clientShipmentService.createShipment(shipmentRequest);
 		shipmentOrder = saveShipmentDocuments(shipmentOrder);
-		shipmentOrder.setCarrier("YRC");
+		shipmentOrder.setCarrier(shipmentRequest.getCarrier());
 		System.out.println("'Shipment Order:" + shipmentOrder);
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		/*ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
 		shipmentServiceDAO.saveShipmentOrder(shipmentOrder);
 		System.out.println(shipmentOrder);
-		context.close();
+		context.close();*/
 		return shipmentOrder;
 
 	}
@@ -145,52 +144,81 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 		List<ShipmentDocument> shipmentDocumentList = shipmentOrder.getShipmentDocuments();
 			
-		String targetDir = ShippingConstants.OUTPUT_DIR;
+		//String targetDir = ShippingConstants.OUTPUT_DIR;
 		String imgFileName = null;
 		String  documentContent="";
-		
+		String targetDir = new UPSHTTPClient().getClass().getClassLoader().getResource("").getPath();
+		targetDir = targetDir.replace(ShippingConstants.FILE_PATH, ShippingConstants.File_Path_Replace);
 		for (ShipmentDocument shipmentDocument : shipmentDocumentList) {
-			String  outputFileName=CommonUtil.getDcoumentName(shipmentDocument.getDocumentTitle(), shipmentOrder.getCarrier(), shipmentDocument.getDocumentType(), shipmentOrder.getTrackingNumber());
-			byte[] decodedBytes = Base64.getDecoder().decode((String)shipmentDocument.getDocumentContent());
+			String  outputFileName=getDcoumentName(shipmentDocument.getDocumentTitle(), shipmentOrder.getCarrier(), shipmentDocument.getDocumentType(), shipmentOrder.getTrackingNumber());
 			System.out.println("Target Dir1:" + targetDir);
 			switch (shipmentDocument.getDocumentTitle()) {
 			
 				case "SHIPPINGLABEL" :  {
 					try {
 						// For shipping label if the output is pdf it needs to saved as png;
-						if(shipmentDocument.getDocumentType().equalsIgnoreCase("PDF")) {						
+						if(shipmentDocument.getDocumentType().equalsIgnoreCase("PDF")) {	
+							byte[] decodedBytes = Base64.getDecoder().decode((String)shipmentDocument.getDocumentContent());
 							imgFileName = convertPdfToImg( decodedBytes,outputFileName,targetDir);	
 							imgFileName = outputFileName;							
 						} else {
-							imgFileName = shipmentDocument.getDocumentName();
+							String path = targetDir+outputFileName;
+							File outputFile = new File(path);
+							byte[] decoded = null;
+							String documentContentType = shipmentDocument.getDocumentContentType();
+							if (null != shipmentDocument.getDocumentContent()) {
+								decoded = Base64.getDecoder().decode(shipmentDocument.getDocumentContent());
+							} else if (documentContentType != null && documentContentType.equals(ShippingConstants.DECODED_BYTE_ARRAY)) {
+								decoded = shipmentDocument.getByteArray();
+							}
+							FileUtils.writeByteArrayToFile(outputFile, decoded); 
+							imgFileName = outputFileName;
+							imgFileName = imgFileName.replace(".png", ".pdf");
 						}
 						String pdfFileName = createInvoicePDF(imgFileName,targetDir, shipmentOrder);
-						documentContent = encodeFileToBase64Binary(pdfFileName);
+						documentContent = encodeFileToBase64Binary(targetDir+pdfFileName);
 						documentContent = "data:application/pdf;base64," + documentContent;
 						shipmentDocument.setDocumentType("PDF");
+						shipmentDocument.setDocumentName(imgFileName);
 						shipmentDocument.setDocumentContent(documentContent);
 						
 					} catch (IOException | DocumentException | InterruptedException | URISyntaxException e) {						
 						e.printStackTrace();
-					}						
+					}
+					break;
 				}
 				
 				case "CO" : {
 					try {
-						shipmentDocument.setDocumentName(createCOPDF(outputFileName, shipmentOrder));
-						documentContent = encodeFileToBase64Binary(shipmentDocument.getDocumentName());
+						createCOPDF(targetDir+outputFileName, shipmentOrder);
+						shipmentDocument.setDocumentName(outputFileName);
+						documentContent = encodeFileToBase64Binary(targetDir+outputFileName);
 						documentContent = "data:application/pdf;base64," + documentContent;
 						shipmentDocument.setDocumentContent(documentContent);
 						
 					} catch (IOException | DocumentException | InterruptedException | URISyntaxException e) {						
 						e.printStackTrace();
 					}
+					break;
 				}
 				
 			}
 		}				
 		
 		return shipmentOrder;
+	}
+
+	private String getDcoumentName(String documentTitle, String carrier, String documentType, String trackingNumber) {
+		StringBuilder documentName  = new StringBuilder();
+		documentName.append(carrier);
+		documentName.append("_");
+		documentName.append(documentTitle);
+		documentName.append("_");
+		documentName.append(trackingNumber);
+		documentName.append(".");
+		documentName.append(documentType.toLowerCase());
+		
+		return documentName.toString();
 	}
 
 	public String createInvoicePDF(String imagePath, String targetDir,ShipmentOrder shipmentOrder)
@@ -200,10 +228,12 @@ public class ShipmentServiceImpl implements ShipmentService {
 		imagePath = imagePath.replace(".pdf", ".png");
 		String sFilepath = targetDir + imagePath;
 		Image image = Image.getInstance(sFilepath);
+		imagePath = imagePath.replace(".png", ".pdf");
+		
 		// create a paragraph
 		Paragraph paragraph = new Paragraph();
 		Document d = new Document(PageSize.A4_LANDSCAPE.rotate());
-		PdfWriter w = PdfWriter.getInstance(d, new FileOutputStream(sFilepath));
+		PdfWriter w = PdfWriter.getInstance(d, new FileOutputStream(targetDir+imagePath));
 		d.open();
 		PdfContentByte cb = w.getDirectContent();
 		ByteArrayOutputStream stampedBuffer;
@@ -259,7 +289,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		d.close();
 		w.close();
 
-		return sFilepath;
+		return imagePath;
 	}
 
 	public String createCOPDF(String OUTPUT_FILEPATH, ShipmentOrder shipmentOrder)

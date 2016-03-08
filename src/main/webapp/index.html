@@ -193,7 +193,7 @@
 					<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 							ng-show="shipLbl">
-							<embed ng-src="{{labelSrc}}" width="900" height="600"
+							<embed src="{{labelSrc}}" width="900" height="600"
 								type='application/pdf'>
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
@@ -202,7 +202,7 @@
 						</div>
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 							ng-show="showInv">
-							<embed ng-src="{{COESrc}}" width="900" height="600"
+							<embed src="{{COESrc}}" width="900" height="600"
 								type='application/pdf'>
 						</div>
 					</div>
@@ -352,6 +352,9 @@
 							}, {
 								id : 'YRC',
 								name : 'YRC'
+							}, {
+								id : 'FEDEX',
+								name : 'FEDEX'
 							}, ],
 							selectedOption : {
 								id : 'UPS',
@@ -392,9 +395,12 @@
 									id : 'UPS',
 									name : 'UPS'
 								}, {
+									id : 'FEDEX',
+									name : 'FEDEX'
+								},  {
 									id : 'YRC',
 									name : 'YRC'
-								}, ],
+								}],
 								selectedOption : {
 									id : 'UPS',
 									name : 'UPS'
@@ -480,11 +486,15 @@
 																+ ".png";
 													}
 													for ( var shipmentdoc in $scope.response.shipmentDocuments) {
-														if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "CO") {
-															$scope.COESrc = $scope.response.shipmentDocuments[shipmentdoc].documentContent;
+														if ($scope.response.shipmentDocuments[shipmentdoc].documentTitle == "CO") {
+															$scope.COESrc = str
+																	+ "/ShipLabels/"
+																	+ $scope.response.shipmentDocuments[shipmentdoc].documentName;
 														}
-														if ($scope.response.shipmentDocuments[shipmentdoc].documentName == "SHIPPINGLABEL") {
-															$scope.labelSrc =  $scope.response.shipmentDocuments[shipmentdoc].documentContent;
+														if ($scope.response.shipmentDocuments[shipmentdoc].documentTitle == "SHIPPINGLABEL") {
+															$scope.labelSrc = str
+																	+ "/ShipLabels/"
+																	+ $scope.response.shipmentDocuments[shipmentdoc].documentName;
 														}
 													}
 

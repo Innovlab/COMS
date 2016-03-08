@@ -7,22 +7,25 @@ package com.cts.ptms.utils.constants;
  */
 public class ShippingConstants {
 	
-	/* // Path setting for tomcat server in azure
-	 public static final String buildPropertiesPath="/home/bdcuser/Config/ups/Integraiton/UPS.properties";
-	 public static final String YRC_INPUT_MAPPER="/home/bdcuser/Config/ups/Integraiton/yrc_mapper.xsl";
-	 public static final String INPUTFILE="/home/bdcuser/input";
-     public static final String INVOICE_TEMPLATE="/home/bdcuser/Config/ups/common/invoice.pdf";
-     public static final String CO_TEMPLATE="/home/bdcuser/Config/ups/common/COTemplate.pdf";
-     public static final String OUTPUT_DIR="/home/bdcuser/Output/";*/
+	 // Path setting for tomcat server in azure
+	 public static final String buildPropertiesPath="/home/bdcuser/COMS_ENV/Config/ups/Integraiton/UPS.properties";
+	 public static final String YRC_INPUT_MAPPER="/home/bdcuser/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
+	 public static final String INPUTFILE="/home/bdcuser/COMS_ENV/input";
+     public static final String INVOICE_TEMPLATE="/home/bdcuser/COMS_ENV/Config/ups/common/invoice.pdf";
+     public static final String CO_TEMPLATE="/home/bdcuser/COMS_ENV/Config/ups/common/COTemplate.pdf";
+     public static final String OUTPUT_DIR="/home/bdcuser/COMS_ENV/Output/";
+     public static  final String TEST_DOCUMENT_LOCATION="/home/bdcuser/COMS_ENV/Test/documents_location.properties";
+   
+	
 
-	 // Path setting for local tomcat
+	 /*// Path setting for local tomcat
 	 public static final String buildPropertiesPath="D:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
 	 public static final String YRC_INPUT_MAPPER="D:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
 	 public static final String INPUTFILE="D:/COMS_ENV/inputData.xml";
 	 public static final String INVOICE_TEMPLATE="D:/COMS_ENV/Config/ups/common/invoice.pdf";
      public static final String CO_TEMPLATE="D:/COMS_ENV/Config/ups/common/COTemplate.pdf";
      public static final String OUTPUT_DIR="D:/COMS_ENV/Output/";
-     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";
+     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";*/
 	    
 	
 	public static final String SHIPPING_CONFIRM_URL	= "shipConfirmURL";
@@ -53,8 +56,9 @@ public class ShippingConstants {
     public static  final String FEDEX = "FEDEX";
     public static final String DECODED_BYTE_ARRAY = "DECODED_BYTE_ARRAY";
     public static final String DECODED_FORMAT = "UTF-8";
-    public static final String SHIPPING_LABEL_DOC = "";
+    public static final String SHIPPING_LABEL_DOC = "SHIPPINGLABEL";
   //Status codes
     public static final String SUCCESS = "SUCCESS";
+    public static final String ERROR = "ERROR";
 }
 

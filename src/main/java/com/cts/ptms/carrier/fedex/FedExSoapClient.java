@@ -20,6 +20,7 @@ import com.cts.ptms.model.fedex.ws.ship.v17.ProcessShipmentRequest;
 import com.cts.ptms.model.fedex.ws.ship.v17.ShipPortType;
 import com.cts.ptms.model.fedex.ws.ship.v17.ShipServiceLocator;
 import com.cts.ptms.model.gls.CreateShipUnits;
+import com.cts.ptms.utils.constants.ShippingConstants;
 
 /**
  * @author 417765
@@ -51,7 +52,7 @@ public class FedExSoapClient implements ClientGateway {
 			File file = new File(request.getFileName());
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			CreateShipUnits createShipUnits = (CreateShipUnits) jaxbUnmarshaller.unmarshal(file);
-			processShipmentRequest = fedExMapper.mapRequestToCarrierInput(createShipUnits);
+			processShipmentRequest = fedExMapper.mapRequestToCarrierInput(createShipUnits, shipmentOrder);
 			
 			// Initialize the service
 			ShipServiceLocator service;
@@ -71,12 +72,12 @@ public class FedExSoapClient implements ClientGateway {
 
 		} catch (ShippingException e) {
 		    e.printStackTrace();
-		    shipmentOrder.setStatus("ERROR");
+		    shipmentOrder.setStatus(ShippingConstants.ERROR);
 		    logger.severe("Exception occured at createShipmentRequest()::"+e.getMessage());
 		    
 		} catch (Exception e) {
 			e.printStackTrace();
-			shipmentOrder.setStatus("ERROR");
+			shipmentOrder.setStatus(ShippingConstants.ERROR);
 			logger.severe("Exception occured at createShipmentRequest()::"+e.getMessage());
 		}
 		return shipmentOrder;

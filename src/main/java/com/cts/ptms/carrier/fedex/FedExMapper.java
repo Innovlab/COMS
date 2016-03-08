@@ -14,9 +14,15 @@ import java.util.logging.Logger;
 import org.apache.axis.types.NonNegativeInteger;
 import org.apache.axis.types.PositiveInteger;
 
+import com.cts.ptms.core.ShipmentServiceImpl;
 import com.cts.ptms.exception.shipping.ShippingException;
 import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
+import com.cts.ptms.model.confirm.request.ShipFromAddressType;
+import com.cts.ptms.model.confirm.request.ShipFromType;
+import com.cts.ptms.model.confirm.request.ShipToAddressType;
+import com.cts.ptms.model.confirm.request.ShipToType;
+import com.cts.ptms.model.confirm.request.ShipmentType;
 import com.cts.ptms.model.fedex.ws.ship.v17.Address;
 import com.cts.ptms.model.fedex.ws.ship.v17.AssociatedShipmentDetail;
 import com.cts.ptms.model.fedex.ws.ship.v17.ClientDetail;
@@ -82,23 +88,30 @@ public class FedExMapper {
 	 * @return
 	 * @throws ShippingException
 	 */
-	public ProcessShipmentRequest mapRequestToCarrierInput(CreateShipUnits createShipUnits) throws ShippingException{
+	public ProcessShipmentRequest mapRequestToCarrierInput(CreateShipUnits createShipUnits, ShipmentOrder shipmentOrder) throws ShippingException{
 		
 		ProcessShipmentRequest processShipmentRequest  = null;
 		try {
-			
+			logger.info("mapRequestToCarrierInput-->"+createShipUnits);
 			processShipmentRequest = new ProcessShipmentRequest();
 			
 			processShipmentRequest.setClientDetail(createClientDetail());
 			processShipmentRequest.setWebAuthenticationDetail(createWebAuthenticationDetail());
 			
-			
+			logger.info("Authentication completed..");
 			if (createShipUnits == null) {
 				logger.severe("Ship units are empty");
 				throw new ShippingException("Ship units are empty");
 			}
 			
 			SHIPUNIT  shipUnit = createShipUnits.getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT();
+			logger.info("Ship unit details are ::"+shipUnit);
+			ShipmentServiceImpl.itemNumber = shipUnit.getDataXML().getINVOICE().getITEM().getItemNumber().toString();
+			ShipmentServiceImpl.itemDescription = shipUnit.getDataXML().getINVOICE().getITEM().getDescription();
+			ShipmentServiceImpl.plannedShipDate = shipUnit.getDatePlannedShipment();
+			ShipmentServiceImpl.shipmentWeight = shipUnit.getWeight().toString();
+			ShipmentServiceImpl.pkgCnt = shipUnit.getDataXML().getINVOICE().getITEM().getQuantity().toString();
+			logger.info("Captured all service impl details");
 			RequestedShipment requestedShipment = new RequestedShipment();
 			
 		    TransactionDetail transactionDetail = new TransactionDetail();
@@ -119,16 +132,20 @@ public class FedExMapper {
 		    requestedShipment.setPackagingType(PackagingType.YOUR_PACKAGING); // Packaging type FEDEX_BOX, FEDEX_PAK, FEDEX_TUBE, YOUR_PACKAGING, ...
 		    
 		    List<ADDRESS> addressList = shipUnit.getADDRESS();
+		    logger.info("Trying to set all address..");
+		    ShipmentType shipmentTypeDO = new ShipmentType();
 			for (ADDRESS address : addressList ) {
 				String addressType = address.getClazz();
 				if(addressType.equals(UPSConstants.DELIVER_TO)) {
-					requestedShipment.setRecipient(addRecipient(address));
+					requestedShipment.setRecipient(addRecipient(address, shipmentTypeDO));
 				} else if(addressType.equals(UPSConstants.ORDERED_BY)) {
 					//shipFromAddress = address;
 				} else if(addressType.equals(UPSConstants.RETURN)) {
-					 requestedShipment.setShipper(addShipper(address));
+					 requestedShipment.setShipper(addShipper(address, shipmentTypeDO));
 				}
 			}
+			logger.info("Set All address..");
+			shipmentOrder.setShipmentTypeDO(shipmentTypeDO);
 			requestedShipment.setShippingChargesPayment(addShippingChargesPayment("510087224"));
 		    requestedShipment.setLabelSpecification(addLabelSpecification());
 	        //At present considering only one item.
@@ -136,6 +153,8 @@ public class FedExMapper {
 		    requestedShipment.setRequestedPackageLineItems(new RequestedPackageLineItem[] {addRequestedPackageLineItem(shipUnit)}); 
 	        //
 		    processShipmentRequest.setRequestedShipment(requestedShipment);
+		    
+		    logger.info("Created complete Request::");
 		} catch (Exception e) {
 			logger.severe("Exception occured at : "+e.getClass().getName());
 			throw new ShippingException(e.getMessage());
@@ -407,22 +426,42 @@ public class FedExMapper {
 	 * @param shprAddress
 	 * @return
 	 */
-	public  Party addShipper(ADDRESS shprAddress) {
+	public  Party addShipper(ADDRESS shprAddress, ShipmentType shipmentTypeDO) {
 		
 	    Party shipperParty = new Party(); // Sender information
 	    Contact shipperContact = new Contact();
+	    ShipFromType shipFrom = new ShipFromType();
+	    ShipFromAddressType shipFromAddressType = new ShipFromAddressType();
 	    try {
 		    shipperContact.setPersonName(shprAddress.getIndividualName());
+		    shipFrom.setAttentionName(shprAddress.getIndividualName());
 		    //shipperContact.setCompanyName("Sender Company Name");
 		    shipperContact.setPhoneNumber(shprAddress.getPhoneNumber().toString());
+		    shipFrom.setPhoneNumber(shprAddress.getPhoneNumber().toString());
+		    
 		    Address shipperAddress = new Address();
 		    shipperAddress.setStreetLines(new String[] {shprAddress.getAddress1(), shprAddress.getAddress2()});
+		    shipFromAddressType.setAddressLine1(shprAddress.getAddress1());
+		    shipFromAddressType.setAddressLine1(shprAddress.getAddress2());
+		    
 		    shipperAddress.setCity(shprAddress.getCity());
+		    shipFromAddressType.setCity(shprAddress.getCity());
+		    
 		    shipperAddress.setStateOrProvinceCode(shprAddress.getState());
+		    shipFromAddressType.setStateProvinceCode(shprAddress.getState());
+		    
 		    shipperAddress.setPostalCode(shprAddress.getZIPCode().toString());
-		    shipperAddress.setCountryCode(shprAddress.getCountry());	    
+		    shipFromAddressType.setPostalCode(shprAddress.getZIPCode().toString());
+		    
+		    shipperAddress.setCountryCode(shprAddress.getCountry());
+		    shipFromAddressType.setCountryCode(shprAddress.getZIPCode().toString());
+		    
 		    shipperParty.setContact(shipperContact);
 		    shipperParty.setAddress(shipperAddress);
+		    
+		    shipFrom.setAddress(shipFromAddressType);
+		    shipmentTypeDO.setShipFrom(shipFrom);
+		    
 	    } catch (Exception e) {
 	    	logger.severe("Exception occured in addShipper()::"+e.getMessage());
 	    	throw new ShippingException("Exception occured in addShipper()::"+e.getMessage());
@@ -434,21 +473,44 @@ public class FedExMapper {
 	 * @param shipToAddress
 	 * @return
 	 */
-	public  Party addRecipient(ADDRESS shipToAddress){
+	public  Party addRecipient(ADDRESS shipToAddress, ShipmentType shipmentTypeDO) {
 	    Party recipientParty = new Party(); // Recipient information
 	    Contact recipientContact = new Contact();
+	    ShipToType shipTo = new ShipToType();
+	    
 	    recipientContact.setPersonName(shipToAddress.getIndividualName());
+	    shipTo.setCompanyName(shipToAddress.getIndividualName());
+	    shipTo.setPhoneNumber(shipToAddress.getPhoneNumber().toString());
+	    
 	    //recipientContact.setCompanyName("Recipient Company Name");
 	    recipientContact.setPhoneNumber(shipToAddress.getPhoneNumber().toString());
+	    
 	    Address recipientAddress = new Address();
+	    ShipToAddressType shipToAddressType = new ShipToAddressType();
+	    
 	    recipientAddress.setStreetLines(new String[] {shipToAddress.getAddress1()});
+	    shipToAddressType.setAddressLine1(shipToAddress.getAddress1());
+	    
+	    
 	    recipientAddress.setCity(shipToAddress.getCity());
+	    shipToAddressType.setCity(shipToAddress.getCity());
+	    
 	    recipientAddress.setStateOrProvinceCode(shipToAddress.getState());
+	    shipToAddressType.setStateProvinceCode(shipToAddress.getState());
+	    
 	    recipientAddress.setPostalCode(shipToAddress.getZIPCode().toString());
+	    shipToAddressType.setPostalCode(shipToAddress.getZIPCode().toString());
+	    
 	    recipientAddress.setCountryCode(shipToAddress.getCountry());
-	    recipientAddress.setResidential(Boolean.valueOf(true));	    
+	    shipToAddressType.setStateProvinceCode(shipToAddress.getCountry());
+	    
+	    recipientAddress.setResidential(Boolean.valueOf(false));	    
 	    recipientParty.setContact(recipientContact);
 	    recipientParty.setAddress(recipientAddress);
+	    
+	    shipTo.setAddress(shipToAddressType);
+	    shipmentTypeDO.setShipTo(shipTo);
+	    
 	    return recipientParty;
 	}
 	/**
@@ -587,13 +649,17 @@ public class FedExMapper {
 			ShipmentDocument shipmentDocument = new ShipmentDocument();
 			String imageType = shippingDocument.getImageType().getValue();
 			ShippingDocumentPart sdpart = sdparts[a];
-			shipmentDocument.setDocumentName(ShippingConstants.SHIPPING_LABEL_DOC);
+			shipmentDocument.setDocumentTitle(ShippingConstants.SHIPPING_LABEL_DOC);
 			shipmentDocument.setDocumentType(imageType);
 			shipmentDocument.setDocumentContentType(ShippingConstants.DECODED_BYTE_ARRAY);
 			//shipmentDocument.setDocumentText();
 			shipmentDocument.setByteArray(sdpart.getImage());
 			shipmentDocuments.add(shipmentDocument);
 		}
+		ShipmentDocument shipmentDocument = new ShipmentDocument();
+		shipmentDocument.setDocumentTitle("CO");
+		shipmentDocument.setDocumentType("PDF");
+		shipmentDocuments.add(shipmentDocument);
 		shipmentOrder.setShipmentDocuments(shipmentDocuments);
 		shipmentOrder.setTrackingNumber(trackingNumber);
 	}

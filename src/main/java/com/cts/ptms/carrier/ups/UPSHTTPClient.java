@@ -140,7 +140,7 @@ public class UPSHTTPClient implements ClientGateway {
 					null!=acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage()){
 				ShipmentDocument document = new ShipmentDocument();
 					document.setDocumentTitle("SHIPPINGLABEL");
-				document.setDocumentType(acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage().getLabelImageFormat().getCode());
+				document.setDocumentType("png");
 				document.setDocumentContent(acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage().getGraphicImage());		
 				response.getShipmentDocuments().add(document);
 			}
@@ -262,8 +262,8 @@ public class UPSHTTPClient implements ClientGateway {
 		try {
 
 			URL url = new URL(serviceUrl);
-		//	System.getProperties().put("https.proxyHost", "proxy.cognizant.com");
-	     //   System.getProperties().put("https.proxyPort", "6050"); 
+			//System.getProperties().put("https.proxyHost", "proxy.cognizant.com");
+	       // System.getProperties().put("https.proxyPort", "6050"); 
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		//	connection.setRequestProperty("User-Agent", "Mozilla/4.5");
 			connection.setDoOutput(true);
