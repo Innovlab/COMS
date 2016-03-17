@@ -8,7 +8,7 @@
 	<name>COMS</name>
 	<description>Cognizant Shipment Order Management Solutions		</description>
 	<dependencies>
-		
+
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-bundle</artifactId>
@@ -96,14 +96,25 @@
 		<!-- Hibernate 4.3.6 JPA support -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>1.0.1.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>4.3.6.Final</version>
-			<exclusions>
-				<exclusion>
-					<groupId>dom4j</groupId>
-					<artifactId>dom4j</artifactId>
-				</exclusion>
-			</exclusions>
+			<version>4.2.0.Final</version>
 		</dependency>
 
 		<dependency>
@@ -187,6 +198,22 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mailapi</artifactId>
 			<version>1.4.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.milyn</groupId>
+			<artifactId>milyn-smooks-javabean</artifactId>
+			<version>1.5.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xercesImpl</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>xerces</groupId>
+					<artifactId>xmlParserAPIs</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<!-- Axis JARS -->
 	</dependencies>

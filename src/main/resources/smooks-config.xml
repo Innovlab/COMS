@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<smooks-resource-list xmlns="http://www.milyn.org/xsd/smooks-1.1.xsd" xmlns:jb="http://www.milyn.org/xsd/smooks/javabean-1.2.xsd">
+
+   
+   <!--  <jb:bean beanId="YRCTrackingDetail" class="com.cts.YRCTrackingDetail" createOnElement="YRCTrackingDetail">         
+      <jb:wiring property="shipmentStatusList" beanIdRef="shipmentStatusList" />
+    </jb:bean>
+     -->
+     
+   
+
+    <!--
+    Create an ArrayList bean instance when we visit the start of the <order> element.
+    This bean is wired into the "order" bean.
+    -->
+    <jb:bean beanId="Shipments" class="com.cts.ptms.model.yrc.Shipments" createOnElement="SHIPMENTS">
+        <jb:wiring property="shipment" beanIdRef="shipment" />
+    </jb:bean>
+
+    
+
+    <!--
+    Create an "example.beans.OrderItem" bean instance when we visit the start of the <order-item> element.
+    This bean is wired into the "orderItems" ArrayList bean.
+    -->
+    <jb:bean beanId="shipment" class="com.cts.ptms.model.yrc.Shipment" createOnElement="SHIPMENTS">
+        <jb:value property="returnCode" decoder="String" data="SHIPMENT/returnCode" />
+        <jb:value property="returnMessage" decoder="String" data="SHIPMENT/returnMessage" />
+        <jb:value property="freightBillNumber" decoder="String" data="SHIPMENT/freightBillNumber" />
+        <jb:value property="referenceNumber" decoder="String" data="SHIPMENT/referenceNumber" />
+        <jb:value property="originCity" decoder="String" data="SHIPMENT/originCity" />
+        <jb:value property="originState" decoder="String" data="SHIPMENT/originState" />
+        <jb:value property="originZip" decoder="String" data="SHIPMENT/originZip" />
+        <jb:value property="destinationCity" decoder="String" data="SHIPMENT/destinationCity" />
+        <jb:value property="destinationState" decoder="String" data="SHIPMENT/destinationState" />
+        <jb:value property="destinationZip" decoder="String" data="SHIPMENT/destinationZip" />
+        <jb:value property="pickupDate" decoder="String" data="SHIPMENT/pickupDate" />
+        <jb:value property="deliveredDate" decoder="String" data="SHIPMENT/deliveredDate" />
+        <jb:value property="tenderCode" decoder="String" data="SHIPMENT/tenderCode" />
+        <jb:value property="currentStatusCode" decoder="String" data="SHIPMENT/currentStatusCode" />
+        <jb:value property="currentStatusDate" decoder="String" data="SHIPMENT/currentStatusDate" />
+        <jb:value property="currentStatusMessage" decoder="String" data="SHIPMENT/currentStatusMessage" />
+        <jb:value property="estimatedDeliveryDate" decoder="String" data="SHIPMENT/estimatedDeliveryDate" />
+    </jb:bean>
+
+</smooks-resource-list>

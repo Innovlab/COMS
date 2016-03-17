@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +69,30 @@ public class ShipmentServiceDAO {
 	
 	public ShipmentOrderDetail getShipmentOrder (ShipmentOrderDetailRequest ShipmentOrderDetailRequest) {
 		return null;
+		
+	}
+	
+	public String getCarrierName(String trackingNumber)  {
+		String carrierName="UPS";
+		System.out.println("Tracking Numer" + trackingNumber);
+		TypedQuery<String> query = em.createQuery("SELECT so.carrier FROM ShipmentOrder so where so.trackingNumber=:arg1", String.class);
+		query.setParameter("arg1", trackingNumber);
+		List<String> carrierNames = query.getResultList();
+		if (carrierNames==null||carrierNames.size()==0) {
+		  carrierName = "UPS";
+		} else {
+		  carrierName = carrierNames.get(0);
+		}
+			 
+			  if (carrierName==null ||  carrierName.trim().equals("")) {				  
+					
+				  carrierName = "UPS";
+			  }
+		
+		 return carrierName;
+	}
+	
+	public static void main (String [] args) {
 		
 	}
 	

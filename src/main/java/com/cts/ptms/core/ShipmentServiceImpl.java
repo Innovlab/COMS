@@ -85,11 +85,11 @@ public class ShipmentServiceImpl implements ShipmentService {
 		shipmentOrder = saveShipmentDocuments(shipmentOrder);
 		shipmentOrder.setCarrier(shipmentRequest.getCarrier());
 		System.out.println("'Shipment Order:" + shipmentOrder);
-		/*ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
 		shipmentServiceDAO.saveShipmentOrder(shipmentOrder);
 		System.out.println(shipmentOrder);
-		context.close();*/
+		context.close();
 		return shipmentOrder;
 
 	}
