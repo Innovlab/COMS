@@ -386,8 +386,10 @@
 							$scope.load = false;
 							$scope.xmlData = "";
 							$scope.trackingNum = "";
+							$scope.showError = false;
 						}
 						$scope.backToHome = function() {
+							$scope.showError = false;
 							$scope.tracking = false;
 							$scope.showDta = false;
 							$scope.showProg = false;
@@ -414,6 +416,7 @@
 								}
 							//This sets the default value of the select in the ui
 							};
+							
 						}
 
 						$scope.trackShipment = function() {
