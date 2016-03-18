@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<CreateShipUnits>
+                <SessionID>245</SessionID>
+                <CreateShipUnitsParams>
+                                <CREATE_SHIP_UNITS_PARAMS1
+                                                xmlns="http://ScanData.com/WTM/XMLSchemas/WTM_XMLSchema_11.00.0000.xsd"
+                                                MSN="245">
+                                                <SHIP_UNIT Version="11.00.0000">
+                                                                <CartonNumber>00000070520009876543</CartonNumber>
+                                                                <DistributionCenter>7052</DistributionCenter>
+                                                                <OrderKey>157431137905</OrderKey>
+                                                                <OrderNumber>157431137905</OrderNumber>
+                                                                <BillingAccountID>7052</BillingAccountID>
+                                                                <Status>LABELED</Status>
+                                                                <CartonName>STANDARD</CartonName>
+                                                                <DatePlannedShipment>2015-07-08-05:00</DatePlannedShipment>
+                                                                <ShipVia>10</ShipVia>
+                                                                <ShippingOptions />
+                                                                <Weight>5</Weight>
+                                                                <Length>15</Length>
+                                                                <Width>10</Width>
+                                                                <Height>5</Height>
+                                                                <CarrierReferenceNote>157431137905</CarrierReferenceNote>
+                                                                <CarrierReferenceType>IK</CarrierReferenceType>
+                                                                <DataXML>
+                                                                                <SHIP_UNIT_CUSTOM
+                                                                                                xmlns="http://ScanData.com/WTM/XMLSchemas/Walmart_1.00.0000.xsd">
+                                                                                                <CustomerPONumber>157431130987</CustomerPONumber>
+                                                                                </SHIP_UNIT_CUSTOM>
+                                                                                <INVOICE xmlns="http://ScanData.com/WTM/XMLSchemas/Walmart_1.00.0000.xsd">
+                                                                                                <CustomerOrderNumber>157431130987</CustomerOrderNumber>
+                                                                                                <SalesTax>0.0000</SalesTax>
+                                                                                                <ShippingAndHandling>27.8800</ShippingAndHandling>
+                                                                                                <ShipmentTotal>600.8800</ShipmentTotal>
+                                                                                                <SubTotal>627.88</SubTotal>
+                                                                                                <TCNumber>78130151356808848117</TCNumber>
+                                                                                                <WaveNumber>5628</WaveNumber>
+                                                                                                <ITEM>
+                                                                                                                <LineNumber>1</LineNumber>
+                                                                                                                <Quantity>5</Quantity>
+                                                                                                                <ItemNumber>928354686</ItemNumber>
+                                                                                                                <Description>Intel processors</Description>
+                                                                                                                <SecondaryDescription>12341001-12341003</SecondaryDescription>
+                                                                                                                <SecondaryDescription>009283546861231231231231231231
+                                                                                                                </SecondaryDescription>
+                                                                                                                <UnitPrice>160.0000</UnitPrice>
+                                                                                                                <TotalPrice>800.0000</TotalPrice>
+                                                                                                </ITEM>
+                                                                                </INVOICE>
+                                                                                <ShippingOptions />
+                                                                </DataXML>
+                                                                <ADDRESS>
+                                                                                <Class>ORDERED_BY</Class>
+                                                                                <IndividualName>Ganesh K</IndividualName>
+                                                                                <Address1>9887 Walton Street</Address1>
+                                                                                <Address2 />
+                                                                                <Address3 />
+                                                                                <Address4 />
+                                                                                <City>Dallas</City>
+                                                                                <State>TX</State>
+                                                                                <Country>US</Country>
+                                                                                <ZIPCode>75208</ZIPCode>
+                                                                </ADDRESS>
+                                                                <ADDRESS>
+                                                                                <Class>DELIVER_TO</Class>
+                                                                                <AddressID>157431137905</AddressID>
+                                                                                <IndividualName>Muttu Krishnan</IndividualName>
+                                                                                <Address1>123 Oak St</Address1>
+                                                                                <City>Bentonville</City>
+                                                                                <State>AR</State>
+                                                                                <ZIPCode>72712</ZIPCode>
+                                                                                <Country>US</Country>
+                                                                                <PhoneNumber>8148341966</PhoneNumber>
+                                                                </ADDRESS>
+                                                                <ADDRESS>
+                                                                                <Class>RETURN</Class>
+                                                                                <IndividualName>WALMART.COM</IndividualName>
+                                                                                <Address1>1901 SE 10TH STREET</Address1>
+                                                                                <Address2>1901 SE 10TH STREET</Address2>
+                                                                                <City>BENTONVILLE</City>
+                                                                                <State>AR</State>
+                                                                                <Country>US</Country>
+                                                                                <ZIPCode>72716</ZIPCode>
+                                                                                <PhoneNumber>9998882222</PhoneNumber>
+                                                                </ADDRESS>
+                                                                <INTERNATIONAL_SHIP_UNIT />
+                                                                <UPS_SHIP_UNIT>
+                                                                                <CustomerReferenceType2>PO</CustomerReferenceType2>
+                                                                                <CustomerReference2>157431137905</CustomerReference2>
+                                                                </UPS_SHIP_UNIT>
+                                                                <FEDEX_SHIP_UNIT>
+                                                                                <PackagePONumber>157431137905</PackagePONumber>
+                                                                </FEDEX_SHIP_UNIT>
+                                                </SHIP_UNIT>
+                                                <LabelOutputFileType>Buffer</LabelOutputFileType>
+                                                <ReportOutputFileType>None</ReportOutputFileType>
+                                </CREATE_SHIP_UNITS_PARAMS1>
+                </CreateShipUnitsParams>
+</CreateShipUnits>
