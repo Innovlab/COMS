@@ -213,20 +213,28 @@
 					{{errorDesc}}
 				</div>
 				<div ng-hide="showDta">
+					<div class="col-lg-5" style="padding-top: 25px;">
+						<label for="mySelect">Carrier:</label> <select name="mySelect"
+							id="mySelect" ng-change="showRetLabel()"
+							ng-options="option.name for option in data.availableOptions track by option.id"
+							ng-model="data.selectedOption"></select>
+					</div>
 					<div class="row" ng-hide="tracking">
-						<div class="col-lg-3"
-							style="height: 500px; vertical-align: middle;">
-							<img src="./images/xml_5.png"
-								style="height: 300px; padding-top: 35%; padding-left: 15%;">
+						<!-- <div class="col-lg-3"
+							style="height: 500px; vertical-align: middle;"> -->
+						<div class="col-lg-3">
+							<!-- <img src="./images/xml_5.png"
+								style="height: 300px; padding-top: 15%; padding-left: 15%;"> -->
+						<img src="./images/xml_5.png" style="height: 100px;">
 						</div>
 						<div class="col-lg-6">
 							<div class="row">
-								<div class="col-lg-5" style="padding-top: 25px;">
+								<!-- <div class="col-lg-5" style="padding-top: 25px;">
 									<label for="mySelect">Carrier:</label> <select name="mySelect"
 										id="mySelect" ng-change="showRetLabel()"
 										ng-options="option.name for option in data.availableOptions track by option.id"
 										ng-model="data.selectedOption"></select>
-								</div>
+								</div> -->
 								<div class="col-lg-7" style="padding-top: 15px;">
 									<h4>
 										Input XML to be pasted below
@@ -418,7 +426,7 @@
 												},
 												params : {
 													'trackingNumber' : $scope.trackingNum,
-													'carrierName' : "FEDEX"
+													'carrierName' : $scope.data.selectedOption.name
 												}
 											})
 									.success(

@@ -14,7 +14,8 @@ public class ShippingConstants {
      public static final String INVOICE_TEMPLATE="/home/bdcuser/COMS_ENV/Config/ups/common/invoice.pdf";
      public static final String CO_TEMPLATE="/home/bdcuser/COMS_ENV/Config/ups/common/COTemplate.pdf";
      public static final String OUTPUT_DIR="/home/bdcuser/COMS_ENV/Output/";
-     public static  final String TEST_DOCUMENT_LOCATION="/home/bdcuser/COMS_ENV/Test/documents_location.properties";*/
+     public static  final String TEST_DOCUMENT_LOCATION="/home/bdcuser/COMS_ENV/Test/documents_location.properties";
+     public static final String FEDEX_PROPERTIES_PATH = "/home/bdcuser/COMS_ENV/Config/fedex/Integration/FEDEX.properties";*/
    
 	
 
@@ -25,7 +26,8 @@ public class ShippingConstants {
 	 public static final String INVOICE_TEMPLATE="D:/COMS_ENV/Config/ups/common/invoice.pdf";
      public static final String CO_TEMPLATE="D:/COMS_ENV/Config/ups/common/COTemplate.pdf";
      public static final String OUTPUT_DIR="D:/COMS_ENV/Output/";
-     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";*/
+     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";
+	public static final String FEDEX_PROPERTIES_PATH = "D:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";*/
      
     // Path setting for local tomcat
   	 public static final String buildPropertiesPath="E:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
