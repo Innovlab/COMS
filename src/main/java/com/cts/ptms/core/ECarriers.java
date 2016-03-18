@@ -12,6 +12,7 @@ public enum ECarriers
 {
 
 	UPS, 
-	YRC
+	YRC,
+	FEDEX
 
 }

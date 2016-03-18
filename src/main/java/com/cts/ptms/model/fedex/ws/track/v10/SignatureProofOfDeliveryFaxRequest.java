@@ -1,0 +1,409 @@
+/**
+ * SignatureProofOfDeliveryFaxRequest.java
+ *
+ * This file was auto-generated from WSDL
+ * by the Apache Axis 1.4 Apr 22, 2006 (06:55:48 PDT) WSDL2Java emitter.
+ */
+
+package com.cts.ptms.model.fedex.ws.track.v10;
+
+
+/**
+ * FedEx Signature Proof Of Delivery Fax request.
+ */
+public class SignatureProofOfDeliveryFaxRequest  implements java.io.Serializable {
+    /* Descriptive data to be used in authentication of the sender's
+     * identity (and right to use FedEx web services). */
+    private com.cts.ptms.model.fedex.ws.track.v10.WebAuthenticationDetail webAuthenticationDetail;
+
+    /* Descriptive data identifying the client submitting the transaction. */
+    private com.cts.ptms.model.fedex.ws.track.v10.ClientDetail clientDetail;
+
+    /* Contains a free form field that is echoed back in the reply
+     * to match requests with replies and data that governs the data payload
+     * language/translations. */
+    private com.cts.ptms.model.fedex.ws.track.v10.TransactionDetail transactionDetail;
+
+    /* The version of the request being used. */
+    private com.cts.ptms.model.fedex.ws.track.v10.VersionId version;
+
+    /* Tracking number and additional shipment data used to identify
+     * a unique shipment for proof of delivery. */
+    private com.cts.ptms.model.fedex.ws.track.v10.QualifiedTrackingNumber qualifiedTrackingNumber;
+
+    /* Additional customer-supplied text to be added to the body of
+     * the letter. */
+    private java.lang.String additionalComments;
+
+    /* Contact and address information about the person requesting
+     * the fax to be sent. */
+    private com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress faxSender;
+
+    /* Contact and address information, including the fax number,
+     * about the person to receive the fax. */
+    private com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress faxRecipient;
+
+    public SignatureProofOfDeliveryFaxRequest() {
+    }
+
+    public SignatureProofOfDeliveryFaxRequest(
+           com.cts.ptms.model.fedex.ws.track.v10.WebAuthenticationDetail webAuthenticationDetail,
+           com.cts.ptms.model.fedex.ws.track.v10.ClientDetail clientDetail,
+           com.cts.ptms.model.fedex.ws.track.v10.TransactionDetail transactionDetail,
+           com.cts.ptms.model.fedex.ws.track.v10.VersionId version,
+           com.cts.ptms.model.fedex.ws.track.v10.QualifiedTrackingNumber qualifiedTrackingNumber,
+           java.lang.String additionalComments,
+           com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress faxSender,
+           com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress faxRecipient) {
+           this.webAuthenticationDetail = webAuthenticationDetail;
+           this.clientDetail = clientDetail;
+           this.transactionDetail = transactionDetail;
+           this.version = version;
+           this.qualifiedTrackingNumber = qualifiedTrackingNumber;
+           this.additionalComments = additionalComments;
+           this.faxSender = faxSender;
+           this.faxRecipient = faxRecipient;
+    }
+
+
+    /**
+     * Gets the webAuthenticationDetail value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return webAuthenticationDetail   * Descriptive data to be used in authentication of the sender's
+     * identity (and right to use FedEx web services).
+     */
+    public com.cts.ptms.model.fedex.ws.track.v10.WebAuthenticationDetail getWebAuthenticationDetail() {
+        return webAuthenticationDetail;
+    }
+
+
+    /**
+     * Sets the webAuthenticationDetail value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param webAuthenticationDetail   * Descriptive data to be used in authentication of the sender's
+     * identity (and right to use FedEx web services).
+     */
+    public void setWebAuthenticationDetail(com.cts.ptms.model.fedex.ws.track.v10.WebAuthenticationDetail webAuthenticationDetail) {
+        this.webAuthenticationDetail = webAuthenticationDetail;
+    }
+
+
+    /**
+     * Gets the clientDetail value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return clientDetail   * Descriptive data identifying the client submitting the transaction.
+     */
+    public com.cts.ptms.model.fedex.ws.track.v10.ClientDetail getClientDetail() {
+        return clientDetail;
+    }
+
+
+    /**
+     * Sets the clientDetail value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param clientDetail   * Descriptive data identifying the client submitting the transaction.
+     */
+    public void setClientDetail(com.cts.ptms.model.fedex.ws.track.v10.ClientDetail clientDetail) {
+        this.clientDetail = clientDetail;
+    }
+
+
+    /**
+     * Gets the transactionDetail value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return transactionDetail   * Contains a free form field that is echoed back in the reply
+     * to match requests with replies and data that governs the data payload
+     * language/translations.
+     */
+    public com.cts.ptms.model.fedex.ws.track.v10.TransactionDetail getTransactionDetail() {
+        return transactionDetail;
+    }
+
+
+    /**
+     * Sets the transactionDetail value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param transactionDetail   * Contains a free form field that is echoed back in the reply
+     * to match requests with replies and data that governs the data payload
+     * language/translations.
+     */
+    public void setTransactionDetail(com.cts.ptms.model.fedex.ws.track.v10.TransactionDetail transactionDetail) {
+        this.transactionDetail = transactionDetail;
+    }
+
+
+    /**
+     * Gets the version value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return version   * The version of the request being used.
+     */
+    public com.cts.ptms.model.fedex.ws.track.v10.VersionId getVersion() {
+        return version;
+    }
+
+
+    /**
+     * Sets the version value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param version   * The version of the request being used.
+     */
+    public void setVersion(com.cts.ptms.model.fedex.ws.track.v10.VersionId version) {
+        this.version = version;
+    }
+
+
+    /**
+     * Gets the qualifiedTrackingNumber value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return qualifiedTrackingNumber   * Tracking number and additional shipment data used to identify
+     * a unique shipment for proof of delivery.
+     */
+    public com.cts.ptms.model.fedex.ws.track.v10.QualifiedTrackingNumber getQualifiedTrackingNumber() {
+        return qualifiedTrackingNumber;
+    }
+
+
+    /**
+     * Sets the qualifiedTrackingNumber value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param qualifiedTrackingNumber   * Tracking number and additional shipment data used to identify
+     * a unique shipment for proof of delivery.
+     */
+    public void setQualifiedTrackingNumber(com.cts.ptms.model.fedex.ws.track.v10.QualifiedTrackingNumber qualifiedTrackingNumber) {
+        this.qualifiedTrackingNumber = qualifiedTrackingNumber;
+    }
+
+
+    /**
+     * Gets the additionalComments value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return additionalComments   * Additional customer-supplied text to be added to the body of
+     * the letter.
+     */
+    public java.lang.String getAdditionalComments() {
+        return additionalComments;
+    }
+
+
+    /**
+     * Sets the additionalComments value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param additionalComments   * Additional customer-supplied text to be added to the body of
+     * the letter.
+     */
+    public void setAdditionalComments(java.lang.String additionalComments) {
+        this.additionalComments = additionalComments;
+    }
+
+
+    /**
+     * Gets the faxSender value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return faxSender   * Contact and address information about the person requesting
+     * the fax to be sent.
+     */
+    public com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress getFaxSender() {
+        return faxSender;
+    }
+
+
+    /**
+     * Sets the faxSender value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param faxSender   * Contact and address information about the person requesting
+     * the fax to be sent.
+     */
+    public void setFaxSender(com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress faxSender) {
+        this.faxSender = faxSender;
+    }
+
+
+    /**
+     * Gets the faxRecipient value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @return faxRecipient   * Contact and address information, including the fax number,
+     * about the person to receive the fax.
+     */
+    public com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress getFaxRecipient() {
+        return faxRecipient;
+    }
+
+
+    /**
+     * Sets the faxRecipient value for this SignatureProofOfDeliveryFaxRequest.
+     * 
+     * @param faxRecipient   * Contact and address information, including the fax number,
+     * about the person to receive the fax.
+     */
+    public void setFaxRecipient(com.cts.ptms.model.fedex.ws.track.v10.ContactAndAddress faxRecipient) {
+        this.faxRecipient = faxRecipient;
+    }
+
+    private java.lang.Object __equalsCalc = null;
+    public synchronized boolean equals(java.lang.Object obj) {
+        if (!(obj instanceof SignatureProofOfDeliveryFaxRequest)) return false;
+        SignatureProofOfDeliveryFaxRequest other = (SignatureProofOfDeliveryFaxRequest) obj;
+        if (obj == null) return false;
+        if (this == obj) return true;
+        if (__equalsCalc != null) {
+            return (__equalsCalc == obj);
+        }
+        __equalsCalc = obj;
+        boolean _equals;
+        _equals = true && 
+            ((this.webAuthenticationDetail==null && other.getWebAuthenticationDetail()==null) || 
+             (this.webAuthenticationDetail!=null &&
+              this.webAuthenticationDetail.equals(other.getWebAuthenticationDetail()))) &&
+            ((this.clientDetail==null && other.getClientDetail()==null) || 
+             (this.clientDetail!=null &&
+              this.clientDetail.equals(other.getClientDetail()))) &&
+            ((this.transactionDetail==null && other.getTransactionDetail()==null) || 
+             (this.transactionDetail!=null &&
+              this.transactionDetail.equals(other.getTransactionDetail()))) &&
+            ((this.version==null && other.getVersion()==null) || 
+             (this.version!=null &&
+              this.version.equals(other.getVersion()))) &&
+            ((this.qualifiedTrackingNumber==null && other.getQualifiedTrackingNumber()==null) || 
+             (this.qualifiedTrackingNumber!=null &&
+              this.qualifiedTrackingNumber.equals(other.getQualifiedTrackingNumber()))) &&
+            ((this.additionalComments==null && other.getAdditionalComments()==null) || 
+             (this.additionalComments!=null &&
+              this.additionalComments.equals(other.getAdditionalComments()))) &&
+            ((this.faxSender==null && other.getFaxSender()==null) || 
+             (this.faxSender!=null &&
+              this.faxSender.equals(other.getFaxSender()))) &&
+            ((this.faxRecipient==null && other.getFaxRecipient()==null) || 
+             (this.faxRecipient!=null &&
+              this.faxRecipient.equals(other.getFaxRecipient())));
+        __equalsCalc = null;
+        return _equals;
+    }
+
+    private boolean __hashCodeCalc = false;
+    public synchronized int hashCode() {
+        if (__hashCodeCalc) {
+            return 0;
+        }
+        __hashCodeCalc = true;
+        int _hashCode = 1;
+        if (getWebAuthenticationDetail() != null) {
+            _hashCode += getWebAuthenticationDetail().hashCode();
+        }
+        if (getClientDetail() != null) {
+            _hashCode += getClientDetail().hashCode();
+        }
+        if (getTransactionDetail() != null) {
+            _hashCode += getTransactionDetail().hashCode();
+        }
+        if (getVersion() != null) {
+            _hashCode += getVersion().hashCode();
+        }
+        if (getQualifiedTrackingNumber() != null) {
+            _hashCode += getQualifiedTrackingNumber().hashCode();
+        }
+        if (getAdditionalComments() != null) {
+            _hashCode += getAdditionalComments().hashCode();
+        }
+        if (getFaxSender() != null) {
+            _hashCode += getFaxSender().hashCode();
+        }
+        if (getFaxRecipient() != null) {
+            _hashCode += getFaxRecipient().hashCode();
+        }
+        __hashCodeCalc = false;
+        return _hashCode;
+    }
+
+    // Type metadata
+    private static org.apache.axis.description.TypeDesc typeDesc =
+        new org.apache.axis.description.TypeDesc(SignatureProofOfDeliveryFaxRequest.class, true);
+
+    static {
+        typeDesc.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "SignatureProofOfDeliveryFaxRequest"));
+        org.apache.axis.description.ElementDesc elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("webAuthenticationDetail");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "WebAuthenticationDetail"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "WebAuthenticationDetail"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("clientDetail");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "ClientDetail"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "ClientDetail"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("transactionDetail");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "TransactionDetail"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "TransactionDetail"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("version");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "Version"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "VersionId"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("qualifiedTrackingNumber");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "QualifiedTrackingNumber"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "QualifiedTrackingNumber"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("additionalComments");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "AdditionalComments"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("faxSender");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "FaxSender"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "ContactAndAddress"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("faxRecipient");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "FaxRecipient"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://fedex.com/ws/track/v10", "ContactAndAddress"));
+        elemField.setMinOccurs(0);
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+    }
+
+    /**
+     * Return type metadata object
+     */
+    public static org.apache.axis.description.TypeDesc getTypeDesc() {
+        return typeDesc;
+    }
+
+    /**
+     * Get Custom Serializer
+     */
+    public static org.apache.axis.encoding.Serializer getSerializer(
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
+           javax.xml.namespace.QName _xmlType) {
+        return 
+          new  org.apache.axis.encoding.ser.BeanSerializer(
+            _javaType, _xmlType, typeDesc);
+    }
+
+    /**
+     * Get Custom Deserializer
+     */
+    public static org.apache.axis.encoding.Deserializer getDeserializer(
+           java.lang.String mechType, 
+           java.lang.Class _javaType,  
+           javax.xml.namespace.QName _xmlType) {
+        return 
+          new  org.apache.axis.encoding.ser.BeanDeserializer(
+            _javaType, _xmlType, typeDesc);
+    }
+
+}

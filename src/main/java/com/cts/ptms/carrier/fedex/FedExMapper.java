@@ -40,8 +40,6 @@ import com.cts.ptms.model.fedex.ws.ship.v17.LabelFormatType;
 import com.cts.ptms.model.fedex.ws.ship.v17.LabelSpecification;
 import com.cts.ptms.model.fedex.ws.ship.v17.LinearUnits;
 import com.cts.ptms.model.fedex.ws.ship.v17.Money;
-import com.cts.ptms.model.fedex.ws.ship.v17.Notification;
-import com.cts.ptms.model.fedex.ws.ship.v17.NotificationSeverityType;
 import com.cts.ptms.model.fedex.ws.ship.v17.PackageOperationalDetail;
 import com.cts.ptms.model.fedex.ws.ship.v17.PackagingType;
 import com.cts.ptms.model.fedex.ws.ship.v17.Party;
@@ -68,6 +66,8 @@ import com.cts.ptms.model.fedex.ws.ship.v17.WebAuthenticationCredential;
 import com.cts.ptms.model.fedex.ws.ship.v17.WebAuthenticationDetail;
 import com.cts.ptms.model.fedex.ws.ship.v17.Weight;
 import com.cts.ptms.model.fedex.ws.ship.v17.WeightUnits;
+import com.cts.ptms.model.fedex.ws.ship.v17.Notification;
+import com.cts.ptms.model.fedex.ws.ship.v17.NotificationSeverityType;
 import com.cts.ptms.model.gls.ADDRESS;
 import com.cts.ptms.model.gls.CreateShipUnits;
 import com.cts.ptms.model.gls.SHIPUNIT;
@@ -786,5 +786,13 @@ public class FedExMapper {
 			serviceLocator.setShipServicePortEndpointAddress(endPoint);
 		}
 	}
+	
+	
+	
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
 
 }

@@ -40,6 +40,9 @@ public class TrackingCarrierProducer {
 				case YRC : 
 					obj = new YRCTracking();
 					break;
+				case FEDEX : 
+					obj = new FedExTracking();
+					break;
 				default : 
 					System.out.println("Invalid Carrier");
 					break;

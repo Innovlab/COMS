@@ -30,7 +30,7 @@ import com.cts.ptms.service.tracking.TrackingServiceImpl;
 @Path("/Tracking")
 public class ManageTrackingResource {
 	
-	private Logger logger = Logger.getAnonymousLogger() ;
+	private Logger logger = Logger.getAnonymousLogger();
 	
 	
 	@POST	
@@ -76,6 +76,8 @@ public class ManageTrackingResource {
 	{
 		CustomTrackingResponse customTrackingResponse = null;
 		CustomTrackingRequest customTrackingRequest = null;
+		TrackRequestDetails trackRequestDetails = null;
+		
 		logger.info("Trying to get the tracking details..");
 		try
 		{
@@ -83,23 +85,37 @@ public class ManageTrackingResource {
 			{
 				throw new TrackingException("Invalid Request");
 			}
+			
 			customTrackingRequest = new CustomTrackingRequest();
-			AccessRequest accessRequest = new AccessRequest();
-			accessRequest.setAccessLicenseNumber("BD02B06EAB9F9B56");
-			accessRequest.setUserId("varaprasadk.05");
-			accessRequest.setPassword("Vara@2016");
-			
-			customTrackingRequest.setAccessRequest(accessRequest);
 			customTrackingRequest.setCarrierName(carrierName);
+			trackRequestDetails = new TrackRequestDetails();
 			
-			TrackRequestDetails trackRequestDetails = new TrackRequestDetails();
-			trackRequestDetails.setRequestAction("Track");
-			//0- Last Activity 1-All Activity
-			trackRequestDetails.getRequestOptions().add("1");
+			if (carrierName.equalsIgnoreCase(ECarriers.UPS.toString())) 
+			{
+				AccessRequest accessRequest = new AccessRequest();
+				accessRequest.setAccessLicenseNumber("BD02B06EAB9F9B56");
+				accessRequest.setUserId("varaprasadk.05");
+				accessRequest.setPassword("Vara@2016");
+				
+				customTrackingRequest.setAccessRequest(accessRequest);
+				customTrackingRequest.setCarrierName(carrierName);
+				
+				
+				trackRequestDetails.setRequestAction("Track");
+				//0- Last Activity 1-All Activity
+				trackRequestDetails.getRequestOptions().add("1");
+				
+				
+			} else if (carrierName.equalsIgnoreCase(ECarriers.FEDEX.toString())) {
+				
+				//Setting the credentials at respective carrier mapper.
+				
+			}
+			
 			trackRequestDetails.setTrackingNumber(trackingNum);
 			customTrackingRequest.setTrackRequestDetails(trackRequestDetails);
-			
 			System.out.println("Input tracking request is ::" + customTrackingRequest);
+			
 			customTrackingResponse = getTrackingDetails(customTrackingRequest);
 			System.out.println(customTrackingResponse);
 		} 

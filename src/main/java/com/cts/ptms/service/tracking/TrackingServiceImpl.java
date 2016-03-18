@@ -44,6 +44,9 @@ public class TrackingServiceImpl implements ITrackingService {
 		if (carrierName!=null && !carrierName.trim().equals("")) {
 			customTrackingRequest.setCarrierName(carrierName);
 		}
+		//HARD CODE --For Testing
+		customTrackingRequest.setCarrierName("FEDEX");
+		
 		return new TrackingCarrierProducer().getTrackingCarrier(customTrackingRequest.getCarrierName()).
 				getTrackingDetails(customTrackingRequest);
 	}
