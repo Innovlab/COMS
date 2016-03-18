@@ -80,12 +80,14 @@ public class FedExTracking implements ITrackingDetails{
 		logger.entering("FedExTracking", "getTrackingDetails");
 		
 		CustomTrackingResponse customTrackingResponse = new CustomTrackingResponse();
+		List<TrackingError> trackingErrors = new ArrayList<TrackingError>(0);
 		try 
 		{
 			TrackRequest request = populateAndGetTrackRequest(customTrackingRequest);
 			
 	        if(request == null)
 	        	throw new TrackingException("Exception occured at while populating the tracking request object..");
+	        
 	        // Initializing the service
 			TrackServiceLocator service = new TrackServiceLocator();
 			//updateEndPoint(service);
@@ -93,12 +95,11 @@ public class FedExTracking implements ITrackingDetails{
 
 			TrackReply reply = port.track(request); // This is the call to the web service passing in a request object and returning a reply object
 			//
+			Notification[] notifications = reply.getNotifications();
+			
 			if (isResponseOk(reply.getHighestSeverity())) // check if the call was successful
 			{
 				System.out.println("--Track Reply--");
-				List<TrackingError> trackingErrors = null;
-				Notification[] notifications = reply.getNotifications();
-				
 				if (notifications != null && notifications.length != 0 ) {
 					System.out.println("Response Status: " + notifications[0].getCode());
 					System.out.println("Response Status Description: " + notifications[0].getMessage());
@@ -108,7 +109,6 @@ public class FedExTracking implements ITrackingDetails{
 				}		    	
 				else  
 			    {	
-					trackingErrors = new ArrayList<TrackingError>(0);
 					for (com.cts.ptms.model.fedex.ws.track.v10.Notification notification : notifications) 
 					{
 						TrackingError trackingError = new TrackingError();
@@ -119,11 +119,27 @@ public class FedExTracking implements ITrackingDetails{
 					}
 					customTrackingResponse.setError(trackingErrors);
 			    }
+			} else {
+				customTrackingResponse.setResponseStatusCode("0");
+				customTrackingResponse.setResponseStatusDescription(notifications[0].getMessage());
+				TrackingError trackingError = new TrackingError();
+				trackingError.setErrorSeverity(notifications[0].getSeverity().toString());
+				trackingError.setErrorCode("0");
+				trackingError.setErrorDescription(notifications[0].getMessage());
+				trackingErrors.add(trackingError);
+				customTrackingResponse.setError(trackingErrors);
 			}
 		} 
 		catch(Exception ex) 
 		{
-			logger.severe("Exception occured in getTrackingDetails() method::");
+			logger.severe("Exception occured in getTrackingDetails() method::"+ex.getMessage());
+			customTrackingResponse.setResponseStatusCode("0");
+			customTrackingResponse.setResponseStatusDescription("Problem in gettting tracking details..");
+			TrackingError trackingError = new TrackingError();
+			trackingError.setErrorSeverity("FAILURE");
+			trackingError.setErrorCode("0");
+			trackingError.setErrorDescription("Problem in gettting tracking details..");
+			trackingErrors.add(trackingError);
 		}
 		logger.exiting("FedExTracking", "getTrackingDetails");
 		return customTrackingResponse;

@@ -36,14 +36,14 @@ public class TrackingServiceImpl implements ITrackingService {
 
 		
 		// Get the carrier name by tracking Number from DAO
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		/*ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		ShipmentServiceDAO shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
 		String carrierName = shipmentServiceDAO.getCarrierName(customTrackingRequest.getTrackRequestDetails().getTrackingNumber());
 		System.out.println(carrierName);
 		context.close();
 		if (carrierName!=null && !carrierName.trim().equals("")) {
 			//customTrackingRequest.setCarrierName(carrierName);
-		}
+		}*/
 		return new TrackingCarrierProducer().getTrackingCarrier(customTrackingRequest.getCarrierName()).
 				getTrackingDetails(customTrackingRequest);
 	}
