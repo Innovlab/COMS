@@ -3,6 +3,8 @@
  */
 package com.cts.ptms.service.tracking;
 
+import java.util.logging.Logger;
+
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.cts.ptms.dao.ShipmentServiceDAO;
@@ -19,6 +21,7 @@ import com.cts.ptms.tracking.TrackingCarrierProducer;
  */
 public class TrackingServiceImpl implements ITrackingService {
 
+	private Logger logger = Logger.getAnonymousLogger();
 	/**
 	 * Default Constructor
 	 */
@@ -34,7 +37,8 @@ public class TrackingServiceImpl implements ITrackingService {
 	public CustomTrackingResponse getShipmentTrackingDetails(CustomTrackingRequest customTrackingRequest) throws TrackingException
 	{
 
-		
+		logger.info("getShipmentTrackingDetails for :"+customTrackingRequest.getCarrierName() + 
+				" With Tracking Number:"+customTrackingRequest.getTrackRequestDetails().getTrackingNumber());
 		// Get the carrier name by tracking Number from DAO
 		/*ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		ShipmentServiceDAO shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");

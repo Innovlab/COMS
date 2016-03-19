@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -103,7 +104,7 @@ public class FedExTracking implements ITrackingDetails{
 				if (notifications != null && notifications.length != 0 ) {
 					System.out.println("Response Status: " + notifications[0].getCode());
 					System.out.println("Response Status Description: " + notifications[0].getMessage());
-					customTrackingResponse.setResponseStatusCode(notifications[0].getCode());
+					customTrackingResponse.setResponseStatusCode("1");
 					customTrackingResponse.setResponseStatusDescription(notifications[0].getMessage());
 					customTrackingResponse = populateResponse(customTrackingResponse, reply.getCompletedTrackDetails());
 				}		    	
@@ -118,6 +119,8 @@ public class FedExTracking implements ITrackingDetails{
 						trackingErrors.add(trackingError);
 					}
 					customTrackingResponse.setError(trackingErrors);
+					customTrackingResponse.setResponseStatusCode("0");
+					customTrackingResponse.setResponseStatusDescription(notifications[0].getMessage());
 			    }
 			} else {
 				customTrackingResponse.setResponseStatusCode("0");
@@ -142,6 +145,7 @@ public class FedExTracking implements ITrackingDetails{
 			trackingErrors.add(trackingError);
 		}
 		logger.exiting("FedExTracking", "getTrackingDetails");
+		logger.info("Finished tracking details ");
 		return customTrackingResponse;
 	}
 	/**
@@ -156,8 +160,13 @@ public class FedExTracking implements ITrackingDetails{
 			request = new TrackRequest();
 		    com.cts.ptms.model.fedex.ws.track.v10.ClientDetail clientDetail = 
 		    		new com.cts.ptms.model.fedex.ws.track.v10.ClientDetail();
+		    
 		    clientDetail.setAccountNumber(properties.getProperty("ACCOUNT_NUMBER"));
+		    logger.info("ACCOUNT_NUMBER :: "+properties.getProperty("ACCOUNT_NUMBER"));
 		    clientDetail.setMeterNumber(properties.getProperty("METER_NUMBER"));
+		    logger.info("METER_NUMBER :: "+properties.getProperty("METER_NUMBER"));
+		    
+		    
 	    	//clientDetail.setAccountNumber("510087224");
 	    	//clientDetail.setMeterNumber("118706842");
 	    	
@@ -166,7 +175,10 @@ public class FedExTracking implements ITrackingDetails{
 	    			new com.cts.ptms.model.fedex.ws.track.v10.WebAuthenticationCredential();
 	
 	    	userCredential.setKey(properties.getProperty("USER_KEY"));
+	    	logger.info("USER_KEY :: "+properties.getProperty("USER_KEY"));
 			userCredential.setPassword(properties.getProperty("USER_PASSWORD"));
+			logger.info("USER_PASSWORD :: "+properties.getProperty("USER_PASSWORD"));
+			
 			//userCredential.setKey("1GVNZ5PFguLgFkmP");
 			//userCredential.setPassword("Q02iNoC2AUFsGpJzyTIsm9obV");
 	        request.setWebAuthenticationDetail(new com.cts.ptms.model.fedex.ws.track.v10.WebAuthenticationDetail(null, userCredential));
@@ -260,11 +272,15 @@ public class FedExTracking implements ITrackingDetails{
 		try {
 			//Setting shipper details
 			Address  resShipperAddress = trackDetail.getShipperAddress();
+			logger.info("Tyring to set shipper address details");
 			if (resShipperAddress != null) {
 				Shipper shipper = new Shipper();
 				com.cts.ptms.model.tracking.Address shipperAddress = new com.cts.ptms.model.tracking.Address();
-				shipperAddress.setAddressLine1(resShipperAddress.getStreetLines()[0]);
-				shipperAddress.setAddressLine2(resShipperAddress.getStreetLines()[1]);
+				String[] shprStreetLines = resShipperAddress.getStreetLines();
+				if(shprStreetLines != null) {
+					shipperAddress.setAddressLine1(shprStreetLines[0]);
+					shipperAddress.setAddressLine2(shprStreetLines[1]);
+				}
 				shipperAddress.setCity(resShipperAddress.getCity());
 				shipperAddress.setCountryCode(resShipperAddress.getCountryCode());
 				shipperAddress.setPostalCode(resShipperAddress.getPostalCode());
@@ -275,11 +291,15 @@ public class FedExTracking implements ITrackingDetails{
 			
 			//Setting Recipient  details
 			Address  resDestAddress = trackDetail.getDestinationAddress();
+			logger.info("Tyring to set destination address details");
 			if (resDestAddress != null) {
 				ShipTo shipTo = new ShipTo();
 				com.cts.ptms.model.tracking.Address shipToAddress = new com.cts.ptms.model.tracking.Address();
-				shipToAddress.setAddressLine1(resDestAddress.getStreetLines()[0]);
-				shipToAddress.setAddressLine1(resDestAddress.getStreetLines()[1]);
+				String[] destStreetLines = resDestAddress.getStreetLines();
+				if (destStreetLines != null && destStreetLines.length != 0 ) {
+					shipToAddress.setAddressLine1(destStreetLines[0]);
+					shipToAddress.setAddressLine1(destStreetLines[1]);
+				}
 				shipToAddress.setCity(resDestAddress.getCity());
 				shipToAddress.setCountryCode(resDestAddress.getCountryCode());
 				shipToAddress.setPostalCode(resDestAddress.getPostalCode());
@@ -289,6 +309,7 @@ public class FedExTracking implements ITrackingDetails{
 			}
 			//Weight Detais
 			Weight resWeight = trackDetail.getPackageWeight();
+			logger.info("Tyring to set retrieved weight details");
 			if (resWeight != null ) { 
 				com.cts.ptms.model.tracking.Weight weightDetails  = null;
 				
@@ -303,6 +324,7 @@ public class FedExTracking implements ITrackingDetails{
 			}
 			//Service type
 			CarrierCodeType carrierCodeType = trackDetail.getCarrierCode();
+			logger.info("Tyring to set Service Type details");
 			TrackServiceDescriptionDetail serviceDetails = trackDetail.getService();
 			if (carrierCodeType != null) {
 				CodeType codeType = new CodeType();
@@ -313,6 +335,7 @@ public class FedExTracking implements ITrackingDetails{
 			
 			//Shipment ReferenceNumber
 			List<ShipmentReferenceNumber> shipmentReferenceNumbers = new ArrayList<ShipmentReferenceNumber>(0);
+			logger.info("Tyring to set Shipement reference number details");
 			TrackOtherIdentifierDetail[] otherIdentifiers = trackDetail.getOtherIdentifiers();
 			if ( otherIdentifiers != null && otherIdentifiers.length != 0) {
 				for (TrackOtherIdentifierDetail trackOtherIdentifierDetail 
@@ -326,19 +349,22 @@ public class FedExTracking implements ITrackingDetails{
 			shipment.setReferenceNumber(shipmentReferenceNumbers);
 			
 			//Pickup date
+			logger.info("Tyring to set estimated pick up details");
 			if(trackDetail.getShipTimestamp() != null) {
 				shipment.setPickupDate(trackDetail.getShipTimestamp().toString());
 			}
 			if (trackDetail.getEstimatedDeliveryTimestamp() != null) {
-			shipment.setScheduledDeliveryDate((new SimpleDateFormat("'MM/dd/yyyy hh:mm.ss").format(trackDetail.getEstimatedDeliveryTimestamp())));
+				shipment.setScheduledDeliveryDate((new SimpleDateFormat("'MM/dd/yyyy hh:mm.ss").
+						format(trackDetail.getEstimatedDeliveryTimestamp())));
 			}
 			
 			//Package Details
 			List<com.cts.ptms.model.tracking.Package> packages = new ArrayList<com.cts.ptms.model.tracking.Package>(0);
 			com.cts.ptms.model.tracking.Package tempPackage = null; 
-			
+			logger.info("Tyring to set Activity details");
 			//Activity
 			List<Activity> activities = new ArrayList<Activity>(0);
+			
 			Activity activity = null;
 			if (trackDetail.getEvents() == null) {
 				throw new TrackingException("No Events occured");
@@ -352,10 +378,15 @@ public class FedExTracking implements ITrackingDetails{
 				activity = new Activity();
 				ActivityLocation activityLoc = null;
 				if(rcvdActvityLoc != null) {
+					logger.info("Tyring to set Activity Location details");
 					Address rcvdLocAddress = trackEvent.getAddress();
 					com.cts.ptms.model.tracking.Address  tempAddress = new com.cts.ptms.model.tracking.Address();
-					tempAddress.setAddressLine1(rcvdLocAddress.getStreetLines()[0]);
-					tempAddress.setAddressLine2(rcvdLocAddress.getStreetLines()[1]);
+					
+					String[] locationAddLines = rcvdLocAddress.getStreetLines();
+					if(locationAddLines != null && locationAddLines.length != 0) {
+						tempAddress.setAddressLine1(locationAddLines[0]);
+						tempAddress.setAddressLine2(locationAddLines[1]);
+					}
 					tempAddress.setCity(rcvdLocAddress.getCity());
 					tempAddress.setCountryCode(rcvdLocAddress.getCountryCode());
 					tempAddress.setPostalCode(rcvdLocAddress.getPostalCode());
@@ -369,6 +400,7 @@ public class FedExTracking implements ITrackingDetails{
 				}
 				activity.setActivityLocation(activityLoc);
 				
+				logger.info("Tyring to set event status details");
 				Status status = new Status();
 				CodeType tempCodeType = new CodeType();
 				tempCodeType.setCode(trackEvent.getEventType());
@@ -376,14 +408,16 @@ public class FedExTracking implements ITrackingDetails{
 				status.setStatusType(tempCodeType);
 				
 				activity.setStatus(status);
-				
-				activity.setDate(new SimpleDateFormat("MM/dd/yyyy").format(trackEvent.getTimestamp()));
-				activity.setTime(new SimpleDateFormat("HH:mm:ss").format(trackEvent.getTimestamp()));
+				logger.info("Event Time Stamp"+trackEvent.getTimestamp());
+				Date eventDate = trackEvent.getTimestamp().getTime();
+				activity.setDate(new SimpleDateFormat("MM/dd/yyyy").format(eventDate));
+				activity.setTime(new SimpleDateFormat("HH:mm:ss").format(eventDate));
 				
 				activities.add(activity);
 				tempPackage.setActivity(activities);
+				packages.add(tempPackage);
 			}
-			packages.add(tempPackage);
+			
 			shipment.set_package(packages);
 			
 		}catch (TrackingException ex) {
