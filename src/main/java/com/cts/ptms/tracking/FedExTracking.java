@@ -224,6 +224,7 @@ public class FedExTracking implements ITrackingDetails{
 	 */
 	private CustomTrackingResponse populateResponse(CustomTrackingResponse customTrckRes , CompletedTrackDetail[] ctd) 
 	{
+		String errorMsg = null;
 		try 
 		{
 			for (int i=0; i< ctd.length; i++) { // package detail information
@@ -243,7 +244,8 @@ public class FedExTracking implements ITrackingDetails{
 						trackingError.setErrorDescription(notification.getMessage());
 						trackingErrors.add(trackingError);
 						customTrckRes.setError(trackingErrors);
-						throw new TrackingException("Unable to process the tracking request..");
+						errorMsg = notification.getMessage();
+						throw new TrackingException(errorMsg);
 					}
 					
 					Shipment shipment = populateShipmentDetails(customTrckRes, trackDetail);
@@ -256,11 +258,17 @@ public class FedExTracking implements ITrackingDetails{
 		}
 		catch (TrackingException e)
 		{
+			customTrckRes.setResponseStatusCode("0");
+			customTrckRes.setResponseStatusDescription(errorMsg);
+			
 			System.out.println("Exception occured in populateResponse(customTrckRes, ctd):"+e.getMessage());
 			logger.severe("Exception occured in populateResponse(customTrckRes, ctd):"+e.getMessage());
 		}
 		catch (Exception e)
 		{
+			customTrckRes.setResponseStatusCode("0");
+			customTrckRes.setResponseStatusDescription(errorMsg);
+			
 			System.out.println("Exception occured while populating the response:"+e.getMessage());
 			logger.severe("Exception occured in populateResponse(customTrckRes, ctd):"+e.getMessage());
 		}
