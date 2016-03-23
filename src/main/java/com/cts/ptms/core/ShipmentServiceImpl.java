@@ -40,6 +40,7 @@ import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
 import com.cts.ptms.model.common.TrackingDetails;
 import com.cts.ptms.utils.ShipmentUtils;
 import com.cts.ptms.utils.constants.ShippingConstants;
+import com.cts.ptms.utils.constants.UPSConstants;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
@@ -54,7 +55,7 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class ShipmentServiceImpl implements ShipmentService {
-
+	
 	private ShipmentServiceDAO shipmentServiceDAO;
 	ClientShipmentService clientShipmentService;
 	static String date = FastDateFormat.getInstance("MM-dd-yyyy").format(System.currentTimeMillis());
@@ -63,6 +64,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 	public static String plannedShipDate = "";
 	public static String shipmentWeight = "";
 	public static String pkgCnt = "";
+	
+	ClassPathXmlApplicationContext context =null;
 
 	private void initializeService(String carrier) {
 		// Based on carrier and the corresponding configuration load the
@@ -75,23 +78,55 @@ public class ShipmentServiceImpl implements ShipmentService {
 		} else if (carrier.equalsIgnoreCase(ShippingConstants.FEDEX)) {
 			clientShipmentService = new FedExShipmentService();
 		}
+		
+		if (null == context){
+			context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		}
 
 	}
 
 	public ShipmentOrder createSingleShipmentOrder(ShipmentRequest shipmentRequest) {
 		
+		ShipmentOrder shipmentOrder = null;
+		String activeOrder = "Y";
 		initializeService(shipmentRequest.getCarrier());
-		ShipmentOrder shipmentOrder = clientShipmentService.createShipment(shipmentRequest);
-		shipmentOrder = saveShipmentDocuments(shipmentOrder);
-		shipmentOrder.setCarrier(shipmentRequest.getCarrier());
-		System.out.println("'Shipment Order:" + shipmentOrder);
-		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
 		shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
+		
+		//get the Shipment Order from DB
+		//Check for duplicate
+		shipmentOrder = shipmentServiceDAO.getByCartonNumber(getCartonNumber(shipmentRequest), activeOrder);
+		
+		if ( null != shipmentOrder && (null != shipmentOrder.getTrackingNumber()) ){
+			shipmentOrder.setStatus(ShippingConstants.STATUS_FAILURE);
+			shipmentOrder.setErrorDescription(ShippingConstants.ERR_CD_CARTON_EXISTS);
+			return shipmentOrder;
+		}
+		
+		shipmentOrder = clientShipmentService.createShipment(shipmentRequest);
+		shipmentOrder = saveShipmentDocuments(shipmentOrder);
+		populateRequestAttributes(shipmentRequest, shipmentOrder);
+		System.out.println("'Shipment Order:" + shipmentOrder);
+
 		shipmentServiceDAO.saveShipmentOrder(shipmentOrder);
 		System.out.println(shipmentOrder);
-		context.close();
+		//context.close();
 		return shipmentOrder;
 
+	}
+
+	private long getCartonNumber(ShipmentRequest shipmentRequest) {
+		long cartonNum = new Long(shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT().getCartonNumber()).longValue();
+		return cartonNum;
+	}
+
+	protected void populateRequestAttributes(ShipmentRequest shipmentRequest, ShipmentOrder shipmentOrder)
+			throws NumberFormatException {
+		shipmentOrder.setCarrier(shipmentRequest.getCarrier());
+		long cartonNum = getCartonNumber(shipmentRequest);
+		long orderNum = shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT().getOrderNumber().longValue();
+		shipmentOrder.setCartonNumber(cartonNum);
+		shipmentOrder.setOrderNumber(orderNum);
+		shipmentOrder.setReturnFlag(shipmentRequest.isGenLabel()?"Y":"N");
 	}
 
 	public TrackingDetails getShipmentTrackingDetails(String trackingId) {

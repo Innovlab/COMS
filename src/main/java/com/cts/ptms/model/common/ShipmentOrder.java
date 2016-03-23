@@ -36,8 +36,20 @@ public class ShipmentOrder  implements Serializable {
 	@Column(name="SHIPMENT_ORDER_ID",nullable = false)	
 	private long shipmentOrderId;
 	
-	@Column(name="ORDER_NUMBER",length = 30, nullable = false)
-	private String orderNumber;	
+	@Column(name="ORDER_NUMBER",nullable = false)
+	private long orderNumber;	
+	
+	@Column(name="CARTON_NUMBER", nullable = false)
+	private long cartonNumber;	
+	
+	@Column(name="RETURN_FLAG",length=1)
+	private String returnFlag;
+
+	
+	@Column(name="ACTIVE_ORDER",length=1)
+	private String active;
+	
+	
 	@Column(name="TRACKING_ID",length = 35, nullable = true)
 	private String trackingNumber;	
 	@Column(name="STATUS",length = 15, nullable = false)
@@ -81,10 +93,10 @@ public class ShipmentOrder  implements Serializable {
 	public void setShipmentOrderId(long shipmentOrderId) {
 		this.shipmentOrderId = shipmentOrderId;
 	}*/
-	public String getOrderNumber() {
+	public long getOrderNumber() {
 		return orderNumber;
 	}
-	public void setOrderNumber(String orderNumber) {
+	public void setOrderNumber(long orderNumber) {
 		this.orderNumber = orderNumber;
 	}
 	public String getTrackingNumber() {
@@ -135,6 +147,25 @@ public class ShipmentOrder  implements Serializable {
 	}
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
+	}
+
+	public long getCartonNumber() {
+		return cartonNumber;
+	}
+	public void setCartonNumber(long cartonNumber) {
+		this.cartonNumber = cartonNumber;
+	}
+	public String getReturnFlag() {
+		return returnFlag;
+	}
+	public void setReturnFlag(String returnFlag) {
+		this.returnFlag = returnFlag;
+	}
+	public String getActive() {
+		return active;
+	}
+	public void setActive(String active) {
+		this.active = active;
 	}
 	
 	

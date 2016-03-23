@@ -31,7 +31,7 @@ public class ShipmentDocument implements Serializable {
 	private String documentTitle;
 	@Column(name="DOCUMENT_TYPE",length = 15, nullable = false)
 	private String documentType;
-	@Column(name="DOCUMENT_PATH",length = 300, nullable = false)
+	@Column(name="DOCUMENT_PATH",length = 300)
 	private String documentName;
 	
 	@Transient

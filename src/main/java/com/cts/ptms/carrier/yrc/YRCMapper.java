@@ -119,7 +119,9 @@ public class YRCMapper {
 					switch(docTitle) {
 						case "trackingNumber" : {							
 							shipmentOrder.setTrackingNumber(xpath.evaluate(exprList.get("trackingNumber"), document));
-							shipmentOrder.setOrderNumber(xpath.evaluate(exprList.get("trackingNumber"), document));
+							shipmentOrder.setActive("Y");
+							
+							//shipmentOrder.setOrderNumber(xpath.evaluate(exprList.get("trackingNumber"), document));
 							break;
 						}
 						case "INVOICE":

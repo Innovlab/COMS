@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -41,6 +42,21 @@ public class ShipmentServiceDAO {
 		Query query =  em.createQuery("select shipmentOrder  from ShipmentOrder shipmentOrder where shipmentOrder.trackingNumber = :trackingNumber",ShipmentOrder.class);
 		query.setParameter("trackingNumber", trackingNumber);
 		return (ShipmentOrder) query.getSingleResult();
+	}
+
+	public ShipmentOrder getByCartonNumber(long cartonNum, String status) {
+		ShipmentOrder shipOrder = null;
+		Query query =  em.createQuery("select shipmentOrder  from ShipmentOrder shipmentOrder where shipmentOrder.cartonNumber = :cartonNum and shipmentOrder.active=:status",ShipmentOrder.class);
+		query.setParameter("cartonNum", cartonNum);
+		query.setParameter("status", status);
+		try{
+			Object result = query.getSingleResult();
+			shipOrder = (ShipmentOrder)result;
+		}catch(NoResultException ex){
+			System.out.println("No Active  Entity found for Carton Number : " + cartonNum);
+			shipOrder = null;
+		}
+		return shipOrder;
 	}
 	
 	public List<ShipmentOrder> getSummaryByDateRange (String fromDate,String toDate) {

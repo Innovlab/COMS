@@ -662,6 +662,7 @@ public class FedExMapper {
 		shipmentDocuments.add(shipmentDocument);
 		shipmentOrder.setShipmentDocuments(shipmentDocuments);
 		shipmentOrder.setTrackingNumber(trackingNumber);
+		shipmentOrder.setActive("Y");
 	}
 	/**
 	 * 

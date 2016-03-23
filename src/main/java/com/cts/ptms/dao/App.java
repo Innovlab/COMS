@@ -46,7 +46,7 @@ public class App {
 		ShipmentOrder shipmentOrder = new ShipmentOrder();
 		shipmentOrder.setCarrier("YRC");
 		shipmentOrder.setOrderDate(new Date());
-		shipmentOrder.setOrderNumber("12345");
+		shipmentOrder.setOrderNumber(12345);
 		shipmentOrder.setStatus("SUCCESS");
 		shipmentOrder.setTrackingNumber("Y12345");
 		

@@ -8,36 +8,36 @@ package com.cts.ptms.utils.constants;
 public class ShippingConstants {
 	
 	 // Path setting for tomcat server in azure
-	/* public static final String buildPropertiesPath="/home/bdcuser/COMS_ENV/Config/ups/Integraiton/UPS.properties";
+	 public static final String buildPropertiesPath="/home/bdcuser/COMS_ENV/Config/ups/Integraiton/UPS.properties";
 	 public static final String YRC_INPUT_MAPPER="/home/bdcuser/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
 	 public static final String INPUTFILE="/home/bdcuser/COMS_ENV/input";
      public static final String INVOICE_TEMPLATE="/home/bdcuser/COMS_ENV/Config/ups/common/invoice.pdf";
      public static final String CO_TEMPLATE="/home/bdcuser/COMS_ENV/Config/ups/common/COTemplate.pdf";
      public static final String OUTPUT_DIR="/home/bdcuser/COMS_ENV/Output/";
      public static  final String TEST_DOCUMENT_LOCATION="/home/bdcuser/COMS_ENV/Test/documents_location.properties";
-     public static final String FEDEX_PROPERTIES_PATH = "/home/bdcuser/COMS_ENV/Config/fedex/Integration/FEDEX.properties";*/
+     public static final String FEDEX_PROPERTIES_PATH = "/home/bdcuser/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
    
 	
 
-	 /*// Path setting for local tomcat
-	 public static final String buildPropertiesPath="D:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
-	 public static final String YRC_INPUT_MAPPER="D:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
-	 public static final String INPUTFILE="D:/COMS_ENV/inputData.xml";
-	 public static final String INVOICE_TEMPLATE="D:/COMS_ENV/Config/ups/common/invoice.pdf";
-     public static final String CO_TEMPLATE="D:/COMS_ENV/Config/ups/common/COTemplate.pdf";
-     public static final String OUTPUT_DIR="D:/COMS_ENV/Output/";
-     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";
-	public static final String FEDEX_PROPERTIES_PATH = "D:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";*/
-     
+	 // Path setting for local tomcat
+//	 public static final String buildPropertiesPath="D:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
+//	 public static final String YRC_INPUT_MAPPER="D:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
+//	 public static final String INPUTFILE="D:/COMS_ENV/inputData.xml";
+//	 public static final String INVOICE_TEMPLATE="D:/COMS_ENV/Config/ups/common/invoice.pdf";
+//     public static final String CO_TEMPLATE="D:/COMS_ENV/Config/ups/common/COTemplate.pdf";
+//     public static final String OUTPUT_DIR="D:/COMS_ENV/Output/";
+//     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";
+//	public static final String FEDEX_PROPERTIES_PATH = "D:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
+//     
      // Path setting for local tomcat
-  	 public static final String buildPropertiesPath="E:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
-  	 public static final String YRC_INPUT_MAPPER="E:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
-  	 public static final String INPUTFILE="E:/COMS_ENV/inputData.xml";
-  	 public static final String INVOICE_TEMPLATE="E:/COMS_ENV/Config/ups/common/invoice.pdf";
-	 public static final String CO_TEMPLATE="E:/COMS_ENV/Config/ups/common/COTemplate.pdf";
-	 public static final String OUTPUT_DIR="E:/COMS_ENV/Output/";
-	 public static  final String TEST_DOCUMENT_LOCATION="E:/COMS_ENV/Test/documents_location.properties";
-	 public static final String FEDEX_PROPERTIES_PATH = "E:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
+//  	 public static final String buildPropertiesPath="E:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
+//  	 public static final String YRC_INPUT_MAPPER="E:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
+//  	 public static final String INPUTFILE="E:/COMS_ENV/inputData.xml";
+//  	 public static final String INVOICE_TEMPLATE="E:/COMS_ENV/Config/ups/common/invoice.pdf";
+//	 public static final String CO_TEMPLATE="E:/COMS_ENV/Config/ups/common/COTemplate.pdf";
+//	 public static final String OUTPUT_DIR="E:/COMS_ENV/Output/";
+//	 public static  final String TEST_DOCUMENT_LOCATION="E:/COMS_ENV/Test/documents_location.properties";
+//	 public static final String FEDEX_PROPERTIES_PATH = "E:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
 	    
 	
 	public static final String SHIPPING_CONFIRM_URL	= "shipConfirmURL";
@@ -72,5 +72,8 @@ public class ShippingConstants {
   //Status codes
     public static final String SUCCESS = "SUCCESS";
     public static final String ERROR = "ERROR";
+    public static final String STATUS_FAILURE = "FAILURE";
+    
+    public static final String ERR_CD_CARTON_EXISTS = "An Active Tracking Number already exists for the carton";
 }
 

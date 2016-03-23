@@ -135,6 +135,7 @@ public class UPSHTTPClient implements ClientGateway {
 			}else{
 			response.setTrackingNumber(acceptResponse.getShipmentResults().getShipmentIdentificationNumber());
 			}
+			response.setActive("Y");
 			//for Label
 			if(null!=acceptResponse.getShipmentResults() && null!=acceptResponse.getShipmentResults().getPackageResults() &&
 					null!=acceptResponse.getShipmentResults().getPackageResults().get(0).getLabelImage()){
