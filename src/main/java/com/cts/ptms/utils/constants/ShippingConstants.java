@@ -16,6 +16,7 @@ public class ShippingConstants {
      public static final String OUTPUT_DIR="/home/bdcuser/COMS_ENV/Output/";
      public static  final String TEST_DOCUMENT_LOCATION="/home/bdcuser/COMS_ENV/Test/documents_location.properties";
      public static final String FEDEX_PROPERTIES_PATH = "/home/bdcuser/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
+     public static final String PUROLATOR_PROPERTIES_PATH= "/home/bdcuser/COMS_ENV/Config/Purolator/Integration/Purolator.properties";
    
 	
 
@@ -28,6 +29,8 @@ public class ShippingConstants {
 //     public static final String OUTPUT_DIR="D:/COMS_ENV/Output/";
 //     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";
 //	public static final String FEDEX_PROPERTIES_PATH = "D:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
+ //    public static final String PUROLATOR_PROPERTIES_PATH= "D:/COMS_ENV/Config/Purolator/Integration/Purolator.properties";
+     
 //     
      // Path setting for local tomcat
 //  	 public static final String buildPropertiesPath="E:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
@@ -38,7 +41,7 @@ public class ShippingConstants {
 //	 public static final String OUTPUT_DIR="E:/COMS_ENV/Output/";
 //	 public static  final String TEST_DOCUMENT_LOCATION="E:/COMS_ENV/Test/documents_location.properties";
 //	 public static final String FEDEX_PROPERTIES_PATH = "E:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
-	    
+//    public static final String PUROLATOR_PROPERTIES_PATH= "E:/COMS_ENV/Config/Purolator/Integration/Purolator.properties";    
 	
 	public static final String SHIPPING_CONFIRM_URL	= "shipConfirmURL";
 	public static final String SHIPPING_ACCEPT_URL 	= "shipAcceptURL";
@@ -75,5 +78,7 @@ public class ShippingConstants {
     public static final String STATUS_FAILURE = "FAILURE";
     
     public static final String ERR_CD_CARTON_EXISTS = "An Active Tracking Number already exists for the carton";
+    
+    public static final String PUROLATOR="PUROLATOR";
 }
 

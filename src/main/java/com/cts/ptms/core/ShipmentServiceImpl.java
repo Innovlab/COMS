@@ -25,6 +25,7 @@ import org.apache.pdfbox.util.PDFImageWriter;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.cts.ptms.carrier.fedex.FedExShipmentService;
+import com.cts.ptms.carrier.purolator.PurolatorShipmentService;
 import com.cts.ptms.carrier.ups.UPSHTTPClient;
 import com.cts.ptms.carrier.ups.UPSShipmentService;
 import com.cts.ptms.carrier.yrc.YRCShipmentService;
@@ -77,6 +78,8 @@ public class ShipmentServiceImpl implements ShipmentService {
 			clientShipmentService = new YRCShipmentService();
 		} else if (carrier.equalsIgnoreCase(ShippingConstants.FEDEX)) {
 			clientShipmentService = new FedExShipmentService();
+		} else if (carrier.equalsIgnoreCase(ShippingConstants.PUROLATOR)) {
+			clientShipmentService = new PurolatorShipmentService();
 		}
 		
 		if (null == context){
@@ -314,7 +317,12 @@ public class ShipmentServiceImpl implements ShipmentService {
 			image.scaleAbsoluteWidth(550);
 			image.setRotationDegrees(90);
 			image.setAbsolutePosition(450, 20);
-		} else {
+		} else if (shipmentOrder.getCarrier().equalsIgnoreCase("PUROLATOR")) {
+			image.scaleAbsoluteHeight(550);
+			image.scaleAbsoluteWidth(325);
+			//image.setRotationDegrees(90);
+			image.setAbsolutePosition(450, 20);
+		}else {
 			image.scaleAbsoluteHeight(600);
 			image.scaleAbsoluteWidth(700);
 			// image.setRotationDegrees(0);

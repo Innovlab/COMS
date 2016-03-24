@@ -93,7 +93,7 @@ public class ADDRESS {
     @XmlSchemaType(name = "NCName")
     protected String state;
     @XmlElement(name = "ZIPCode", required = true)
-    protected BigInteger zipCode;
+    protected String zipCode;
     @XmlElement(name = "PhoneNumber")
     protected BigInteger phoneNumber;
     
@@ -331,10 +331,10 @@ public class ADDRESS {
      * 
      * @return
      *     possible object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public BigInteger getZIPCode() {
+    public String getZIPCode() {
         return zipCode;
     }
 
@@ -343,10 +343,10 @@ public class ADDRESS {
      * 
      * @param value
      *     allowed object is
-     *     {@link BigInteger }
+     *     {@link String }
      *     
      */
-    public void setZIPCode(BigInteger value) {
+    public void setZIPCode(String value) {
         this.zipCode = value;
     }
 
