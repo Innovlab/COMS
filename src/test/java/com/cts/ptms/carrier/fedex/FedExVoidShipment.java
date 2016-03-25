@@ -6,36 +6,27 @@ package com.cts.ptms.carrier.fedex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.cts.ptms.commonutils.ShipmentCommonUtilities;
 import com.cts.ptms.core.ShipmentServiceImpl;
-import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
 import com.cts.ptms.model.common.ShipmentRequest;
-import com.cts.ptms.utils.constants.ShippingConstants;
 
 /**
  * @author 417765
  *
  */
-public class FedExReturnLabelJUnit {
+public class FedExVoidShipment {
 
 	private Logger logger = Logger.getAnonymousLogger() ;
 	private ShipmentRequest shipmentRequest;
 	private ShipmentOrder shipmentResponse;
-	private String pathToGet = ShippingConstants.FEDEX_INPUT_DIR;
-	private String pathToSave = ShippingConstants.FEDEX_OUTPUT_DIR;
 	private ShipmentServiceImpl serviceImpl;	
 	
 	@Before
@@ -46,6 +37,7 @@ public class FedExReturnLabelJUnit {
 		shipmentRequest.setCarrier("FEDEX");
     	shipmentResponse = new ShipmentOrder();
     	serviceImpl = new ShipmentServiceImpl();
+       
     }
     @After
     public void tearDown() 
@@ -58,34 +50,24 @@ public class FedExReturnLabelJUnit {
      * FedEx 2 day success test case
      */
 	@Test
-	public void testCreateShipmentRequest_FedEx_2day_Success_WithRtrnLbl()
+	public void testVoidShipmentRequest()
 	{
 		logger.info("Testing CreateShipmentRequest for fedex 2nd day with return label success scenario...");
 		try 
 		{
-			shipmentRequest.setFileName(pathToGet+"InputData_FedEx_2day_Success.xml");
-			shipmentRequest.setGenLabel(true);
-			shipmentResponse = serviceImpl.createSingleShipmentOrder(shipmentRequest);
+			shipmentRequest.setTrackingNumToCancel("794683545266");
+			shipmentResponse = serviceImpl.cancelShipmentOrder(shipmentRequest);
 			
 			assertEquals("SUCCESS", shipmentResponse.getStatus());
 			System.out.println("Status:"+shipmentResponse.getStatus() );
 			
-			/*assertFalse(shipmentResponse == null);
-			assertFalse(shipmentResponse.getShipmentDocuments().size() == 0);
-			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(0);
-			assertFalse(shipmentDoc.getDocumentTitle() != ShippingConstants.SHIPPING_LABEL_DOC);
-			assertFalse(null == shipmentDoc.getByteArray());
-			
-			ShipmentCommonUtilities.saveBase64DataToLocalFile(shipmentDoc.getByteArray(), shipmentResponse.getTrackingNumber()+"_2ndDay", 
-					pathToSave, shipmentDoc.getDocumentType());*/
-			
 		} 
 		catch(Exception e)
 		{
-			logger.severe("Exception occured at testCreateShipmentRequest_FedEx_2day_Success_WithRtrnLbl::"+e);
+			logger.severe("Exception occured at testCreateShipmentRequest_InvalidServiceCode::"+e);
 			assertFalse(false);
 		}
 		
 	}
-	
+
 }
