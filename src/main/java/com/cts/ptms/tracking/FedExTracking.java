@@ -416,7 +416,7 @@ public class FedExTracking implements ITrackingDetails{
 				status.setStatusType(tempCodeType);
 				
 				activity.setStatus(status);
-				logger.info("Event Time Stamp"+trackEvent.getTimestamp());
+				//logger.info("Event Time Stamp"+trackEvent.getTimestamp());
 				Date eventDate = trackEvent.getTimestamp().getTime();
 				activity.setDate(new SimpleDateFormat("MM/dd/yyyy").format(eventDate));
 				activity.setTime(new SimpleDateFormat("HH:mm:ss").format(eventDate));

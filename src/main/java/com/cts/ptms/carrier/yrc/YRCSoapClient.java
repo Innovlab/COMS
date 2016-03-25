@@ -165,5 +165,15 @@ public class YRCSoapClient implements ClientGateway {
 		YRCSoapClient soapClient = new YRCSoapClient();
 		soapClient.createShipmentRequest(null);
 	}
+
+	/* (non-Javadoc)
+	 * @see com.cts.ptms.core.ClientGateway#cancelShipment(com.cts.ptms.model.common.ShipmentRequest)
+	 */
+	@Override
+	public ShipmentOrder cancelShipment(ShipmentRequest shipmentRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 }

@@ -47,4 +47,11 @@ public class PurolatorShipmentService implements ClientShipmentService {
 		return null;
 	}
 
+	@Override
+	public ShipmentOrder cancelShipment(ShipmentRequest shipmentRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 }

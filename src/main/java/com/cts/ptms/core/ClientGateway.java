@@ -15,5 +15,6 @@ public interface ClientGateway {
 	
 	public ShipmentOrder createShipmentResposeObj (ShipmentConfirmResponse confirmResponse,ShipmentAcceptResponse acceptResponse);
 	
-	
+	//Cancel Shipment Order
+	ShipmentOrder cancelShipment(ShipmentRequest shipmentRequest);	
 }

@@ -44,6 +44,16 @@ public class UPSShipmentService implements ClientShipmentService{
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.cts.ptms.core.ClientShipmentService#cancelShipment(com.cts.ptms.model.common.ShipmentRequest)
+	 */
+	@Override
+	public ShipmentOrder cancelShipment(ShipmentRequest shipmentRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
 	
 
 }

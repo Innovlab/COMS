@@ -205,4 +205,11 @@ public class PurolatorSOAPClient implements ClientGateway {
 			docRequestMapper = null;
 	}
 
+	@Override
+	public ShipmentOrder cancelShipment(ShipmentRequest shipmentRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+
 }

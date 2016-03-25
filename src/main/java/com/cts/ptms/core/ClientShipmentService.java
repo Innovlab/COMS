@@ -10,5 +10,6 @@ public interface ClientShipmentService {
 	void processOutputFiles () ;
 	ShipmentOrder createShipment(ShipmentRequest shipmentRequest);
 	TrackingDetails getTrackingDetails(String trackingId);
-
+	//Cancel Shipment Order
+	ShipmentOrder cancelShipment(ShipmentRequest shipmentRequest);
 }

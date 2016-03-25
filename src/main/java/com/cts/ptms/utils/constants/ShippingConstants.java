@@ -17,31 +17,49 @@ public class ShippingConstants {
      public static  final String TEST_DOCUMENT_LOCATION="/home/bdcuser/COMS_ENV/Test/documents_location.properties";
      public static final String FEDEX_PROPERTIES_PATH = "/home/bdcuser/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
      public static final String PUROLATOR_PROPERTIES_PATH= "/home/bdcuser/COMS_ENV/Config/Purolator/Integration/Purolator.properties";
-   
+     public static final String FEDEX_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/fedex/input/";
+	 public static final String FEDEX_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/fedex/output/";
+	 public static final String UPS_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/ups/input/";
+	 public static final String UPS_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/ups/output/";
+	 public static final String YRC_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/yrc/input/";
+	 public static final String YRC_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/yrc/output/";
 	
 
-	 // Path setting for local tomcat
-//	 public static final String buildPropertiesPath="D:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
-//	 public static final String YRC_INPUT_MAPPER="D:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
-//	 public static final String INPUTFILE="D:/COMS_ENV/inputData.xml";
-//	 public static final String INVOICE_TEMPLATE="D:/COMS_ENV/Config/ups/common/invoice.pdf";
-//     public static final String CO_TEMPLATE="D:/COMS_ENV/Config/ups/common/COTemplate.pdf";
-//     public static final String OUTPUT_DIR="D:/COMS_ENV/Output/";
-//     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";
-//	public static final String FEDEX_PROPERTIES_PATH = "D:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
- //    public static final String PUROLATOR_PROPERTIES_PATH= "D:/COMS_ENV/Config/Purolator/Integration/Purolator.properties";
+	 /* //Path setting for local tomcat
+	 public static final String buildPropertiesPath="D:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
+	 public static final String YRC_INPUT_MAPPER="D:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
+	 public static final String INPUTFILE="D:/COMS_ENV/inputData.xml";
+	 public static final String INVOICE_TEMPLATE="D:/COMS_ENV/Config/ups/common/invoice.pdf";
+     public static final String CO_TEMPLATE="D:/COMS_ENV/Config/ups/common/COTemplate.pdf";
+     public static final String OUTPUT_DIR="D:/COMS_ENV/Output/";
+     public static  final String TEST_DOCUMENT_LOCATION="D:/COMS_ENV/Test/documents_location.properties";
+	 public static final String FEDEX_PROPERTIES_PATH = "D:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
+     public static final String PUROLATOR_PROPERTIES_PATH= "D:/COMS_ENV/Config/Purolator/Integration/Purolator.properties";
+	 public static final String FEDEX_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/fedex/input/";
+	 public static final String FEDEX_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/fedex/output/";
+	 public static final String UPS_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/ups/input/";
+	 public static final String UPS_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/ups/output/";
+	 public static final String YRC_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/yrc/input/";
+	 public static final String YRC_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/yrc/output/";*/
      
-//     
-     // Path setting for local tomcat
-//  	 public static final String buildPropertiesPath="E:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
-//  	 public static final String YRC_INPUT_MAPPER="E:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
-//  	 public static final String INPUTFILE="E:/COMS_ENV/inputData.xml";
-//  	 public static final String INVOICE_TEMPLATE="E:/COMS_ENV/Config/ups/common/invoice.pdf";
-//	 public static final String CO_TEMPLATE="E:/COMS_ENV/Config/ups/common/COTemplate.pdf";
-//	 public static final String OUTPUT_DIR="E:/COMS_ENV/Output/";
-//	 public static  final String TEST_DOCUMENT_LOCATION="E:/COMS_ENV/Test/documents_location.properties";
-//	 public static final String FEDEX_PROPERTIES_PATH = "E:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
-//    public static final String PUROLATOR_PROPERTIES_PATH= "E:/COMS_ENV/Config/Purolator/Integration/Purolator.properties";    
+     
+     //Path setting for local tomcat
+  	 /*public static final String buildPropertiesPath="E:/COMS_ENV/Config/ups/Integraiton/UPS.properties";
+  	 public static final String YRC_INPUT_MAPPER="E:/COMS_ENV/Config/yrc/Integraiton/yrc_mapper.xsl";
+  	 public static final String INPUTFILE="E:/COMS_ENV/inputData.xml";
+  	 public static final String INVOICE_TEMPLATE="E:/COMS_ENV/Config/ups/common/invoice.pdf";
+	 public static final String CO_TEMPLATE="E:/COMS_ENV/Config/ups/common/COTemplate.pdf";
+	 public static final String OUTPUT_DIR="E:/COMS_ENV/Output/";
+	 public static  final String TEST_DOCUMENT_LOCATION="E:/COMS_ENV/Test/documents_location.properties";
+	 public static final String FEDEX_PROPERTIES_PATH = "E:/COMS_ENV/Config/fedex/Integration/FEDEX.properties";
+     public static final String PUROLATOR_PROPERTIES_PATH= "E:/COMS_ENV/Config/Purolator/Integration/Purolator.properties";
+	 public static final String FEDEX_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/fedex/input/";
+	 public static final String FEDEX_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/fedex/output/";
+	 public static final String UPS_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/ups/input/";
+	 public static final String UPS_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/ups/output/";
+	 public static final String YRC_INPUT_DIR = "/home/bdcuser/COMS_ENV/Test/yrc/input/";
+	 public static final String YRC_OUTPUT_DIR = "/home/bdcuser/COMS_ENV/Test/yrc/output/";*/
+	 
 	
 	public static final String SHIPPING_CONFIRM_URL	= "shipConfirmURL";
 	public static final String SHIPPING_ACCEPT_URL 	= "shipAcceptURL";

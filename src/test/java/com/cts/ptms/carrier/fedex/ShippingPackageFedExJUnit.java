@@ -7,9 +7,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 import org.json.JSONException;
@@ -33,9 +30,8 @@ public class ShippingPackageFedExJUnit {
 	private Logger logger = Logger.getAnonymousLogger(); 
 	private ShipmentRequest shipmentRequest;
 	private ShipmentOrder shipmentResponse;
-	private String filePath;
+	private String pathToGet;
 	private String pathToSave;
-	private Properties properties; 
 	private ShipmentServiceImpl serviceImpl;
 	/**
 	 * 
@@ -50,20 +46,10 @@ public class ShippingPackageFedExJUnit {
 		logger.info("Setting up all required data for each test case method.");
 		shipmentRequest = new ShipmentRequest();
     	shipmentResponse = new ShipmentOrder();
-    	//fedExSoapClient = new FedExSoapClient();
     	serviceImpl = new ShipmentServiceImpl();
     	shipmentRequest.setCarrier("FEDEX"); 
-    	
-    	try {
-    		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("./documents_location.properties");
-			properties = new Properties();
-			properties.load(inputStream);
-			System.out.println("File will be saved on  .."+ properties.getProperty("SAVE_FILE_PATH"));
-			pathToSave = properties.getProperty("SAVE_FILE_PATH");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-       
+    	pathToGet = ShippingConstants.FEDEX_INPUT_DIR;
+    	pathToSave = ShippingConstants.FEDEX_OUTPUT_DIR;
     }
     @After
     public void tearDown() 
@@ -71,7 +57,7 @@ public class ShippingPackageFedExJUnit {
     	logger.info("nullifying up all required data for each test case method.");
     	shipmentRequest = null;
     	shipmentResponse = null;
-    	filePath = null;
+    	pathToGet = null;
     	pathToSave = null;
     	serviceImpl = null;
     }
@@ -84,24 +70,21 @@ public class ShippingPackageFedExJUnit {
 		logger.info("Testing CreateShipmentRequest for fedex 2nd day success scenario...");
 		try 
 		{
-			filePath = "./com/cts/ptms/carrier/fedex/resources/InputData_FedEx_2day_Success.xml";
 			
-			URL url = getClass().getClassLoader().getResource(filePath);
-			shipmentRequest.setFileName(url.getFile());
+			shipmentRequest.setFileName(pathToGet+"InputData_FedEx_2day_Success.xml");
 			shipmentResponse = serviceImpl.createSingleShipmentOrder(shipmentRequest);
 			
-			//System.out.println(shipmentResponse.getErrorDescription());
 			assertEquals("SUCCESS", shipmentResponse.getStatus());
 			System.out.println("Status:"+shipmentResponse.getStatus() );
 			
 			assertFalse(shipmentResponse == null);
 			assertFalse(shipmentResponse.getShipmentDocuments().size() == 0);
 			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(0);
-			assertFalse(shipmentDoc.getDocumentName() != ShippingConstants.SHIPPING_LABEL_DOC);
+			assertFalse(shipmentDoc.getDocumentTitle() != ShippingConstants.SHIPPING_LABEL_DOC);
 			assertFalse(null == shipmentDoc.getByteArray());
 			
-			ShipmentCommonUtilities.saveBase64DataToLocalFile(shipmentDoc.getByteArray(), shipmentResponse.getTrackingNumber()+"_2ndDay", pathToSave, 
-					shipmentDoc.getDocumentType());
+			ShipmentCommonUtilities.saveBase64DataToLocalFile(shipmentDoc.getByteArray(), shipmentResponse.getTrackingNumber()+"_2ndDay", 
+					pathToSave, shipmentDoc.getDocumentType());
 			
 		} 
 		catch(Exception e)
@@ -121,10 +104,7 @@ public class ShippingPackageFedExJUnit {
 		logger.info("Testing CreateShipmentRequest for Invalid ServiceCode...");
 		try 
 		{
-			filePath = "./com/cts/ptms/carrier/fedex/resources/InputData_FedEx_2day_Failure.xml";
-			
-			URL url = getClass().getClassLoader().getResource(filePath);
-			shipmentRequest.setFileName(url.getFile());
+			shipmentRequest.setFileName(pathToGet+"InputData_FedEx_2day_Failure.xml");
 			shipmentResponse = serviceImpl.createSingleShipmentOrder(shipmentRequest);
 			
 			assertEquals("ERROR", shipmentResponse.getStatus());
@@ -147,10 +127,7 @@ public class ShippingPackageFedExJUnit {
 		logger.info("testShipmentTracking_FedExGround_Success== >");
 		try 
 		{
-			filePath = "./com/cts/ptms/carrier/fedex/resources/InputData_FedExGround_Success.xml";
-			
-			URL url = getClass().getClassLoader().getResource(filePath);
-			shipmentRequest.setFileName(url.getFile());
+			shipmentRequest.setFileName(pathToGet+"InputData_FedExGround_Success.xml");
 			shipmentResponse = serviceImpl.createSingleShipmentOrder(shipmentRequest);
 			
 			assertEquals("SUCCESS", shipmentResponse.getStatus());
@@ -159,7 +136,7 @@ public class ShippingPackageFedExJUnit {
 			assertFalse(shipmentResponse == null);
 			assertFalse(shipmentResponse.getShipmentDocuments().size() == 0);
 			ShipmentDocument shipmentDoc = shipmentResponse.getShipmentDocuments().get(0);
-			assertFalse(shipmentDoc.getDocumentName() != ShippingConstants.SHIPPING_LABEL_DOC);
+			assertFalse(shipmentDoc.getDocumentTitle() != ShippingConstants.SHIPPING_LABEL_DOC);
 			assertFalse(null == shipmentDoc.getByteArray());
 			
 			ShipmentCommonUtilities.saveBase64DataToLocalFile(shipmentDoc.getByteArray(), shipmentResponse.getTrackingNumber()+"_Ground", pathToSave, 
@@ -183,10 +160,7 @@ public class ShippingPackageFedExJUnit {
 		logger.info("testShipmentTracking_FedExGround_Failure== >");
 		try 
 		{
-			filePath = "./com/cts/ptms/carrier/fedex/resources/InputData_FedExGround_Failure.xml";
-			
-			URL url = getClass().getClassLoader().getResource(filePath);
-			shipmentRequest.setFileName(url.getFile());
+			shipmentRequest.setFileName(pathToGet+"InputData_FedExGround_Failure.xml");
 			shipmentResponse = serviceImpl.createSingleShipmentOrder(shipmentRequest);
 			assertEquals("ERROR", shipmentResponse.getStatus());
 			
@@ -208,10 +182,7 @@ public class ShippingPackageFedExJUnit {
 		logger.info("Start:: Testing CreateShipmentRequest for fedex Invalid ServiceCode scenario...==>");
 		try 
 		{
-			filePath = "./com/cts/ptms/carrier/fedex/resources/InputData_FedEx_InvalidServiceCode.xml";
-			
-			URL url = getClass().getClassLoader().getResource(filePath);
-			shipmentRequest.setFileName(url.getFile());
+			shipmentRequest.setFileName(pathToGet+"InputData_FedEx_InvalidServiceCode.xml");
 			shipmentResponse = serviceImpl.createSingleShipmentOrder(shipmentRequest);
 			assertEquals("ERROR", shipmentResponse.getStatus());
 			
@@ -233,9 +204,7 @@ public class ShippingPackageFedExJUnit {
 		logger.info("Start:: Testing testCreateShipmentRequest_FedEx_Invalid_Weight()...==>");
 		try 
 		{
-			filePath = "./com/cts/ptms/carrier/fedex/resources/InputData_FedEx_InvalidWeight.xml";
-			URL url = getClass().getClassLoader().getResource(filePath);
-			shipmentRequest.setFileName(url.getFile());
+			shipmentRequest.setFileName(pathToGet+"InputData_FedEx_InvalidWeight.xml");
 			shipmentResponse = serviceImpl.createSingleShipmentOrder(shipmentRequest);
 			assertEquals("ERROR", shipmentResponse.getStatus());
 			

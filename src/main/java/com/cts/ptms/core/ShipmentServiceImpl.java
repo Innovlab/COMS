@@ -422,4 +422,15 @@ public class ShipmentServiceImpl implements ShipmentService {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see com.cts.ptms.core.ShipmentService#cancelShipmentOrder(com.cts.ptms.model.common.ShipmentRequest)
+	 */
+	@Override
+	public ShipmentOrder cancelShipmentOrder(ShipmentRequest shipmentRequest) {
+		initializeService(shipmentRequest.getCarrier());
+		return clientShipmentService.cancelShipment(shipmentRequest);
+	}
+	
+	
+	
 }

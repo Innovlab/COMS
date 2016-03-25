@@ -49,7 +49,11 @@ public class FedExShipmentService implements ClientShipmentService{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public ShipmentOrder cancelShipment(ShipmentRequest shipmentRequest) {
+		return clientService.cancelShipment(shipmentRequest);
+	}
 	
 
 }

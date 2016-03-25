@@ -285,14 +285,14 @@
 												<th>City</th>
 												<th>State</th>
 												<th>Status</th>
-												<th>Date</th>
+												<th>Date and Time</th>
 											</tr>
 										</thead>
 										<tr ng-repeat="x in activities">
 											<td>{{ x.ActivityLocation.Address.city }}</td>
 											<td>{{ x.ActivityLocation.Address.stateProvinceCode }}</td>
 											<td>{{ x.Status.StatusType.Description }}</td>
-											<td>{{ x.Date }}</td>
+											<td>{{ x.Date }} {{x.Time}}</td>
 										</tr>
 									</table>
 								</div>
@@ -360,10 +360,7 @@
 							}, {
 								id : 'FEDEX',
 								name : 'FEDEX'
-							},{
-								id : 'PUROLATOR',
-								name : 'PUROLATOR'
-							} ],
+							}, ],
 							selectedOption : {
 								id : 'UPS',
 								name : 'UPS'
@@ -373,7 +370,8 @@
 
 						$scope.showRetLabel = function() {
 							$scope.checkboxModel.value = false;
-							if ($scope.data.selectedOption.name == "UPS") {
+							if ($scope.data.selectedOption.name == "UPS" || 
+									$scope.data.selectedOption.name == "FEDEX") {
 								$scope.showRet = true;
 							} else {
 								$scope.showRet = false;
@@ -414,9 +412,6 @@
 								},  {
 									id : 'YRC',
 									name : 'YRC'
-								}, {
-									id : 'PUROLATOR',
-									name : 'PUROLATOR'
 								}],
 								selectedOption : {
 									id : 'UPS',
@@ -428,6 +423,7 @@
 						}
 
 						$scope.trackShipment = function() {
+							$scope.showError = false;
 							$scope.load = true;
 							$http
 									.get(
@@ -497,7 +493,8 @@
 												} else {
 													var str = window.location.href;
 													str = str.replace("/#", "");
-													if ($scope.data.selectedOption.name == "UPS") {
+													if ($scope.data.selectedOption.name == "UPS" || 
+															$scope.data.selectedOption.name == "FEDEX") {
 														$scope.retimgSrc = str
 																+ "/ShipLabels/Return_"
 																+ $scope.response.trackingNumber

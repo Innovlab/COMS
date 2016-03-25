@@ -13,5 +13,6 @@ public interface ShipmentService {
 	public BatchOrderSummary createBatchShipmentOrder(ShipmentBatchRequest shipmentRequest);
 	public TrackingDetails getShipmentTrackingDetails(String trackingId);
 	public BatchOrderSummary getBatchOrderSummary(BatchOrderSummaryFilter batchOrderSummaryFilter);
-
+	//For Cancel Shipment
+	ShipmentOrder cancelShipmentOrder(ShipmentRequest shipmentRequest);
 }

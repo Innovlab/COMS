@@ -31,6 +31,9 @@ public class ShipmentRequest {
 	@XmlElement(name = "CreateShipUnits")
 	private CreateShipUnits createShipUnits;
 	
+	@XmlElement(name = "TrackingNumber")
+	private String trackingNumToCancel;
+	
 	
 	public String getShipmentRequestXml() {
 		return shipmentRequestXml;
@@ -81,5 +84,18 @@ public class ShipmentRequest {
 	public void setCreateShipUnits(CreateShipUnits createShipUnits) {
 		this.createShipUnits = createShipUnits;
 	}
+	/**
+	 * @return the trackingNumToCancel
+	 */
+	public String getTrackingNumToCancel() {
+		return trackingNumToCancel;
+	}
+	/**
+	 * @param trackingNumToCancel the trackingNumToCancel to set
+	 */
+	public void setTrackingNumToCancel(String trackingNumToCancel) {
+		this.trackingNumToCancel = trackingNumToCancel;
+	}
+	
 	
 }

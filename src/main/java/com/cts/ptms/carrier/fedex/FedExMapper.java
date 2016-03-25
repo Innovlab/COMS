@@ -31,6 +31,8 @@ import com.cts.ptms.model.fedex.ws.ship.v17.CompletedShipmentDetail;
 import com.cts.ptms.model.fedex.ws.ship.v17.Contact;
 import com.cts.ptms.model.fedex.ws.ship.v17.CustomerReference;
 import com.cts.ptms.model.fedex.ws.ship.v17.CustomerReferenceType;
+import com.cts.ptms.model.fedex.ws.ship.v17.DeleteShipmentRequest;
+import com.cts.ptms.model.fedex.ws.ship.v17.DeletionControlType;
 import com.cts.ptms.model.fedex.ws.ship.v17.Dimensions;
 import com.cts.ptms.model.fedex.ws.ship.v17.DropoffType;
 import com.cts.ptms.model.fedex.ws.ship.v17.FreightBaseCharge;
@@ -40,7 +42,8 @@ import com.cts.ptms.model.fedex.ws.ship.v17.LabelFormatType;
 import com.cts.ptms.model.fedex.ws.ship.v17.LabelSpecification;
 import com.cts.ptms.model.fedex.ws.ship.v17.LinearUnits;
 import com.cts.ptms.model.fedex.ws.ship.v17.Money;
-import com.cts.ptms.model.fedex.ws.ship.v17.PackageOperationalDetail;
+import com.cts.ptms.model.fedex.ws.ship.v17.Notification;
+import com.cts.ptms.model.fedex.ws.ship.v17.NotificationSeverityType;
 import com.cts.ptms.model.fedex.ws.ship.v17.PackagingType;
 import com.cts.ptms.model.fedex.ws.ship.v17.Party;
 import com.cts.ptms.model.fedex.ws.ship.v17.Payment;
@@ -50,24 +53,24 @@ import com.cts.ptms.model.fedex.ws.ship.v17.ProcessShipmentReply;
 import com.cts.ptms.model.fedex.ws.ship.v17.ProcessShipmentRequest;
 import com.cts.ptms.model.fedex.ws.ship.v17.RequestedPackageLineItem;
 import com.cts.ptms.model.fedex.ws.ship.v17.RequestedShipment;
+import com.cts.ptms.model.fedex.ws.ship.v17.ReturnShipmentDetail;
+import com.cts.ptms.model.fedex.ws.ship.v17.ReturnType;
 import com.cts.ptms.model.fedex.ws.ship.v17.ServiceType;
 import com.cts.ptms.model.fedex.ws.ship.v17.ShipServiceLocator;
 import com.cts.ptms.model.fedex.ws.ship.v17.ShipmentOperationalDetail;
-import com.cts.ptms.model.fedex.ws.ship.v17.ShipmentRateDetail;
-import com.cts.ptms.model.fedex.ws.ship.v17.ShipmentRating;
+import com.cts.ptms.model.fedex.ws.ship.v17.ShipmentSpecialServiceType;
+import com.cts.ptms.model.fedex.ws.ship.v17.ShipmentSpecialServicesRequested;
 import com.cts.ptms.model.fedex.ws.ship.v17.ShippingDocument;
 import com.cts.ptms.model.fedex.ws.ship.v17.ShippingDocumentImageType;
 import com.cts.ptms.model.fedex.ws.ship.v17.ShippingDocumentPart;
-import com.cts.ptms.model.fedex.ws.ship.v17.Surcharge;
 import com.cts.ptms.model.fedex.ws.ship.v17.TrackingId;
+import com.cts.ptms.model.fedex.ws.ship.v17.TrackingIdType;
 import com.cts.ptms.model.fedex.ws.ship.v17.TransactionDetail;
 import com.cts.ptms.model.fedex.ws.ship.v17.VersionId;
 import com.cts.ptms.model.fedex.ws.ship.v17.WebAuthenticationCredential;
 import com.cts.ptms.model.fedex.ws.ship.v17.WebAuthenticationDetail;
 import com.cts.ptms.model.fedex.ws.ship.v17.Weight;
 import com.cts.ptms.model.fedex.ws.ship.v17.WeightUnits;
-import com.cts.ptms.model.fedex.ws.ship.v17.Notification;
-import com.cts.ptms.model.fedex.ws.ship.v17.NotificationSeverityType;
 import com.cts.ptms.model.gls.ADDRESS;
 import com.cts.ptms.model.gls.CreateShipUnits;
 import com.cts.ptms.model.gls.SHIPUNIT;
@@ -88,10 +91,11 @@ public class FedExMapper {
 	 * @return
 	 * @throws ShippingException
 	 */
-	public ProcessShipmentRequest mapRequestToCarrierInput(CreateShipUnits createShipUnits, ShipmentOrder shipmentOrder) throws ShippingException{
+	public ProcessShipmentRequest mapRequestToCarrierInput(CreateShipUnits createShipUnits, ShipmentOrder shipmentOrder, boolean isRtrnLblRequested) throws ShippingException{
 		
 		ProcessShipmentRequest processShipmentRequest  = null;
 		try {
+			SHIPUNIT  shipUnit = null;
 			logger.info("mapRequestToCarrierInput-->"+createShipUnits);
 			processShipmentRequest = new ProcessShipmentRequest();
 			
@@ -103,16 +107,27 @@ public class FedExMapper {
 				logger.severe("Ship units are empty");
 				throw new ShippingException("Ship units are empty");
 			}
-			
-			SHIPUNIT  shipUnit = createShipUnits.getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT();
-			logger.info("Ship unit details are ::"+shipUnit);
-			ShipmentServiceImpl.itemNumber = shipUnit.getDataXML().getINVOICE().getITEM().getItemNumber().toString();
-			ShipmentServiceImpl.itemDescription = shipUnit.getDataXML().getINVOICE().getITEM().getDescription();
-			ShipmentServiceImpl.plannedShipDate = shipUnit.getDatePlannedShipment();
-			ShipmentServiceImpl.shipmentWeight = shipUnit.getWeight().toString();
-			ShipmentServiceImpl.pkgCnt = shipUnit.getDataXML().getINVOICE().getITEM().getQuantity().toString();
-			logger.info("Captured all service impl details");
 			RequestedShipment requestedShipment = new RequestedShipment();
+			
+			shipUnit = createShipUnits.getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT();
+			if (!isRtrnLblRequested) {
+				logger.info("Ship unit details are ::"+shipUnit);
+				ShipmentServiceImpl.itemNumber = shipUnit.getDataXML().getINVOICE().getITEM().getItemNumber().toString();
+				ShipmentServiceImpl.itemDescription = shipUnit.getDataXML().getINVOICE().getITEM().getDescription();
+				ShipmentServiceImpl.plannedShipDate = shipUnit.getDatePlannedShipment();
+				ShipmentServiceImpl.shipmentWeight = shipUnit.getWeight().toString();
+				ShipmentServiceImpl.pkgCnt = shipUnit.getDataXML().getINVOICE().getITEM().getQuantity().toString();
+				logger.info("Captured all service impl details");
+			} else {
+				ShipmentSpecialServicesRequested specialSrvcReqstd = new ShipmentSpecialServicesRequested();
+				ShipmentSpecialServiceType[] shipSpecialSrvcTypes = new ShipmentSpecialServiceType[]{ShipmentSpecialServiceType.RETURN_SHIPMENT};
+				specialSrvcReqstd.setSpecialServiceTypes(shipSpecialSrvcTypes);
+				ReturnShipmentDetail rtrnShipmentDetail = new ReturnShipmentDetail();
+				rtrnShipmentDetail.setReturnType(ReturnType.PRINT_RETURN_LABEL);
+				specialSrvcReqstd.setReturnShipmentDetail(rtrnShipmentDetail);
+				requestedShipment.setSpecialServicesRequested(specialSrvcReqstd);
+			}
+			
 			
 		    TransactionDetail transactionDetail = new TransactionDetail();
 		    transactionDetail.setCustomerTransactionId("Domestic Express Ship Request"); // The client will get the same value back in the response
@@ -136,12 +151,18 @@ public class FedExMapper {
 		    ShipmentType shipmentTypeDO = new ShipmentType();
 			for (ADDRESS address : addressList ) {
 				String addressType = address.getClazz();
-				if(addressType.equals(UPSConstants.DELIVER_TO)) {
-					requestedShipment.setRecipient(addRecipient(address, shipmentTypeDO));
-				} else if(addressType.equals(UPSConstants.ORDERED_BY)) {
-					//shipFromAddress = address;
-				} else if(addressType.equals(UPSConstants.RETURN)) {
-					 requestedShipment.setShipper(addShipper(address, shipmentTypeDO));
+				if (isRtrnLblRequested) {
+					if(addressType.equals(UPSConstants.DELIVER_TO)) {
+						requestedShipment.setShipper(addShipper(address, shipmentTypeDO));
+					}else if(addressType.equals(UPSConstants.RETURN)) {
+						requestedShipment.setRecipient(addRecipient(address, shipmentTypeDO)); 
+					}
+				} else {
+					if(addressType.equals(UPSConstants.DELIVER_TO)) {
+						requestedShipment.setRecipient(addRecipient(address, shipmentTypeDO));
+					}else if(addressType.equals(UPSConstants.RETURN)) {
+						 requestedShipment.setShipper(addShipper(address, shipmentTypeDO));
+					}
 				}
 			}
 			logger.info("Set All address..");
@@ -315,7 +336,7 @@ public class FedExMapper {
 	/**
 	 * 
 	 * @param shipmentRating
-	 */
+	 *//*
 	public  void printShipmentRating(ShipmentRating shipmentRating) {
 		if(shipmentRating!=null){
 			System.out.println("Shipment Rate Details");
@@ -340,20 +361,20 @@ public class FedExMapper {
 				System.out.println();
 			}
 		}
-	}
+	}*/
 	/**
 	 * 
 	 * @param packageOperationalDetail
 	 */
 	//Package level reply information
-	public  void printPackageOperationalDetails(PackageOperationalDetail packageOperationalDetail){
+	/*public  void printPackageOperationalDetails(PackageOperationalDetail packageOperationalDetail){
 		if(packageOperationalDetail!=null){
 			System.out.println("  Routing Details");
 			printString(packageOperationalDetail.getAstraHandlingText(), "Astra", "    ");
 			printString(packageOperationalDetail.getGroundServiceCode(), "Ground Service Code", "    ");
 			System.out.println();
 		}
-	}
+	}*/
 	
 	public  void savePackageDetails(CompletedPackageDetail[] cpd, ShipmentOrder shipmentOrder) throws Exception{
 		if(cpd!=null){
@@ -362,41 +383,12 @@ public class FedExMapper {
 				String trackingNumber = cpd[i].getTrackingIds()[0].getTrackingNumber();
 				printTrackingNumbers(cpd[i]);
 				System.out.println();
-				//
-				//printPackageRating(cpd[i].getPackageRating());
-				//	Write label buffer to file
 				ShippingDocument sd = cpd[i].getLabel();
 				saveLabelToFile(sd, trackingNumber, shipmentOrder);
-				//printPackageOperationalDetails(cpd[i].getOperationalDetail());
-				//System.out.println();
 			}
 		}
 	}
 	
-	/*public  void printPackageRating(PackageRating packageRating){
-		if(packageRating!=null){
-			System.out.println("Package Rate Details");
-			PackageRateDetail[] prd = packageRating.getPackageRateDetails();
-			for(int j=0; j < prd.length; j++)
-			{
-				System.out.println("  Rate Type: " + prd[j].getRateType().getValue());
-				printWeight(prd[j].getBillingWeight(), "Billing Weight", "    ");
-				printMoney(prd[j].getBaseCharge(), "Base Charge", "    ");
-				printMoney(prd[j].getNetCharge(), "Net Charge", "    ");
-				printMoney(prd[j].getTotalSurcharges(), "Total Surcharge", "    ");
-				if (null != prd[j].getSurcharges())
-				{
-					System.out.println("    Surcharge Details");
-					Surcharge[] s = prd[j].getSurcharges();
-					for(int k=0; k < s.length; k++)
-					{
-						printMoney(s[k].getAmount(),s[k].getSurchargeType().getValue(), "      ");
-					}
-				}
-				System.out.println();
-			}
-		}
-	}*/
 	
 	public  void printTrackingNumbers(CompletedPackageDetail completedPackageDetail){
 		if(completedPackageDetail.getTrackingIds()!=null){
@@ -440,7 +432,11 @@ public class FedExMapper {
 		    shipFrom.setPhoneNumber(shprAddress.getPhoneNumber().toString());
 		    
 		    Address shipperAddress = new Address();
-		    shipperAddress.setStreetLines(new String[] {shprAddress.getAddress1(), shprAddress.getAddress2()});
+		    if (shprAddress.getAddress2() != null) {
+		    	shipperAddress.setStreetLines(new String[] {shprAddress.getAddress1(), shprAddress.getAddress2()});
+		    } else {
+		    	shipperAddress.setStreetLines(new String[] {shprAddress.getAddress1()});
+		    }
 		    shipFromAddressType.setAddressLine1(shprAddress.getAddress1());
 		    shipFromAddressType.setAddressLine1(shprAddress.getAddress2());
 		    
@@ -460,7 +456,9 @@ public class FedExMapper {
 		    shipperParty.setAddress(shipperAddress);
 		    
 		    shipFrom.setAddress(shipFromAddressType);
-		    shipmentTypeDO.setShipFrom(shipFrom);
+		    if (shipmentTypeDO != null) {
+		    	shipmentTypeDO.setShipFrom(shipFrom);
+		    }
 		    
 	    } catch (Exception e) {
 	    	logger.severe("Exception occured in addShipper()::"+e.getMessage());
@@ -488,7 +486,11 @@ public class FedExMapper {
 	    Address recipientAddress = new Address();
 	    ShipToAddressType shipToAddressType = new ShipToAddressType();
 	    
-	    recipientAddress.setStreetLines(new String[] {shipToAddress.getAddress1()});
+	    if (shipToAddress.getAddress2() != null) {
+	    	recipientAddress.setStreetLines(new String[] {shipToAddress.getAddress1(), shipToAddress.getAddress2()});
+	    } else {
+	    	recipientAddress.setStreetLines(new String[] {shipToAddress.getAddress1()});
+	    }
 	    shipToAddressType.setAddressLine1(shipToAddress.getAddress1());
 	    
 	    
@@ -509,8 +511,9 @@ public class FedExMapper {
 	    recipientParty.setAddress(recipientAddress);
 	    
 	    shipTo.setAddress(shipToAddressType);
-	    shipmentTypeDO.setShipTo(shipTo);
-	    
+	    if (shipmentTypeDO != null) {
+	    	shipmentTypeDO.setShipTo(shipTo);
+	    }
 	    return recipientParty;
 	}
 	/**
@@ -532,21 +535,6 @@ public class FedExMapper {
 	    payment.setPayor(payor);
 	    return payment;
 	}
-	
-	/*public  ShipmentSpecialServicesRequested addShipmentSpecialServicesRequested(){
-	    ShipmentSpecialServicesRequested shipmentSpecialServicesRequested = new ShipmentSpecialServicesRequested();
-	    ShipmentSpecialServiceType shipmentSpecialServiceType[]=new ShipmentSpecialServiceType[1];
-	    shipmentSpecialServiceType[0]=ShipmentSpecialServiceType.COD;
-	    shipmentSpecialServicesRequested.setSpecialServiceTypes(shipmentSpecialServiceType);
-	    CodDetail codDetail = new CodDetail();
-	    codDetail.setCollectionType(CodCollectionType.ANY);
-	    Money codMoney = new Money();
-	    codMoney.setCurrency("USD");
-	    codMoney.setAmount(new BigDecimal(150.0));
-	    codDetail.setCodCollectionAmount(codMoney);
-	    shipmentSpecialServicesRequested.setCodDetail(codDetail);
-	    return shipmentSpecialServicesRequested;
-	}*/
 	/**
 	 * 
 	 * @param shipUnit
@@ -662,7 +650,6 @@ public class FedExMapper {
 		shipmentDocuments.add(shipmentDocument);
 		shipmentOrder.setShipmentDocuments(shipmentDocuments);
 		shipmentOrder.setTrackingNumber(trackingNumber);
-		shipmentOrder.setActive("Y");
 	}
 	/**
 	 * 
@@ -793,7 +780,41 @@ public class FedExMapper {
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	
+	/**
+	 * This method maps the input request to carrier specific request
+	 * @param request
+	 * @return
+	 * @throws ShippingException
+	 */
+	public DeleteShipmentRequest mapCancelRequest(ShipmentOrder shipmentOrder) 
+	{
+		DeleteShipmentRequest request = null;
+		try {
+			// Build a CancelPackageRequest object
+			request = new DeleteShipmentRequest();
+	        request.setClientDetail(createClientDetail());
+	        request.setWebAuthenticationDetail(createWebAuthenticationDetail());
+	        request.setDeletionControl(DeletionControlType.DELETE_ALL_PACKAGES);
+	        //
+		    TransactionDetail transactionDetail = new TransactionDetail();
+		    transactionDetail.setCustomerTransactionId("Cancel Shipment Request Transaction");  
+		    //This is a reference field for the customer.  Any value can be used and will be provided in the response.
+		    request.setTransactionDetail(transactionDetail);
+	        VersionId versionId = new VersionId("ship", 17, 0, 0);
+	        request.setVersion(versionId);
+			//request.setCarrierCode(CarrierCodeType.FDXE); // CarrierCodeTypes are FDXC(Cargo), FDXE(Express), FDXG(Ground), FDCC(Custom Critical), FXFR(Freight)
+	        TrackingId id = new TrackingId();
+	        //id.setTrackingNumber(getTrackingNumber());
+	        id.setTrackingNumber(shipmentOrder.getTrackingNumber());
+	        // Replace with the Tracking Id Type
+	        TrackingIdType idType = TrackingIdType.FEDEX; 
+	        id.setTrackingIdType(idType);
+			request.setTrackingId(id); 
+		} catch (ShippingException ex) {
+			logger.severe("Exception occured while mapping input to the cancel request::");
+		}
+		return request;
+	}
 	
 
 }

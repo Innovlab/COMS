@@ -1,10 +1,8 @@
 package com.cts.ptms.core;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -16,6 +14,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBContext;
@@ -26,17 +25,13 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 
-import com.cts.ptms.model.common.BatchOrderSummary;
 import com.cts.ptms.model.common.BatchOrderSummaryFilter;
-import com.cts.ptms.model.common.ShipmentOrderDetail;
-
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentBatchResponse;
-import com.cts.ptms.model.common.ShipmentRequest;
-import com.cts.ptms.model.gls.CreateShipUnits;
 import com.cts.ptms.model.common.ShipmentOrder;
 import com.cts.ptms.model.common.ShipmentOrderDetail;
 import com.cts.ptms.model.common.ShipmentRequest;
+import com.cts.ptms.model.gls.CreateShipUnits;
 import com.cts.ptms.utils.constants.ShippingConstants;
 
 
@@ -158,6 +153,35 @@ public class ManageShippingProcessor {
 			logger.severe("getShipmentResponse==>"+shipmentResponse);
 		}
 		logger.info("getShipmentResponse<==");
+		return shipmentResponse;
+	}
+	
+	/**
+	 * Cancel shipment
+	 * @param shipmentRequest
+	 * @return
+	 */
+	@POST
+	@Path("/cancelshipment" )
+	@Consumes(MediaType.TEXT_PLAIN) 
+	@Produces( MediaType.APPLICATION_JSON)
+	public ShipmentOrder cancelShipment(@QueryParam("trackingNumber") String trackingNumber, 
+			@QueryParam("carrierName") String carrierName) {
+		
+		ShipmentOrder shipmentResponse = null;
+		logger.info("cancelShipment==>"+trackingNumber);
+		try {
+			
+			ShipmentService impl = new ShipmentServiceImpl();
+			ShipmentRequest shipmentRequest =new ShipmentRequest();
+			shipmentRequest.setCarrier(carrierName);
+			shipmentRequest.setTrackingNumToCancel(trackingNumber);
+			shipmentResponse = impl.cancelShipmentOrder(shipmentRequest);
+		
+		}catch(Exception e){
+			logger.severe("cancelShipment==>"+shipmentResponse);
+		}
+		logger.info("cancelShipment<==");
 		return shipmentResponse;
 	}
 	
