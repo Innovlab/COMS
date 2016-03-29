@@ -132,16 +132,19 @@ public class FedExSoapClient implements ClientGateway {
 			System.out.println("CancelPackageReply HightestSeverity: " + nst.toString());
 			if (fedExMapper.isResponseOk(reply.getHighestSeverity()))
 			{
-				shipmentOrder.setStatus(ShippingConstants.SUCCESS);
+				shipmentOrder.setStatus("1");
 				logger.info("Successfully deleted the shipment...");
+			} else {
+				shipmentOrder.setStatus("0");
+				shipmentOrder.setErrorDescription("Error in while cancelling/ deleting the shipment.Please contact the FedEx adminstrator");
 			}
 			
 		} catch (ShippingException e) {
-			shipmentOrder.setStatus(ShippingConstants.STATUS_FAILURE);
+			shipmentOrder.setStatus("0");
 			shipmentOrder.setErrorDescription(e.getMessage());
 			logger.severe("Exception occured at cancelShipment()::"+e);
 		} catch (Exception e) {
-			shipmentOrder.setStatus(ShippingConstants.STATUS_FAILURE);
+			shipmentOrder.setStatus("0");
 			shipmentOrder.setErrorDescription(e.getMessage());
 			logger.severe("Exception occured at cancelShipment()::"+e);
 		}

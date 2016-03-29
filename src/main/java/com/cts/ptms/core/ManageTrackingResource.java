@@ -3,6 +3,8 @@
  */
 package com.cts.ptms.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.ws.rs.Consumes;
@@ -18,6 +20,7 @@ import com.cts.ptms.model.gls.AccessRequest;
 import com.cts.ptms.model.tracking.CustomTrackingRequest;
 import com.cts.ptms.model.tracking.CustomTrackingResponse;
 import com.cts.ptms.model.tracking.TrackRequestDetails;
+import com.cts.ptms.model.tracking.TrackingError;
 import com.cts.ptms.service.tracking.ITrackingService;
 import com.cts.ptms.service.tracking.TrackingServiceImpl;
 
@@ -77,11 +80,11 @@ public class ManageTrackingResource {
 		CustomTrackingResponse customTrackingResponse = null;
 		CustomTrackingRequest customTrackingRequest = null;
 		TrackRequestDetails trackRequestDetails = null;
-		
+		List<TrackingError> trackingErrors = new ArrayList<TrackingError>(0);
 		logger.info("Trying to get the tracking details..");
 		try
 		{
-			if ( trackingNum == null) 
+			if ( trackingNum == null || trackingNum.isEmpty()) 
 			{
 				throw new TrackingException("Invalid Request");
 			}
@@ -122,6 +125,15 @@ public class ManageTrackingResource {
 		catch (TrackingException e)
 		{
 			System.out.println("Exception occured while tracking.."+e.getMessage());
+			customTrackingResponse = new CustomTrackingResponse();
+			customTrackingResponse.setResponseStatusCode("0");
+			customTrackingResponse.setResponseStatusDescription("Empty Tracking number number..");
+			TrackingError trackingError = new TrackingError();
+			trackingError.setErrorSeverity("FAILURE");
+			trackingError.setErrorCode("0");
+			trackingError.setErrorDescription("Empty or Invalid Tracking number number..");
+			trackingErrors.add(trackingError);
+			customTrackingResponse.setError(trackingErrors);
 			logger.severe("Exception occured while tracking..");
 		}
 		return customTrackingResponse;

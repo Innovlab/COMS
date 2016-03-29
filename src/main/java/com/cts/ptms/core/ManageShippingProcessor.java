@@ -25,6 +25,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.io.FileUtils;
 
+import com.cts.ptms.exception.shipping.ShippingException;
 import com.cts.ptms.model.common.BatchOrderSummaryFilter;
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentBatchResponse;
@@ -161,24 +162,33 @@ public class ManageShippingProcessor {
 	 * @param shipmentRequest
 	 * @return
 	 */
-	@POST
+	@GET
 	@Path("/cancelshipment" )
 	@Consumes(MediaType.TEXT_PLAIN) 
 	@Produces( MediaType.APPLICATION_JSON)
 	public ShipmentOrder cancelShipment(@QueryParam("trackingNumber") String trackingNumber, 
 			@QueryParam("carrierName") String carrierName) {
 		
-		ShipmentOrder shipmentResponse = null;
+		ShipmentOrder shipmentResponse = new ShipmentOrder();
 		logger.info("cancelShipment==>"+trackingNumber);
 		try {
-			
+			if (trackingNumber == null || trackingNumber.isEmpty()) {
+				throw new ShippingException("Invalid or empty tracking number..");
+			}
 			ShipmentService impl = new ShipmentServiceImpl();
 			ShipmentRequest shipmentRequest =new ShipmentRequest();
 			shipmentRequest.setCarrier(carrierName);
-			shipmentRequest.setTrackingNumToCancel(trackingNumber);
+			shipmentRequest.setTrackingNumToCancel(trackingNumber.trim());
 			shipmentResponse = impl.cancelShipmentOrder(shipmentRequest);
-		
+			/*shipmentResponse = new ShipmentOrder();
+			shipmentResponse.setStatus("1");*/
+		}catch(ShippingException e){
+			shipmentResponse.setStatus("0");
+			shipmentResponse.setErrorDescription(e.getMessage());
+			logger.severe("cancelShipment==>"+shipmentResponse);
 		}catch(Exception e){
+			shipmentResponse.setStatus("0");
+			shipmentResponse.setErrorDescription(e.getMessage());
 			logger.severe("cancelShipment==>"+shipmentResponse);
 		}
 		logger.info("cancelShipment<==");

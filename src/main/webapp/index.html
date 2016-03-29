@@ -160,7 +160,7 @@
 									of Origin </a></li>
 						</ul></li>
 					<li><a ng-click="showTracking()" style="cursor: pointer;"><i
-							class="fa fa-fw fa-search"></i> Tracking</a></li>
+							class="fa fa-fw fa-search"></i> Tracking / Void Shipment</a></li>
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -174,22 +174,7 @@
 					<img src="./images/loading.gif" />
 				</div>
 				<div class="row" ng-hide="!showDta" style="padding-top: 60px;">
-					<!-- 		<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12"> -->
-					<!-- 		<nav class="navbar navbar-inverse"> -->
-					<!-- 		<div class="container-fluid"> -->
-					<!-- 			<ul class="nav navbar-nav"> -->
-					<!-- 				<li><a data-toggle="pill" ng-click="showLabel('SHIP')">Shipping -->
-					<!-- 						Label -->
-					<!-- 				</a></li> -->
-					<!-- 				<li><a data-toggle="pill" ng-if="checkboxModel.value==true" -->
-					<!-- 					ng-click="showLabel('RETURN')">Return Label</a></li> -->
-					<!-- 				<li><a data-toggle="pill" ng-click="showLabel('INVOICE')">Invoice -->
-					<!-- 						Doc</a></li> -->
-					<!-- 				<li><a data-toggle="pill" ng-click="backToHome()">Home</a></li> -->
-					<!-- 			</ul> -->
-					<!-- 			</div> -->
-					<!-- 			</nav> -->
-					<!-- 		</div> -->
+					
 					<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
 							ng-show="shipLbl">
@@ -212,6 +197,14 @@
 						aria-label="close">&times;</a> <strong>Error!</strong>
 					{{errorDesc}}
 				</div>
+				<!-- Success Header Message -->
+				<div class="alert alert-info" ng-show="showSuccess">
+					<a href="{{strUrl}}" class="close" data-dismiss="alert"
+						aria-label="close">&times;</a> <strong>Success</strong>
+					{{statusDesc}}
+				</div>
+				<!-- End of Success Header Message-->
+				
 				<div ng-hide="showDta">
 					<div class="col-lg-5" style="padding-top: 25px;">
 						<label for="mySelect">Carrier:</label> <select name="mySelect"
@@ -275,8 +268,14 @@
 										id="inputTN" type="text">
 								</div>
 								<div class="col-lg-2" style="padding-top: 75px;">
-									<button type="button" ng-click="trackShipment()"
-										class="btn btn-info btn-sm">Track</button>
+									<button ng-bind="buttonVariable" type="button" ng-click="trackShipment(buttonVariable)"
+										class="btn btn-info btn-sm"> </button>
+								</div>
+								<div class="col-lg-2" style="padding-top: 75px;">
+									<label ng-show="showVoid"> <input type="checkbox"
+										ng-model="checkboxModel.value" ng-change="modifyButtonName(checkboxModel.value)" 
+										class="ng-pristine ng-untouched ng-valid"> Void Shipment by Tracking Number</label>
+									
 								</div>
 								<div class="col-lg-8" style="padding-top: 25PX;">
 									<table class="table table-bordered" ng-show="showProg">
@@ -337,6 +336,9 @@
 			.controller(
 					'family',
 					function($scope, $window, $http) {
+						$scope.buttonVariable = "Track";
+						$scope.statusDesc ="";
+						$scope.showSuccess = false;
 						$scope.tracking = false;
 						$scope.styleWid = "width:100%";
 						$scope.deliverySts = "";
@@ -370,7 +372,17 @@
 							}
 						//This sets the default value of the select in the ui
 						};
-
+						$scope.modifyButtonName = function($event) {
+							
+							if($event == true)
+							{
+								$scope.buttonVariable = "Void Shipment"
+								
+							} else {
+								$scope.buttonVariable = "Track"
+							}
+							
+						}
 						$scope.showRetLabel = function() {
 							$scope.checkboxModel.value = false;
 							if ($scope.data.selectedOption.name == "UPS" || 
@@ -385,6 +397,11 @@
 							
 						}
 						$scope.showTracking = function() {
+							$scope.checkboxModel = {
+									value : false,
+							};
+							$scope.buttonVariable = "Track";
+							$scope.showVoid = true;
 							$scope.tracking = true;
 							$scope.showDta = false;
 							$scope.showProg = false;
@@ -395,6 +412,10 @@
 							$scope.showError = false;
 						}
 						$scope.backToHome = function() {
+							$scope.checkboxModel = {
+									value : false,
+							};
+							$scope.buttonVariable = "Track";
 							$scope.showError = false;
 							$scope.tracking = false;
 							$scope.showDta = false;
@@ -428,26 +449,38 @@
 							
 						}
 
-						$scope.trackShipment = function() {
+						$scope.trackShipment = function(selectedValue) {
+							$scope.strUrl = window.location.href;
+							$scope.strUrl = $scope.strUrl.replace("/#", "");
 							$scope.showError = false;
 							$scope.load = true;
+							var selectedUrl = '';
+							var isTracking = false;
+							if (selectedValue === 'Track') {
+								selectedUrl = './rest/Tracking/trackingdetails';
+								isTracking = true;
+							} else {
+								selectedUrl = './rest/ManageShipping/cancelshipment';
+							}
+							alert(selectedUrl);
 							$http
-									.get(
-											'./rest/Tracking/trackingdetails',
-											{
-												transformRequest : angular.identity,
-												headers : {
-													'Content-Type' : undefined
-												},
-												params : {
-													'trackingNumber' : $scope.trackingNum,
-													'carrierName' : $scope.data.selectedOption.name
-												}
-											})
-									.success(
-											function(resp, status) {
+								.get(
+										selectedUrl,
+										{
+											transformRequest : angular.identity,
+											headers : {
+												'Content-Type' : undefined
+											},
+											params : {
+												'trackingNumber' : $scope.trackingNum,
+												'carrierName' : $scope.data.selectedOption.name
+											}
+										})
+								.success(
+										function(resp, status) {
+											if (isTracking) {
 												if (resp.responseStatusCode == "1") {
-													$scope.response = resp
+													$scope.response = resp;
 													$scope.activities = $scope.response.shipment[0]._package[0].Activity;
 													$scope.load = false;
 													$scope.showError = false;
@@ -458,9 +491,24 @@
 													$scope.errorDesc = resp.error[0].errorDescription;
 													$scope.showError = true;
 												}
-											}).error(function(error, status) {
+											} else { 
+												if (resp.status == "1" ){
+													$scope.statusDesc =  'The Shipment has been cancelled successfully.. ';
+													$scope.load = false;
+													$scope.showError = false;
+													$scope.showSuccess = true;
+												} else {
+													$scope.load = false;
+													$scope.showProg = false;
+													$scope.errorDesc = resp.errorDescription;
+													$scope.showError = true;
+													$scope.showSuccess = false;
+												}
+											}
+										}).error(function(error, status) {
 										$scope.load = false;
 									});
+							
 						}
 						$scope.processXML = function() {
 							var bfr = $scope.xmlData.replace(/(<[a-z A-Z]:)/g,

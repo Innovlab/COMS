@@ -236,7 +236,8 @@ public class FedExTracking implements ITrackingDetails{
 				{
 					List<TrackingError> trackingErrors = new ArrayList<TrackingError>(0);
 					Notification notification = trackDetail.getNotification();
-					if(notification.getSeverity().getValue().equals("FAILURE")) 
+					String status = notification.getSeverity().getValue();
+					if(status.equals("FAILURE") || 	status.equals("ERROR")	) 
 					{
 						TrackingError trackingError = new TrackingError();
 						trackingError.setErrorSeverity(notification.getSeverity().toString());
@@ -334,11 +335,13 @@ public class FedExTracking implements ITrackingDetails{
 			CarrierCodeType carrierCodeType = trackDetail.getCarrierCode();
 			logger.info("Tyring to set Service Type details");
 			TrackServiceDescriptionDetail serviceDetails = trackDetail.getService();
-			if (carrierCodeType != null) {
+			if (serviceDetails != null) {
 				CodeType codeType = new CodeType();
 				codeType.setCode(serviceDetails.getType().getValue());
 				codeType.setDescription(serviceDetails.getDescription());
 				shipment.setService(codeType);
+			} else {
+				throw new TrackingException("Service Type details are null");
 			}
 			
 			//Shipment ReferenceNumber
