@@ -175,5 +175,4 @@ public class YRCSoapClient implements ClientGateway {
 		return null;
 	}
 	
-	
 }

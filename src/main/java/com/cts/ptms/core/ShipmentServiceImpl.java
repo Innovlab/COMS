@@ -9,8 +9,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -21,7 +22,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.util.PDFImageWriter;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.cts.ptms.carrier.fedex.FedExShipmentService;
@@ -30,6 +30,7 @@ import com.cts.ptms.carrier.ups.UPSHTTPClient;
 import com.cts.ptms.carrier.ups.UPSShipmentService;
 import com.cts.ptms.carrier.yrc.YRCShipmentService;
 import com.cts.ptms.dao.ShipmentServiceDAO;
+import com.cts.ptms.dao.ShipmentServiceJDBC;
 import com.cts.ptms.model.common.ShipmentRequest;
 import com.cts.ptms.model.common.BatchOrderSummary;
 import com.cts.ptms.model.common.BatchOrderSummaryFilter;
@@ -39,6 +40,7 @@ import com.cts.ptms.model.common.ShipmentOrder;
 import com.cts.ptms.model.common.ShipmentOrderDetail;
 import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
 import com.cts.ptms.model.common.TrackingDetails;
+import com.cts.ptms.model.gls.SHIPUNIT;
 import com.cts.ptms.utils.ShipmentUtils;
 import com.cts.ptms.utils.constants.ShippingConstants;
 import com.cts.ptms.utils.constants.UPSConstants;
@@ -56,8 +58,9 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class ShipmentServiceImpl implements ShipmentService {
-	
+
 	private ShipmentServiceDAO shipmentServiceDAO;
+	private ShipmentServiceJDBC shipmentServiceJDBC;
 	ClientShipmentService clientShipmentService;
 	static String date = FastDateFormat.getInstance("MM-dd-yyyy").format(System.currentTimeMillis());
 	public static String itemNumber = "";
@@ -94,7 +97,7 @@ public class ShipmentServiceImpl implements ShipmentService {
 		String activeOrder = "Y";
 		initializeService(shipmentRequest.getCarrier());
 		shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
-		
+		shipmentServiceJDBC =  (ShipmentServiceJDBC) context.getBean("shipmentReportServiceDao");
 		//get the Shipment Order from DB
 		//Check for duplicate
 		shipmentOrder = shipmentServiceDAO.getByCartonNumber(getCartonNumber(shipmentRequest), activeOrder);
@@ -104,32 +107,46 @@ public class ShipmentServiceImpl implements ShipmentService {
 			shipmentOrder.setErrorDescription(ShippingConstants.ERR_CD_CARTON_EXISTS);
 			return shipmentOrder;
 		}
-		
+		String serviceId = shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT().getShipVia().toString();
+		int weight = shipmentServiceJDBC.getMaxWeightForCarrier(serviceId);
+		BigInteger maxWeight = BigInteger.valueOf(weight);
+		BigInteger itemWeight = shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT().getWeight();
+		if((itemWeight.compareTo(maxWeight))==1) {
+			shipmentOrder = new ShipmentOrder();
+			shipmentOrder.setStatus(ShippingConstants.STATUS_FAILURE);
+			shipmentOrder.setErrorDescription(ShippingConstants.ERR_CD_MAX_WEIGHT + " " + maxWeight  );
+			return shipmentOrder;
+		}
 		shipmentOrder = clientShipmentService.createShipment(shipmentRequest);
 		shipmentOrder = saveShipmentDocuments(shipmentOrder);
-		populateRequestAttributes(shipmentRequest, shipmentOrder);
+			populateRequestAttributes(shipmentRequest, shipmentOrder);
+		shipmentOrder.setCarrier(shipmentRequest.getCarrier());
 		System.out.println("'Shipment Order:" + shipmentOrder);
-
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
 		shipmentServiceDAO.saveShipmentOrder(shipmentOrder);
 		System.out.println(shipmentOrder);
-		//context.close();
+		context.close();
 		return shipmentOrder;
-
+	
 	}
-
-	private long getCartonNumber(ShipmentRequest shipmentRequest) {
-		long cartonNum = new Long(shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT().getCartonNumber()).longValue();
+	private String getCartonNumber(ShipmentRequest shipmentRequest) {
+		String cartonNum = shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT().getCartonNumber();
 		return cartonNum;
 	}
 
 	protected void populateRequestAttributes(ShipmentRequest shipmentRequest, ShipmentOrder shipmentOrder)
 			throws NumberFormatException {
+		SHIPUNIT shipUnit =  shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT();
 		shipmentOrder.setCarrier(shipmentRequest.getCarrier());
-		long cartonNum = getCartonNumber(shipmentRequest);
-		long orderNum = shipmentRequest.getCreateShipUnits().getCreateShipUnitsParams().getCREATESHIPUNITSPARAMS1().getSHIPUNIT().getOrderNumber().longValue();
+		String cartonNum = getCartonNumber(shipmentRequest);
+		String orderNum = shipUnit.getOrderNumber().toString();
 		shipmentOrder.setCartonNumber(cartonNum);
 		shipmentOrder.setOrderNumber(orderNum);
 		shipmentOrder.setReturnFlag(shipmentRequest.isGenLabel()?"Y":"N");
+		shipmentOrder.setCarrierService(shipUnit.getShipVia().toString());
+		shipmentOrder.setBillingAccountNumber(shipUnit.getBillingAccountID().toString());
+		
 	}
 
 	public TrackingDetails getShipmentTrackingDetails(String trackingId) {
@@ -417,9 +434,25 @@ public class ShipmentServiceImpl implements ShipmentService {
 	}
 
 	
-	
-	public static void main(String[] args) {
-
+	private ShipmentOrder populateShipmentOrder () {
+		ShipmentOrder shipmentOrder = new ShipmentOrder();
+		shipmentOrder.setCarrier("YRC");
+		shipmentOrder.setOrderDate( new Date());
+		shipmentOrder.setOrderNumber("124");
+		shipmentOrder.setStatus("DELIVERED");
+		shipmentOrder.setTrackingNumber("124t");	
+		shipmentOrder.setBillingAccountNumber("123b");
+		shipmentOrder.setCartonNumber("123c");
+		shipmentOrder.setCustomerOrderNumber("123o");
+		ArrayList<ShipmentDocument>  shipmentDocuments = new ArrayList<ShipmentDocument>();
+		ShipmentDocument shipmentDocument = new  ShipmentDocument();
+		shipmentDocument.setDocumentType("A");
+		shipmentDocument.setDocumentTitle("A");
+		shipmentDocument.setDocumentName("A");
+		shipmentDocuments.add(shipmentDocument);
+		
+		shipmentOrder.setShipmentDocuments(shipmentDocuments);
+		return shipmentOrder;
 	}
 
 	/* (non-Javadoc)
@@ -431,6 +464,28 @@ public class ShipmentServiceImpl implements ShipmentService {
 		return clientShipmentService.cancelShipment(shipmentRequest);
 	}
 	
+	public void testSave() {
+		
+		
+		ShipmentOrder shipmentOrder  = populateShipmentOrder();
+		ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+		shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
+		//shipmentServiceDAO.saveShipmentOrder(shipmentOrder);
+		ShipmentServiceJDBC  shipmentServiceJdbc =  (ShipmentServiceJDBC) context.getBean("shipmentReportServiceDao");
+		//shipmentServiceJdbc.getServiceSummaryForAll();
+		//shipmentServiceJT .getOrderSummaryForAll();
+		//shipmentServiceDAO.getOrderSummary();
+		System.out.println(shipmentOrder);
+		context.close();
+	}
 	
 	
+	
+	
+	public static void main(String[] args) {
+		ShipmentServiceImpl  serviceImpl  = new ShipmentServiceImpl();
+		serviceImpl.testSave();
+
+	}
+
 }

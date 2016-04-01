@@ -33,7 +33,7 @@ import com.cts.ptms.service.tracking.TrackingServiceImpl;
 @Path("/Tracking")
 public class ManageTrackingResource {
 	
-	private Logger logger = Logger.getAnonymousLogger();
+	private Logger logger = Logger.getAnonymousLogger() ;
 	
 	
 	@POST	
@@ -117,8 +117,8 @@ public class ManageTrackingResource {
 			
 			trackRequestDetails.setTrackingNumber(trackingNum);
 			customTrackingRequest.setTrackRequestDetails(trackRequestDetails);
-			System.out.println("Input tracking request is ::" + customTrackingRequest);
 			
+			System.out.println("Input tracking request is ::" + customTrackingRequest);
 			customTrackingResponse = getTrackingDetails(customTrackingRequest);
 			System.out.println(customTrackingResponse);
 		} 

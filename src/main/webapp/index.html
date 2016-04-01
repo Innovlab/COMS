@@ -10,7 +10,8 @@
 <meta name="author" content="">
 <link rel="stylesheet" href="css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/grid.css" />
-<script src="lib/angular.min.js"></script>
+
+
 <title>SRS</title>
 
 <!-- Bootstrap Core CSS -->
@@ -26,16 +27,11 @@
 <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet"
 	type="text/css">
 
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+
 
 </head>
 
-<body ng-controller="family">
+<body ng-controller="family" onload="myFunction()">
 
 	<div id="wrapper">
 
@@ -140,7 +136,12 @@
 			</ul>
 			<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
 			<div class="collapse navbar-collapse navbar-ex1-collapse">
+
+
 				<ul class="nav navbar-nav side-nav">
+					<li><a ng-click="showSummary()" style="cursor: pointer;"><i
+							class="fa fa-fw fa-shopping-cart"></i> Dashboard</a></li>
+
 					<li><a ng-click="backToHome()" style="cursor: pointer;"><i
 							class="fa fa-fw fa-shopping-cart"></i> Create Shipment</a></li>
 					<li><a href="javascript:;" data-toggle="collapse"
@@ -206,13 +207,13 @@
 				<!-- End of Success Header Message-->
 				
 				<div ng-hide="showDta">
-					<div class="col-lg-5" style="padding-top: 25px;">
+					<!-- <div class="col-lg-5" style="padding-top: 25px;">
 						<label for="mySelect">Carrier:</label> <select name="mySelect"
 							id="mySelect" ng-change="showRetLabel()"
 							ng-options="option.name for option in data.availableOptions track by option.id"
 							ng-model="data.selectedOption"></select>
-					</div>
-					<div class="row" ng-hide="tracking">
+					</div> -->
+					<div class="row" ng-hide=tracking||summary>
 						<!-- <div class="col-lg-3"
 							style="height: 500px; vertical-align: middle;"> -->
 						<div class="col-lg-3">
@@ -222,12 +223,12 @@
 						</div>
 						<div class="col-lg-6">
 							<div class="row">
-								<!-- <div class="col-lg-5" style="padding-top: 25px;">
+								<div class="col-lg-5" style="padding-top: 25px;">
 									<label for="mySelect">Carrier:</label> <select name="mySelect"
 										id="mySelect" ng-change="showRetLabel()"
 										ng-options="option.name for option in data.availableOptions track by option.id"
 										ng-model="data.selectedOption"></select>
-								</div> -->
+								</div>
 								<div class="col-lg-7" style="padding-top: 15px;">
 									<h4>
 										Input XML to be pasted below
@@ -255,19 +256,146 @@
 							</div>
 						</div>
 					</div>
+
+					<div class="row" ng-show="summary">
+
+
+						<div class="col-lg-12">
+
+							<div class="row" ng-hide=tracking>
+
+								<div class="col-lg-12">
+									<ol class="breadcrumb">
+										<li class="active"><i class="fa fa-dashboard"></i>
+											Dashboard</li>
+										<div id="reportrange" class="pull-right"
+											style="background: #fff; cursor: pointer; padding: 1px 1px; border: 1px solid #ccc; width: 30%;"dateRange">
+											<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
+											<span></span> <b class="caret"></b>
+										</div>
+									</ol>
+								</div>
+							</div>
+
+
+							<!-- <div padding-top: 10x ng-repeat="orderSummary in orderSummaryAll"> -->
+								
+								
+								<div class="col-lg-2 col-md-6">
+									<div class="panel panel-green">
+										<div class="panel-heading">
+											<div class="row">
+												<div align="center">
+													<div class="huge">{{ orderSummaryAll[1].value}}</div>
+													<div>{{ orderSummaryAll[1].columnName }}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-6">
+									<div class="panel panel-primary">
+										<div class="panel-heading">
+											<div class="row">
+												<div align="center">
+													<div class="huge">{{ orderSummaryAll[2].value}}</div>
+													<div>{{ orderSummaryAll[2].columnName }}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-6">
+									<div class="panel panel-yellow">
+										<div class="panel-heading">
+											<div class="row">
+												<div align="center">
+													<div class="huge">{{ orderSummaryAll[3].value}}</div>
+													<div>{{ orderSummaryAll[3].columnName }}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-6">
+									<div class="panel panel-green">
+										<div class="panel-heading">
+											<div class="row">
+												<div align="center">
+													<div class="huge">{{ orderSummaryAll[0].value}}</div>
+													<div>{{ orderSummaryAll[0].columnName }}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-6">
+									<div class="panel panel-red">
+										<div class="panel-heading">
+											<div class="row">
+												<div align="center">
+													<div class="huge">{{ orderSummaryAll[4].value}}</div>
+													<div>{{ orderSummaryAll[4].columnName }}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-lg-2 col-md-6">
+									<div class="panel panel-primary">
+										<div class="panel-heading">
+											<div class="row">
+												<div align="center">
+													<div class="huge">{{ orderSummaryAll[5].value}}</div>
+													<div>{{ orderSummaryAll[5].columnName }}</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							<!-- </div> -->
+
+
+
+							<!-- /.row -->
+							<div class="row">
+
+								<div class="col-lg-12">
+									<div class="panel panel-default">
+										<div class="panel-heading">Orders</div>
+										<div class="panel-body">
+											<div id="chart1"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-6">
+									<div class="panel panel-default">
+										<div class="panel-heading">PieChart</div>
+										<div class="panel-body">
+											<div id="chart2"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
 					<div class="row" style="vertical-align: middle; padding-top: 50px"
 						ng-show="tracking">
-						<div class="col-lg-3" style="padding-top: 5%;">
-							<img src="./images/tracking.png" style="height: 220px" />
-						</div>
-						<div class="row" style="padding-top: 5%;">
-							<div class="row">
-								<div class="col-lg-3" style="padding-top: 50px;">
-									<label for="inputTN">Enter Tracking number :</label> <input
-										class="form-control input-sm" ng-model="trackingNum"
-										id="inputTN" type="text">
-								</div>
-								<div class="col-lg-2" style="padding-top: 75px;">
+						<div class="row" ng-hide=showDta||summary>
+							<div class="col-lg-3" style="padding-top: 5%;">
+								<img src="./images/tracking.png" style="height: 220px" />
+							</div>
+							<div class="row" style="padding-top: 5%;">
+								<div class="row">
+									<div class="col-lg-3" style="padding-top: 50px;">
+										<label for="inputTN">Enter Tracking number :</label> <input
+											class="form-control input-sm" ng-model="trackingNum"
+											id="inputTN" type="text">
+									</div>
+									<div class="col-lg-2" style="padding-top: 75px;">
 									<button ng-bind="buttonVariable" type="button" ng-click="trackShipment(buttonVariable)"
 										class="btn btn-info btn-sm"> </button>
 								</div>
@@ -293,11 +421,11 @@
 											<td>{{ x.Status.StatusType.Description }}</td>
 											<td>{{ x.Date }} {{x.Time}}</td>
 										</tr>
-									</table>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>
-
 						<div class="col-lg-3" style="padding-top: 5%;">
 							<img src="./images/tracking.png"
 								style="height: 180px; visibility: hidden;">
@@ -326,8 +454,258 @@
 
 			<!-- Bootstrap Core JavaScript -->
 			<script src="js/bootstrap.min.js"></script>
+			<script src="lib/angular.min.js"></script>
 
+
+			<script language="javascript" type="text/javascript"
+				src="js/jquery.min.js"></script>
+			<script language="javascript" type="text/javascript"
+				src="js/jquery.jqplot.min.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.barRenderer.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.pieRenderer.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.categoryAxisRenderer.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.pointLabels.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.canvasTextRenderer.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.canvasAxisTickRenderer.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.pieRenderer.js"></script>
+			<script type="text/javascript"
+				src="js/plugins/jq/jqplot.donutRenderer.js"></script>
+			<link rel="stylesheet" type="text/css"
+				href="js/jquery.jqplot.min.css" />
+			<!-- Include Required Prerequisites -->
+			<script type="text/javascript" src="js/plugins/dp/moment.min.js"></script>
+			<script type="text/javascript" src="js/plugins/json/json2.js"></script>
+
+
+			<!-- Include Date Range Picker -->
+			<script type="text/javascript" src="js/plugins/dp/daterangepicker.js"></script>
+			<link rel="stylesheet" type="text/css"
+				href="js/plugins/dp/daterangepicker.css" />
+
+
+
+			<script type="text/javascript">
+			var serviceSummaryAll;
+			var  serviceSummaryById;
+			var firstTimeLoad = true;
+		    var dbFromDate;
+		    var dbToDate;
+		    var extScope;
+		   
+
+		    function myFunction() {
+				 firstTimeLoad=true;
+				
+			}
+			
+		    function getAllSummary ($http,reportRequest) {
+			    console.log('getAllSummaryCalled');
+		    	$http
+				.post('./rest/Report/getStatusSummaryForAll',reportRequest)
+				.success(
+						function(resp, status) {	
+												
+							serviceSummaryAll  = resp.serviceSummaryList;							
+							extScope.orderSummaryAll = resp.orderSummaryList;
+							drawChart();					
+						}).error(function(error, status) {
+							//$scope.load = false;
+				}); 
+				
+			}
+			
+	    function cb(start, end) {   	
+		    console.log('cb')   
+		     $('#reportrange span').html(start.format('MMMM D, YY') + ' - ' + end.format('MMMM D, YY')); 
+		     console.log(firstTimeLoad);
+	    	
+		    dbFromDate = start.format('YYYY-MM-DD') ;
+		    dbToDate = end.format('YYYY-MM-DD') ;
+		    var reportRequest = {
+					requestType : 'getStatusSummaryForAll',								
+					fromDate:dbFromDate,
+					toDate:dbToDate
+				};
+
+		    if (firstTimeLoad) {
+		    	firstTimeLoad=false;
+	    		
+	        } else{
+	        	var $http = angular.element('html').injector().get('$http');	        	
+	   		 	getAllSummary($http, reportRequest); 
+	   		 	
+		    } 
+		    
+	    	// alert("A new date range was chosen: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+	       
+	      
+	        
+	        
+		  
+	    }
+	    
+	    cb(moment(), moment());
+
+	    $('#reportrange').daterangepicker({
+	    	locale: {
+	    	      format: 'YYYY-MM-DD'
+	    	    },
+	        ranges: {
+	           'Today': [moment(), moment()],
+	           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+	           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+	           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+	           'This Month': [moment().startOf('month'), moment().endOf('month')],
+	           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+	        }
+	    }, cb);
+
+
+
+
+	    function CreateBarChartOptions() {
+	    	   
+	        var optionsObj = {
+
+	        		 // Only animate if we're not using excanvas (not in IE 7 or IE 8)..
+	                title: 'Totol Sales Orders',
+	                height: 450,
+	                width: 980,
+	                animate: !$.jqplot.use_excanvas,
+	                seriesDefaults:{
+	                    renderer:$.jqplot.BarRenderer,
+	                    pointLabels: { show: true },
+	                	 rendererOptions: {
+	                		 fillToZero: true,
+	                		 varyBarColor: true
+	                    	//barDirection: 'horizontal'
+	                	}
+	                },
+	                axesDefaults: {
+	                    tickRenderer: $.jqplot.CanvasAxisTickRenderer ,
+	                   
+	                },
+	                axes: {             
+	                    xaxis: {
+	                        renderer: $.jqplot.CategoryAxisRenderer,
+	                        //ticks: ticks,                 
+	                        tickOptions: {
+	                            angle: -55,
+	                           
+	                          }                 
+	                    }
+	                },
+	                highlighter: { show: false }
+	           
+	        };
+	        return optionsObj;
+	    }
+
+	    function drawPieChart() {
+
+	    	console.log(serviceSummaryById);
+	    	var pieChartData  =  new Array();
+	    	
+	   	 for( var i in serviceSummaryById ) {
+	   		
+	   		pieChartData[i]  = new Array();
+	   		pieChartData[i][0] = serviceSummaryById[i].columnName;
+	   		pieChartData[i][1] = serviceSummaryById[i].value;
+	   		
+	   	 }
+	   	 var plot2 = jQuery.jqplot ('chart2', [pieChartData], 
+	   		    {
+	   		      seriesDefaults: {
+	   		        renderer: jQuery.jqplot.PieRenderer, 
+	   		        rendererOptions: {
+	   		          // Turn off filling of slices.
+	   		          fill: false,
+	   		          showDataLabels: true, 
+	   		          // Add a margin to seperate the slices.
+	   		          sliceMargin: 4, 
+	   		          // stroke the slices with a little thicker line.
+	   		          lineWidth: 5
+	   		        }
+	   		      }, 
+	   		      legend: { show:true, location: 'e', }
+	   		    }
+	   		  );
+           
+	    	           
+		}
 		
+function drawChart() {	
+	
+	 $.jqplot.config.enablePlugins = true;    
+	
+	 if(serviceSummaryAll === undefined) {
+	 	console.log('serviceSummaryAll not defined');
+	 } else {
+		 console.log(serviceSummaryAll);
+	 }
+	var barChartData  =  new Array();
+	
+	 for( var i in serviceSummaryAll ) {
+		
+		 barChartData[i]  = new Array();
+		 barChartData[i][0] = serviceSummaryAll[i].columnName;
+		 barChartData[i][1] = serviceSummaryAll[i].value;
+		
+	 }
+	    
+    console.log(barChartData.length);
+    if(barChartData.length>0) {
+    if(firstTimeLoad) {  
+        firstTimeLoad=false;    
+        
+    	plot1 = $.jqplot('chart1', [barChartData], CreateBarChartOptions());
+    } else { 
+    	   	
+    	plot1 = $.jqplot('chart1', [barChartData],CreateBarChartOptions()).replot();
+    }
+    }
+      $('#chart1').bind('jqplotDataClick', 
+         function (ev, seriesIndex, pointIndex, data) {
+          console.log('jqplot' + serviceSummaryAll[pointIndex].columnName);
+          var reportRequest = {
+					requestType : 'getStatusSummaryById',								
+					fromDate:dbFromDate,
+					toDate:dbToDate,
+					carrierServiceType:serviceSummaryAll[pointIndex].columnId
+			};
+            var $http = angular.element('html').injector().get('$http');	        	
+ 		 	;
+	    	$http
+			.post('./rest/Report/getStatusSummaryForAll',reportRequest)
+			.success(
+					function(resp, status) {	
+						
+						 //$('#info1').html('series: '+seriesIndex+', point: '+pointIndex+', data: '+data);
+						 console.log(resp);
+						serviceSummaryById = resp.serviceSummaryByIdList;
+						 drawPieChart();
+											
+					}).error(function(error, status) {
+						//$scope.load = false;
+			}); 
+			
+           
+             
+         }
+     ); 
+
+}
+
+
+
+</script>
 </body>
 
 <script type="text/javascript">
@@ -340,6 +718,7 @@
 						$scope.statusDesc ="";
 						$scope.showSuccess = false;
 						$scope.tracking = false;
+						$scope.summary = false;
 						$scope.styleWid = "width:100%";
 						$scope.deliverySts = "";
 						$scope.shipLbl = true;
@@ -394,7 +773,45 @@
 							$scope.trackingNum = "";
 							$scope.showError = false;
 							$scope.showProg = false;
+						}
+						$scope.showSummary = function () {	
+							$scope.buttonVariable = "Track";
+							$scope.checkboxModel = {
+									value : false,
+							};
+							extScope = $scope;			
+						
+							$scope.summary = true;
+							$scope.tracking = false;
+							$scope.showDta = false;
+							$scope.showProg = false;
+							$scope.showDta = false;
+							$scope.load = false;
+							$scope.xmlData = "";
+							$scope.trackingNum = "";
 							
+							 var reportRequest = {
+									requestType : 'getStatusSummaryForAll',								
+									fromDate:dbFromDate,
+									toDate:dbToDate
+								};
+							 $scope.load=true;
+							 $http
+								.post('./rest/Report/getStatusSummaryForAll',reportRequest)
+								.success(
+										function(resp, status) {
+											$scope.load=false;
+											$scope.orderSummaryAll = resp.orderSummaryList;													
+											serviceSummaryAll = resp.serviceSummaryList	;
+											console.log(serviceSummaryAll);		
+											drawChart();																						
+										}).error(function(error, status) {
+											$scope.load = false;
+								}); 
+
+								
+										
+																					
 						}
 						$scope.showTracking = function() {
 							$scope.checkboxModel = {
@@ -403,6 +820,7 @@
 							$scope.buttonVariable = "Track";
 							$scope.showVoid = true;
 							$scope.tracking = true;
+							$scope.summary=false;
 							$scope.showDta = false;
 							$scope.showProg = false;
 							$scope.showDta = false;
@@ -412,9 +830,11 @@
 							$scope.showError = false;
 						}
 						$scope.backToHome = function() {
+							console.log('backtohome')
 							$scope.checkboxModel = {
 									value : false,
 							};
+							$scope.summary=false;
 							$scope.buttonVariable = "Track";
 							$scope.showError = false;
 							$scope.tracking = false;
@@ -425,7 +845,7 @@
 							$scope.showRet = true;
 							$scope.xmlData = "";
 							$scope.trackingNum = "";
-							checkboxModel.value = false;
+							//checkboxModel.value = false;
 							$scope.data = {
 								availableOptions : [ {
 									id : 'UPS',
@@ -446,7 +866,6 @@
 								}
 							//This sets the default value of the select in the ui
 							};
-							
 						}
 
 						$scope.trackShipment = function(selectedValue) {
@@ -508,7 +927,6 @@
 										}).error(function(error, status) {
 										$scope.load = false;
 									});
-							
 						}
 						$scope.processXML = function() {
 							var bfr = $scope.xmlData.replace(/(<[a-z A-Z]:)/g,

@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -23,15 +24,15 @@ public class ShipmentDocument implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column
+	@GeneratedValue(strategy=GenerationType.AUTO)	 
+	@Column(name="SHIPMENT_DOCUMENT_ID",nullable = false)	
 	private long id;	
 	
-	@Column(name="DOCUMENT_TITLE",length = 35, nullable = false)
+	@Column(name="DOCUMENT_NAME",length = 100, nullable = false)
 	private String documentTitle;
-	@Column(name="DOCUMENT_TYPE",length = 15, nullable = false)
+	@Column(name="DOCUMENT_TYPE",length = 45, nullable = false)
 	private String documentType;
-	@Column(name="DOCUMENT_PATH",length = 300)
+	@Column(name="DOCUMENT_PATH",length = 300, nullable = false)
 	private String documentName;
 	
 	@Transient
@@ -43,9 +44,8 @@ public class ShipmentDocument implements Serializable {
 	@Transient
 	private byte[] byteArray;	
 	
-	@ManyToOne
-	//@JoinColumn(name = "SHIPMENT_ORDER_ID",updatable = false, insertable = true) 
-	private ShipmentOrder shipmentOrder;
+	 
+	
 	
 	
 	public String getDocumentPath() {
@@ -54,18 +54,15 @@ public class ShipmentDocument implements Serializable {
 	public void setDocumentPath(String documentPath) {
 		this.documentPath = documentPath;
 	}
-	public ShipmentOrder getShipmentOrder() {
-		return shipmentOrder;
-	}
-	public void setShipmentOrder(ShipmentOrder shipmentOrder) {
-		this.shipmentOrder = shipmentOrder;
-	}
+	
+	
+	
 	@Override
 	public String toString() {
 		return "ShipmentDocument [id=" + id + ", documentTitle=" + documentTitle + ", documentType=" + documentType
 				+ ", documentName=" + documentName + ", documentPath=" + documentPath + ", documentContentType="
 				+ documentContentType + ", documentContent=" + documentContent + ", byteArray="
-				+ Arrays.toString(byteArray) + ", shipmentOrder=" + shipmentOrder + "]";
+				+ Arrays.toString(byteArray) + ", shipmentOrder=" +  "]";
 	}
 	public long getId() {
 		return id;

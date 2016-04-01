@@ -4,7 +4,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -21,14 +23,13 @@ import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
 
 @Transactional
 public class ShipmentServiceDAO {
-	
-	 @PersistenceContext
-	 private EntityManager em;
-	
-	
-	 
+
+	@PersistenceContext
+	private EntityManager em;
+
 	public void saveShipmentOrder(ShipmentOrder shipmentOrder) {
 		System.out.println("Shipment Order Data" + shipmentOrder);
+
 		em.persist(shipmentOrder);
 	}
 	
@@ -44,7 +45,7 @@ public class ShipmentServiceDAO {
 		return (ShipmentOrder) query.getSingleResult();
 	}
 
-	public ShipmentOrder getByCartonNumber(long cartonNum, String status) {
+	public ShipmentOrder getByCartonNumber(String cartonNum, String status) {
 		ShipmentOrder shipOrder = null;
 		Query query =  em.createQuery("select shipmentOrder  from ShipmentOrder shipmentOrder where shipmentOrder.cartonNumber = :cartonNum and shipmentOrder.active=:status",ShipmentOrder.class);
 		query.setParameter("cartonNum", cartonNum);

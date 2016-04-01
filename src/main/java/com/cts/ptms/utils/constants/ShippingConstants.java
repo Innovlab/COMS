@@ -96,6 +96,7 @@ public class ShippingConstants {
     public static final String STATUS_FAILURE = "FAILURE";
     
     public static final String ERR_CD_CARTON_EXISTS = "An Active Tracking Number already exists for the carton";
+    public static final String ERR_CD_MAX_WEIGHT = "The max weight allowed for this service typs is ";
     
     public static final String PUROLATOR="PUROLATOR";
 }

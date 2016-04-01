@@ -7,8 +7,20 @@
 	<packaging>war</packaging>
 	<name>COMS</name>
 	<description>Cognizant Shipment Order Management Solutions		</description>
-	<dependencies>
 
+	<dependencies>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>1.18.1</version>
+		</dependency>
+		
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.38</version>
+		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-bundle</artifactId>
@@ -25,20 +37,16 @@
 			<artifactId>jersey-core</artifactId>
 			<version>1.19</version>
 		</dependency>
-<dependency>
-	<groupId>dom4j</groupId>
-	<artifactId>dom4j</artifactId>
-	<version>1.6.1</version>
-</dependency>
-
-
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+		</dependency>
 		<dependency>
 			<groupId>com.owlike</groupId>
 			<artifactId>genson</artifactId>
 			<version>0.99</version>
 		</dependency>
-
-
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
@@ -54,7 +62,7 @@
 			<artifactId>gson</artifactId>
 			<version>2.5</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
@@ -91,9 +99,6 @@
 			<artifactId>sonar-maven-plugin</artifactId>
 			<version>5.1</version>
 		</dependency>
-
-
-		<!-- Hibernate 4.3.6 JPA support -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -139,7 +144,7 @@
 			<artifactId>commons-lang</artifactId>
 			<version>2.2</version>
 		</dependency>
-		
+
 		<!-- Axis JARS -->
 		<dependency>
 			<groupId>org.apache.axis</groupId>
@@ -166,7 +171,7 @@
 			<artifactId>jaxrpc-api</artifactId>
 			<version>1.1</version>
 		</dependency>
-			
+
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
