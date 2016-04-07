@@ -85,6 +85,11 @@ public class ShipmentOrder  implements Serializable {
 	private String shipmentType;
 	@Transient
 	private ShipmentType shipmentTypeDO;
+	
+	private String returnLblTrackingNum;
+	
+	
+	
 	public long getShipmentOrderId() {
 		return shipmentOrderId;
 	}
@@ -210,6 +215,18 @@ public class ShipmentOrder  implements Serializable {
 	}
 	public void setActive(String active) {
 		this.active = active;
+	}
+	/**
+	 * @return the returnLblTrackingNum
+	 */
+	public String getReturnLblTrackingNum() {
+		return returnLblTrackingNum;
+	}
+	/**
+	 * @param returnLblTrackingNum the returnLblTrackingNum to set
+	 */
+	public void setReturnLblTrackingNum(String returnLblTrackingNum) {
+		this.returnLblTrackingNum = returnLblTrackingNum;
 	}
 	
 	

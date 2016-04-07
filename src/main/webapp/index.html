@@ -201,7 +201,7 @@
 				<!-- Success Header Message -->
 				<div class="alert alert-info" ng-show="showSuccess">
 					<a href="{{strUrl}}" class="close" data-dismiss="alert"
-						aria-label="close">&times;</a> <strong>Success</strong>
+						aria-label="close">&times;</a> <strong>Success!!</strong>
 					{{statusDesc}}
 				</div>
 				<!-- End of Success Header Message-->
@@ -770,9 +770,11 @@ function drawChart() {
 							} else {
 								$scope.showRet = false;
 							}
+							$scope.buttonVariable = "Track";
 							$scope.trackingNum = "";
 							$scope.showError = false;
 							$scope.showProg = false;
+							$scope.showSuccess = false;
 						}
 						$scope.showSummary = function () {	
 							$scope.buttonVariable = "Track";
@@ -814,6 +816,7 @@ function drawChart() {
 																					
 						}
 						$scope.showTracking = function() {
+							$scope.showSuccess = false;
 							$scope.checkboxModel = {
 									value : false,
 							};
@@ -830,7 +833,7 @@ function drawChart() {
 							$scope.showError = false;
 						}
 						$scope.backToHome = function() {
-							console.log('backtohome')
+							$scope.showSuccess = false;
 							$scope.checkboxModel = {
 									value : false,
 							};
@@ -869,6 +872,7 @@ function drawChart() {
 						}
 
 						$scope.trackShipment = function(selectedValue) {
+							$scope.showSuccess = false;
 							$scope.strUrl = window.location.href;
 							$scope.strUrl = $scope.strUrl.replace("/#", "");
 							$scope.showError = false;
@@ -965,12 +969,16 @@ function drawChart() {
 												} else {
 													var str = window.location.href;
 													str = str.replace("/#", "");
-													if ($scope.data.selectedOption.name == "UPS" || 
-															$scope.data.selectedOption.name == "FEDEX") {
+													if ($scope.data.selectedOption.name == "UPS" ) {
 														$scope.retimgSrc = str
 																+ "/ShipLabels/Return_"
 																+ $scope.response.trackingNumber
 																+ ".png";
+													} else if( $scope.data.selectedOption.name == "FEDEX") {
+														$scope.retimgSrc = str
+															+ "/ShipLabels/Return_"
+															+ $scope.response.returnLblTrackingNum
+															+ ".png";
 													}
 													for ( var shipmentdoc in $scope.response.shipmentDocuments) {
 														if ($scope.response.shipmentDocuments[shipmentdoc].documentTitle == "CO") {

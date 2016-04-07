@@ -180,8 +180,7 @@ public class ManageShippingProcessor {
 			shipmentRequest.setCarrier(carrierName);
 			shipmentRequest.setTrackingNumToCancel(trackingNumber.trim());
 			shipmentResponse = impl.cancelShipmentOrder(shipmentRequest);
-			/*shipmentResponse = new ShipmentOrder();
-			shipmentResponse.setStatus("1");*/
+			
 		}catch(ShippingException e){
 			shipmentResponse.setStatus("0");
 			shipmentResponse.setErrorDescription(e.getMessage());

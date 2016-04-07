@@ -188,13 +188,13 @@ public class FedExMapper {
 	 * @param shipmentOrder
 	 * @throws Exception
 	 */
-	public void writeServiceOutput(ProcessShipmentReply reply, ShipmentOrder shipmentOrder) throws Exception
+	public void writeServiceOutput(ProcessShipmentReply reply, ShipmentOrder shipmentOrder, boolean isRtnLblReqstd) throws Exception
 	{
 		try
 		{
 			CompletedShipmentDetail csd = reply.getCompletedShipmentDetail(); 
 			CompletedPackageDetail cpd[] = csd.getCompletedPackageDetails();
-			savePackageDetails(cpd, shipmentOrder);
+			savePackageDetails(cpd, shipmentOrder, isRtnLblReqstd);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -376,7 +376,7 @@ public class FedExMapper {
 		}
 	}*/
 	
-	public  void savePackageDetails(CompletedPackageDetail[] cpd, ShipmentOrder shipmentOrder) throws Exception{
+	public  void savePackageDetails(CompletedPackageDetail[] cpd, ShipmentOrder shipmentOrder, boolean isRtrnLblRqstd) throws Exception{
 		if(cpd!=null){
 			System.out.println("Package Details");
 			for (int i=0; i < cpd.length; i++) { // Package details / Rating information for each package
@@ -384,7 +384,12 @@ public class FedExMapper {
 				printTrackingNumbers(cpd[i]);
 				System.out.println();
 				ShippingDocument sd = cpd[i].getLabel();
-				saveLabelToFile(sd, trackingNumber, shipmentOrder);
+				saveLabelToFile(sd, shipmentOrder);
+				if (isRtrnLblRqstd) {
+					shipmentOrder.setReturnLblTrackingNum(trackingNumber);
+				} else {
+					shipmentOrder.setTrackingNumber(trackingNumber);
+				}
 			}
 		}
 	}
@@ -629,8 +634,7 @@ public class FedExMapper {
 	}
 	
 	//Saving and displaying shipping documents (labels)
-	public  void saveLabelToFile(ShippingDocument shippingDocument, String trackingNumber, 
-			ShipmentOrder shipmentOrder) throws Exception {
+	public  void saveLabelToFile(ShippingDocument shippingDocument, ShipmentOrder shipmentOrder) throws Exception {
 		ShippingDocumentPart[] sdparts = shippingDocument.getParts();
 		List<ShipmentDocument> shipmentDocuments = new ArrayList<ShipmentDocument>(0);
 		for (int a=0; a < sdparts.length; a++) {
@@ -649,7 +653,7 @@ public class FedExMapper {
 		shipmentDocument.setDocumentType("PDF");
 		shipmentDocuments.add(shipmentDocument);
 		shipmentOrder.setShipmentDocuments(shipmentDocuments);
-		shipmentOrder.setTrackingNumber(trackingNumber);
+		//shipmentOrder.setTrackingNumber(trackingNumber);
 	}
 	/**
 	 * 

@@ -11,10 +11,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 
@@ -31,19 +32,17 @@ import com.cts.ptms.carrier.ups.UPSShipmentService;
 import com.cts.ptms.carrier.yrc.YRCShipmentService;
 import com.cts.ptms.dao.ShipmentServiceDAO;
 import com.cts.ptms.dao.ShipmentServiceJDBC;
-import com.cts.ptms.model.common.ShipmentRequest;
+import com.cts.ptms.exception.shipping.ShippingException;
 import com.cts.ptms.model.common.BatchOrderSummary;
 import com.cts.ptms.model.common.BatchOrderSummaryFilter;
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
-import com.cts.ptms.model.common.ShipmentOrderDetail;
-import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
+import com.cts.ptms.model.common.ShipmentRequest;
 import com.cts.ptms.model.common.TrackingDetails;
 import com.cts.ptms.model.gls.SHIPUNIT;
 import com.cts.ptms.utils.ShipmentUtils;
 import com.cts.ptms.utils.constants.ShippingConstants;
-import com.cts.ptms.utils.constants.UPSConstants;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
@@ -58,7 +57,9 @@ import com.itextpdf.text.pdf.PdfStamper;
 import com.itextpdf.text.pdf.PdfWriter;
 
 public class ShipmentServiceImpl implements ShipmentService {
-
+	
+	private Logger logger = Logger.getAnonymousLogger() ; 
+	
 	private ShipmentServiceDAO shipmentServiceDAO;
 	private ShipmentServiceJDBC shipmentServiceJDBC;
 	ClientShipmentService clientShipmentService;
@@ -461,7 +462,32 @@ public class ShipmentServiceImpl implements ShipmentService {
 	@Override
 	public ShipmentOrder cancelShipmentOrder(ShipmentRequest shipmentRequest) {
 		initializeService(shipmentRequest.getCarrier());
-		return clientShipmentService.cancelShipment(shipmentRequest);
+		ShipmentOrder shipmentOrder = null;
+		shipmentServiceDAO = (ShipmentServiceDAO) context.getBean("shipmentServiceDao");
+		try 
+		{
+			shipmentOrder = shipmentServiceDAO.getByTrackingNumber(shipmentRequest.getTrackingNumToCancel());
+			if (shipmentOrder != null && shipmentOrder.getShipmentOrderId() != 0) {
+				logger.info("Retrieved Shipment order ID:"+shipmentOrder.getShipmentOrderId());
+				long shipmentOrderID = shipmentOrder.getShipmentOrderId();
+				System.out.println("Retrieved Shipment order ID:"+shipmentOrderID);
+				shipmentOrder = clientShipmentService.cancelShipment(shipmentRequest);
+				shipmentServiceDAO.updateShipmentOrder(shipmentOrderID, "N");
+			} else {
+				throw new ShippingException("No details found for the given tracking number..");
+			}
+		}catch(ShippingException ex){
+			shipmentOrder = new ShipmentOrder();
+			shipmentOrder.setStatus("0");
+			shipmentOrder.setErrorDescription(ex.getMessage());
+			logger.severe("Exception occurred :"+ex);
+		}catch(Exception ex){
+			shipmentOrder = new ShipmentOrder();
+			shipmentOrder.setStatus("0");
+			shipmentOrder.setErrorDescription("Exception while cancelling the shipment..");
+			logger.severe("Exception occurred :"+ex);
+		}
+		return shipmentOrder;
 	}
 	
 	public void testSave() {

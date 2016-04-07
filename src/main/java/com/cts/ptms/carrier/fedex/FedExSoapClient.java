@@ -68,20 +68,14 @@ public class FedExSoapClient implements ClientGateway {
 			File file = new File(request.getFileName());
 			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 			CreateShipUnits createShipUnits = (CreateShipUnits) jaxbUnmarshaller.unmarshal(file);
-			String returnLblTckngNum = "";
 			//If Return label is requested
 			if (request.isGenLabel()) {
 				procShipmentRtrnRequest = fedExMapper.mapRequestToCarrierInput(createShipUnits, shipmentOrder, true);	
 				makeServiceCall(shipmentOrder, fedExMapper, procShipmentRtrnRequest, true);
-				returnLblTckngNum = shipmentOrder.getTrackingNumber();
 			}
 			
 			processShipmentRequest = fedExMapper.mapRequestToCarrierInput(createShipUnits, shipmentOrder, false);	
 			makeServiceCall(shipmentOrder, fedExMapper, processShipmentRequest, false);
-			
-			if (request.isGenLabel()) {
-				shipmentOrder.setTrackingNumber(returnLblTckngNum);	
-			}
 			
 			shipmentOrder.setStatus(ShippingConstants.SUCCESS);
 
@@ -173,13 +167,15 @@ public class FedExSoapClient implements ClientGateway {
 			//
 			if (fedExMapper.isResponseOk(reply.getHighestSeverity())) // check if the call was successful
 			{
-				fedExMapper.writeServiceOutput(reply, shipmentOrder);
-				//Saving the documents
-				List<ShipmentDocument> shipmentDocs = shipmentOrder.getShipmentDocuments();
-				if(shipmentDocs != null && !shipmentDocs.isEmpty()) {
-					ShipmentDocument shipMntDoc = shipmentDocs.get(0);
-					generateShippingLabelPDF(shipMntDoc.getByteArray(), shipmentOrder.getTrackingNumber(), 
-							new ShippingConstants(), isReturnSrvcRequested,  ShippingConstants.PNG_FILE);
+				fedExMapper.writeServiceOutput(reply, shipmentOrder, isReturnSrvcRequested);
+				//Saving the return documents
+				if (isReturnSrvcRequested) {
+					List<ShipmentDocument> shipmentDocs = shipmentOrder.getShipmentDocuments();
+					if(shipmentDocs != null && !shipmentDocs.isEmpty()) {
+						ShipmentDocument shipMntDoc = shipmentDocs.get(0);
+						generateShippingLabel(shipMntDoc.getByteArray(), shipmentOrder.getReturnLblTrackingNum(), 
+								new ShippingConstants(),  ShippingConstants.PNG_FILE);
+					}
 				}
 			}	
 		}catch (Exception ex) {
@@ -196,20 +192,14 @@ public class FedExSoapClient implements ClientGateway {
 	 * @throws InterruptedException 
 	 * @throws URISyntaxException 
 	 */
-	public void generateShippingLabelPDF(byte[] decoded,String trackingNumber,ShippingConstants shippingConstants, 
-			boolean isRtnLblRequested, String fileType)
-			throws MalformedURLException, IOException, DocumentException, InterruptedException, URISyntaxException {
+	public void generateShippingLabel(byte[] decoded,String trackingNumber,ShippingConstants shippingConstants, 
+			String fileType) throws MalformedURLException, IOException, DocumentException, InterruptedException, URISyntaxException {
 		
 		String filename;
 		OutputStream out1 = null;
 		try {
-			if(isRtnLblRequested) {
-				filename = new FedExSoapClient().getClass().getClassLoader().getResource("").getPath()
+			filename = new FedExSoapClient().getClass().getClassLoader().getResource("").getPath()
 						+"Return_"+ trackingNumber + fileType;
-			} else {
-				filename = new FedExSoapClient().getClass().getClassLoader().getResource("").getPath()
-						+ trackingNumber + fileType;
-			}
 			filename = filename.replace(ShippingConstants.FILE_PATH, ShippingConstants.File_Path_Replace);
 			try {
 				out1 = new BufferedOutputStream(new FileOutputStream(filename));

@@ -4,9 +4,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -23,13 +22,14 @@ import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
 
 @Transactional
 public class ShipmentServiceDAO {
-
+	
 	@PersistenceContext
 	private EntityManager em;
-
+	
+	private Logger logger = Logger.getAnonymousLogger() ;
+	 
 	public void saveShipmentOrder(ShipmentOrder shipmentOrder) {
 		System.out.println("Shipment Order Data" + shipmentOrder);
-
 		em.persist(shipmentOrder);
 	}
 	
@@ -39,10 +39,19 @@ public class ShipmentServiceDAO {
 	}
 	
 	public ShipmentOrder getByTrackingNumber(String trackingNumber) {
-		
-		Query query =  em.createQuery("select shipmentOrder  from ShipmentOrder shipmentOrder where shipmentOrder.trackingNumber = :trackingNumber",ShipmentOrder.class);
-		query.setParameter("trackingNumber", trackingNumber);
-		return (ShipmentOrder) query.getSingleResult();
+		ShipmentOrder shipmenOrder = null;
+		try {
+			
+			Query query =  em.createQuery("select shipmentOrder  from ShipmentOrder shipmentOrder where shipmentOrder.trackingNumber = :trackingNumber",ShipmentOrder.class);
+			query.setParameter("trackingNumber", trackingNumber);
+			shipmenOrder = (ShipmentOrder) query.getSingleResult();
+			
+		}
+		catch (javax.persistence.NoResultException ex ) {
+			shipmenOrder = new ShipmentOrder();
+			shipmenOrder.setShipmentOrderId(0);
+		}
+		return shipmenOrder;
 	}
 
 	public ShipmentOrder getByCartonNumber(String cartonNum, String status) {
@@ -113,5 +122,24 @@ public class ShipmentServiceDAO {
 		
 	}
 	
+	/**
+	 * Update Shipment order
+	 */
+	public void updateShipmentOrder(long shipmentOrderId, String status ) throws Exception {
+		logger.info("updating the shipment order details");
+		try {
+			Query query =  em.createQuery("Update ShipmentOrder so  set so.active =:status  where so.shipmentOrderId = :shipmentOrderId");
+			query.setParameter("shipmentOrderId", shipmentOrderId);
+			query.setParameter("status", status);
+			if (1 != query.executeUpdate()) {
+				throw new Exception("Exception while updating the shipping order details");
+			}
+			logger.info("Successful update of shipment order details..");
+		} catch (Exception ex) {
+			logger.severe("Exception occured at updateShipmentOrder() method::"+ex);
+			throw ex;
+		}
+		
+	}
 	
 } 
