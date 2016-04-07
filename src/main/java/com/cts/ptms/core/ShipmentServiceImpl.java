@@ -38,11 +38,13 @@ import com.cts.ptms.model.common.BatchOrderSummaryFilter;
 import com.cts.ptms.model.common.ShipmentBatchRequest;
 import com.cts.ptms.model.common.ShipmentDocument;
 import com.cts.ptms.model.common.ShipmentOrder;
-import com.cts.ptms.model.common.ShipmentRequest;
+import com.cts.ptms.model.common.ShipmentOrderDetail;
+import com.cts.ptms.model.common.ShipmentOrderDetailRequest;
 import com.cts.ptms.model.common.TrackingDetails;
 import com.cts.ptms.model.gls.SHIPUNIT;
 import com.cts.ptms.utils.ShipmentUtils;
 import com.cts.ptms.utils.constants.ShippingConstants;
+import com.cts.ptms.utils.constants.UPSConstants;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
@@ -147,6 +149,13 @@ public class ShipmentServiceImpl implements ShipmentService {
 		shipmentOrder.setReturnFlag(shipmentRequest.isGenLabel()?"Y":"N");
 		shipmentOrder.setCarrierService(shipUnit.getShipVia().toString());
 		shipmentOrder.setBillingAccountNumber(shipUnit.getBillingAccountID().toString());
+		if(shipmentOrder.getStatus()!=null || shipmentOrder.getStatus().equalsIgnoreCase("") ) {
+			if(shipmentOrder.getStatus().equalsIgnoreCase("SUCCESS")) {
+				shipmentOrder.setShipperStatus("LABELS GENERATED");
+				shipmentOrder.setProcessedDate(new Date());
+			}
+		}
+		
 		
 	}
 

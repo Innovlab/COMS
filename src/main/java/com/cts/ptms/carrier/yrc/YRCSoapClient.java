@@ -106,7 +106,7 @@ public class YRCSoapClient implements ClientGateway {
 		Dispatch<SOAPMessage> dispatch = svc.createDispatch(QNAME_PORT, SOAPMessage.class, Service.Mode.MESSAGE);
 		SOAPMessage reqMsg = makeSOAPMessage(xmlPayLoad);
 		
-		//dispatch.getRequestContext().put("com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory",ssl_ctx.getSocketFactory());
+	//	dispatch.getRequestContext().put("com.sun.xml.internal.ws.transport.https.client.SSLSocketFactory",ssl_ctx.getSocketFactory());
 		
 		// Invoke the Dispatch
 		SOAPMessage response = null;

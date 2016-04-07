@@ -56,7 +56,8 @@ public class ShipmentOrder  implements Serializable {
 	private String ErrorSeverity;
 	@Column(name="ERROR_CODE",length = 4, nullable = true)
 	private String ErrorCode;
-	@Column(name="ERROR_DESCRIPTION",length = 100)
+	//@Column(name="ERROR_DESCRIPTION",length = 100)
+	@Transient
 	private String ErrorDescription;	
 	@Column(name = "SHIPMENT_PLAN_DT", columnDefinition = "DATE DEFAULT CURRENT_DATE")
 	@Temporal(TemporalType.DATE)
@@ -85,7 +86,7 @@ public class ShipmentOrder  implements Serializable {
 	private String shipmentType;
 	@Transient
 	private ShipmentType shipmentTypeDO;
-	
+	@Transient
 	private String returnLblTrackingNum;
 	
 	

@@ -8,7 +8,7 @@ public interface ShipmentServiceQueries {
 	public static String SELECT_STATUS_SUMMARY_QUERY_FOR_ALL="	SELECT " + 
 		    "so.SHIPPER_STATUS_CD,count(so.ORDER_NO) as 'TOTAL' " +
 		    "FROM " +
-		    "shipment_order so " +
+		    "SHIPMENT_ORDER so " +
 			"INNER JOIN " +
 		    "carrier_service cs ON so.carrier_service = cs.service_id " + 
 		    "and so.shipment_process_dt >= :fromDate " +
@@ -19,7 +19,7 @@ public interface ShipmentServiceQueries {
 	public static String SELECT_STATUS_SUMMARY_QUERY_BY_ID="	SELECT " + 
 		    "so.SHIPPER_STATUS_CD,count(so.ORDER_NO) as 'TOTAL' " +
 		    "FROM " +
-		    "shipment_order so " +
+		    "SHIPMENT_ORDER so " +
 			"INNER JOIN " +
 		    "carrier_service cs ON so.carrier_service = cs.service_id " +   
 		    "and so.carrier_service = :carrierServiceType " +
@@ -32,7 +32,7 @@ public interface ShipmentServiceQueries {
 	public static String SELECT_SERVICE_SUMMARY_QUERY_FOR_ALL="	SELECT " + 
 		    "cs.SERVICE_NAME,cs.SERVICE_ID,count(so.ORDER_NO) as 'TOTAL' " +
 		    "FROM " +
-		    "shipment_order so " +
+		    "SHIPMENT_ORDER so " +
 			"INNER JOIN " +
 		    "carrier_service cs ON so.carrier_service = cs.service_id " +  
 		    "and so.shipment_process_dt >= :fromDate " +

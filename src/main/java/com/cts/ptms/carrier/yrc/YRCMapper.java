@@ -115,6 +115,7 @@ public class YRCMapper {
 			
 			if (status.equalsIgnoreCase("SUCCESS")) {				
 				shipmentOrder.setStatus("SUCCESS");
+				shipmentOrder.setShipperStatus("LABELS GENERATED");
 				for (String docTitle : exprList.keySet()) {					
 					switch(docTitle) {
 						case "trackingNumber" : {							
