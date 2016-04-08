@@ -2,9 +2,7 @@
 <CreateShipUnits>
                 <SessionID>245</SessionID>
                 <CreateShipUnitsParams>
-                                <CREATE_SHIP_UNITS_PARAMS1
-                                                xmlns="http://ScanData.com/WTM/XMLSchemas/WTM_XMLSchema_11.00.0000.xsd"
-                                                MSN="245">
+                                <CREATE_SHIP_UNITS_PARAMS1>
                                                 <SHIP_UNIT Version="11.00.0000">
                                                                 <CartonNumber>00000070520009731471</CartonNumber>
                                                                 <DistributionCenter>7052</DistributionCenter>
